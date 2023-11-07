@@ -49,15 +49,19 @@ export const SignUp = () => {
     );
   };
 
+  const openToast = (severity, message) => {
+    setToastProps({
+      severity: severity,
+      message: message,
+    });
+    setToastOpen(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (isBlankSomeField()) {
-      setToastProps({
-        severity: "info",
-        message: "空欄の項目があります。",
-      });
-      setToastOpen(true);
+      openToast("info", "空欄の項目があります。");
       return;
     }
 
@@ -68,20 +72,11 @@ export const SignUp = () => {
       if (res.status === 200) {
         console.log("200です");
       } else {
-        setToastProps({
-          severity: "error",
-          message: res.data.errors.full_messages.join(""),
-        });
-        setToastOpen(true);
+        openToast("error", res.data.errors.full_messages.join(""));
       }
     } catch (err) {
       console.log("err", err);
-
-      setToastProps({
-        severity: "error",
-        message: err.response.data.errors.full_messages.join(""),
-      });
-      setToastOpen(true);
+      openToast("error", err.response.data.errors.full_messages.join(""));
     }
   };
 
