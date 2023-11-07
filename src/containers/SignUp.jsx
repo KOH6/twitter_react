@@ -10,13 +10,7 @@ import { ToastMessage } from "../components/utils/ToastMessage";
 
 import { signUp } from "../apis/signUp";
 
-const TEST_DATA = {
-  email: "a@example.com",
-  password: "Abcd1234",
-  phone: "1234",
-  birthdate: "1990-01-01",
-  confirm_success_url: "http://google.com",
-};
+import { CONFIRM_SUCCESS_URL } from "../urls/index";
 
 export const SignUp = () => {
   const [name, setName] = useState("");
@@ -35,9 +29,14 @@ export const SignUp = () => {
   const inputFields = [
     { type: "text", label: "Name", value: name, setter: setName },
     { type: "text", label: "EMail", value: email, setter: setEmail },
-    { type: "text", label: "Password", value: password, setter: setPassword },
     {
-      type: "text",
+      type: "password",
+      label: "Password",
+      value: password,
+      setter: setPassword,
+    },
+    {
+      type: "password",
       label: "Password(確認)",
       value: passwordConfirmation,
       setter: setPasswordConfirmation,
@@ -50,6 +49,16 @@ export const SignUp = () => {
       setter: setBirthdate,
     },
   ];
+
+  const signUpParams = {
+    name: name,
+    email: email,
+    password: password,
+    passwordConfirmation: passwordConfirmation,
+    phone: phone,
+    birthdate: birthdate,
+    confirm_success_url: CONFIRM_SUCCESS_URL,
+  };
 
   const isBlankSomeField = () => {
     return (
@@ -79,17 +88,15 @@ export const SignUp = () => {
     }
 
     try {
-      const res = await signUp(TEST_DATA);
+      const res = await signUp(signUpParams);
       console.log("res", res);
 
-      if (res.status === 200) {
-        console.log("200です");
-      } else {
-        openToast("error", res.data.errors.full_messages.join(""));
+      if (res.status !== 200) {
+        openToast("error", res.data.errors.full_messages.join("\r\n"));
       }
     } catch (err) {
       console.log("err", err);
-      openToast("error", err.response.data.errors.full_messages.join(""));
+      openToast("error", err.response.data.errors.full_messages.join("\r\n"));
     }
   };
 
