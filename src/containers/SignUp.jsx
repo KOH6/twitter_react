@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
@@ -10,95 +10,12 @@ import { ToastMessage } from "../components/utils/ToastMessage";
 
 import { signUp } from "../apis/signUp";
 
-import { CONFIRM_SUCCESS_URL } from "../urls/index";
+import { useToastDisplay } from "../hooks/useToastDisplay.jsx";
+import { useSignUp } from "../hooks/useSignUp.jsx";
 
 export const SignUp = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [phone, setPhone] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-
-  const [toastOpen, setToastOpen] = useState(false);
-  const [toastProps, setToastProps] = useState({
-    severity: "info",
-    message: "",
-  });
-
-  const inputFields = [
-    {
-      type: "text",
-      label: "ユーザ名",
-      helperText: "",
-      value: name,
-      setter: setName,
-    },
-    {
-      type: "text",
-      label: "メールアドレス",
-      helperText: "",
-      value: email,
-      setter: setEmail,
-    },
-    {
-      type: "password",
-      label: "パスワード",
-      helperText: "6文字以上",
-      value: password,
-      setter: setPassword,
-    },
-    {
-      type: "password",
-      label: "パスワード(確認)",
-      helperText: "",
-      value: passwordConfirmation,
-      setter: setPasswordConfirmation,
-    },
-    {
-      type: "text",
-      label: "電話番号",
-      helperText: "",
-      value: phone,
-      setter: setPhone,
-    },
-    {
-      type: "date",
-      label: "生年月日",
-      helperText: "",
-      value: birthdate,
-      setter: setBirthdate,
-    },
-  ];
-
-  const signUpParams = {
-    name: name,
-    email: email,
-    password: password,
-    passwordConfirmation: passwordConfirmation,
-    phone: phone,
-    birthdate: birthdate,
-    confirm_success_url: CONFIRM_SUCCESS_URL,
-  };
-
-  const isBlankSomeField = () => {
-    return (
-      name === "" ||
-      email === "" ||
-      password === "" ||
-      passwordConfirmation === "" ||
-      phone === "" ||
-      birthdate === ""
-    );
-  };
-
-  const openToast = (severity, message) => {
-    setToastProps({
-      severity: severity,
-      message: message,
-    });
-    setToastOpen(true);
-  };
+  const { signUpFields, signUpParams, isBlankSomeField } = useSignUp();
+  const { toastOpen, setToastOpen, toastProps, openToast } = useToastDisplay();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,7 +44,7 @@ export const SignUp = () => {
         <Card sx={{ width: "50%", margin: "3rem auto", textAlign: "center" }}>
           <CardHeader title="新規登録" />
           <CardContent>
-            {inputFields.map((field) => (
+            {signUpFields.map((field) => (
               <TextField
                 key={field.label}
                 required
@@ -145,7 +62,6 @@ export const SignUp = () => {
               type="submit"
               variant="contained"
               size="large"
-              // fullWidth
               margin="normal"
               onClick={handleSubmit}
             >
