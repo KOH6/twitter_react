@@ -1,6 +1,6 @@
 import axios from "axios";
-import { signUp } from "../urls/index";
+import { users } from "../urls/index";
 
-export const createUser = (params) => {
-  return axios.post(signUp, params);
+export const signUp = (params) => {
+  return axios.post(users, params);
 };
