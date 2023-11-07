@@ -27,24 +27,45 @@ export const SignUp = () => {
   });
 
   const inputFields = [
-    { type: "text", label: "Name", value: name, setter: setName },
-    { type: "text", label: "EMail", value: email, setter: setEmail },
+    {
+      type: "text",
+      label: "ユーザ名",
+      helperText: "",
+      value: name,
+      setter: setName,
+    },
+    {
+      type: "text",
+      label: "メールアドレス",
+      helperText: "",
+      value: email,
+      setter: setEmail,
+    },
     {
       type: "password",
-      label: "Password",
+      label: "パスワード",
+      helperText: "6文字以上",
       value: password,
       setter: setPassword,
     },
     {
       type: "password",
-      label: "Password(確認)",
+      label: "パスワード(確認)",
+      helperText: "",
       value: passwordConfirmation,
       setter: setPasswordConfirmation,
     },
-    { type: "text", label: "Phone", value: phone, setter: setPhone },
+    {
+      type: "text",
+      label: "電話番号",
+      helperText: "",
+      value: phone,
+      setter: setPhone,
+    },
     {
       type: "date",
-      label: "birthdate",
+      label: "生年月日",
+      helperText: "",
       value: birthdate,
       setter: setBirthdate,
     },
@@ -102,9 +123,9 @@ export const SignUp = () => {
 
   return (
     <>
-      <form noValidate autoComplete="off">
-        <Card>
-          <CardHeader title="Sign Up" />
+      <form>
+        <Card sx={{ width: "50%", margin: "3rem auto", textAlign: "center" }}>
+          <CardHeader title="新規登録" />
           <CardContent>
             {inputFields.map((field) => (
               <TextField
@@ -114,8 +135,9 @@ export const SignUp = () => {
                 type={field.type}
                 label={field.label}
                 value={field.value}
-                margin="dense"
+                margin="normal"
                 InputLabelProps={{ shrink: true }}
+                helperText={field.helperText}
                 onChange={(event) => field.setter(event.target.value)}
               />
             ))}
@@ -123,14 +145,16 @@ export const SignUp = () => {
               type="submit"
               variant="contained"
               size="large"
-              fullWidth
+              // fullWidth
+              margin="normal"
               onClick={handleSubmit}
             >
-              Submit
+              登録
             </Button>
           </CardContent>
         </Card>
       </form>
+
       <ToastMessage
         open={toastOpen}
         setOpen={setToastOpen}
