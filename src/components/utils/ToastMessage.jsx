@@ -17,7 +17,11 @@ export const ToastMessage = (props) => {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity={severity}>
+        <Alert
+          sx={{ whiteSpace: "pre-line" }}
+          severity={severity}
+          onClose={handleClose}
+        >
           {message}
         </Alert>
       </Snackbar>
