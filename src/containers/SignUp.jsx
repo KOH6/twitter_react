@@ -23,6 +23,9 @@ export const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [phone, setPhone] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+
   const [toastOpen, setToastOpen] = useState(false);
   const [toastProps, setToastProps] = useState({
     severity: "info",
@@ -30,13 +33,21 @@ export const SignUp = () => {
   });
 
   const inputFields = [
-    { label: "Name", value: name, setter: setName },
-    { label: "EMail", value: email, setter: setEmail },
-    { label: "Password", value: password, setter: setPassword },
+    { type: "text", label: "Name", value: name, setter: setName },
+    { type: "text", label: "EMail", value: email, setter: setEmail },
+    { type: "text", label: "Password", value: password, setter: setPassword },
     {
+      type: "text",
       label: "Password(確認)",
       value: passwordConfirmation,
       setter: setPasswordConfirmation,
+    },
+    { type: "text", label: "Phone", value: phone, setter: setPhone },
+    {
+      type: "date",
+      label: "birthdate",
+      value: birthdate,
+      setter: setBirthdate,
     },
   ];
 
@@ -45,7 +56,9 @@ export const SignUp = () => {
       name === "" ||
       email === "" ||
       password === "" ||
-      passwordConfirmation === ""
+      passwordConfirmation === "" ||
+      phone === "" ||
+      birthdate === ""
     );
   };
 
@@ -89,12 +102,13 @@ export const SignUp = () => {
             {inputFields.map((field) => (
               <TextField
                 key={field.label}
-                variant="outlined"
                 required
                 fullWidth
+                type={field.type}
                 label={field.label}
                 value={field.value}
                 margin="dense"
+                InputLabelProps={{ shrink: true }}
                 onChange={(event) => field.setter(event.target.value)}
               />
             ))}
