@@ -1,28 +1,30 @@
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { useRecoilState } from "recoil";
+import { flashState } from "../../globalStates/atoms/flashAtom";
 
 export const ToastMessage = (props) => {
-  const { open, setOpen, severity, message } = props;
+  const [flash, setFlash] = useRecoilState(flashState);
 
   const handleClose = (e, reason) => {
     if (reason === "clickaway") return;
-    setOpen(false);
+    setFlash({ ...flash, isOpen: false });
   };
 
   return (
     <Snackbar
-      open={open}
+      open={flash.isOpen}
       autoHideDuration={5000}
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       onClose={handleClose}
     >
       <Alert
         sx={{ whiteSpace: "pre-line" }}
-        severity={severity}
+        severity={flash.severity}
         onClose={handleClose}
       >
-        {message}
+        {flash.message}
       </Alert>
     </Snackbar>
   );

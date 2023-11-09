@@ -10,8 +10,9 @@ import { ToastMessage } from "../components/utils/ToastMessage";
 
 import { signUp } from "../apis/signUp";
 
-import { useToastDisplay } from "../hooks/useToastDisplay.jsx";
 import { useSignUp } from "../hooks/useSignUp.jsx";
+import { useSetRecoilState } from "recoil";
+import { flashState } from "../globalStates/atoms/flashAtom";
 
 export const SignUp = () => {
   const {
@@ -21,13 +22,18 @@ export const SignUp = () => {
     isBlankSomeField,
     onChangeNewUser,
   } = useSignUp();
-  const { toastOpen, setToastOpen, toastProps, openToast } = useToastDisplay();
+
+  const setFlash = useSetRecoilState(flashState);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (isBlankSomeField(newUser)) {
-      openToast("info", "空欄の項目があります。");
+      setFlash({
+        isOpen: true,
+        severity: "info",
+        message: "空欄の項目があります。",
+      });
       return;
     }
 
@@ -36,11 +42,19 @@ export const SignUp = () => {
       console.log("res", res);
 
       if (res.status !== 200) {
-        openToast("error", res.data.errors.full_messages.join("\r\n"));
+        setFlash({
+          isOpen: true,
+          severity: "error",
+          message: res.data.errors.full_messages.join("\r\n"),
+        });
       }
     } catch (err) {
       console.log("err", err);
-      openToast("error", err.response.data.errors.full_messages.join("\r\n"));
+      setFlash({
+        isOpen: true,
+        severity: "error",
+        message: err.response.data.errors.full_messages.join("\r\n"),
+      });
     }
   };
 
@@ -78,12 +92,7 @@ export const SignUp = () => {
         </Card>
       </form>
 
-      <ToastMessage
-        open={toastOpen}
-        setOpen={setToastOpen}
-        severity={toastProps.severity}
-        message={toastProps.message}
-      />
+      <ToastMessage />
     </>
   );
 };
