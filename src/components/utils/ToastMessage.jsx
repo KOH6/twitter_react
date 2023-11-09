@@ -4,7 +4,7 @@ import Alert from "@mui/material/Alert";
 import { useRecoilState } from "recoil";
 import { flashState } from "../../globalStates/atoms/flashAtom";
 
-export const ToastMessage = (props) => {
+export const ToastMessage = () => {
   const [flash, setFlash] = useRecoilState(flashState);
 
   const handleClose = (e, reason) => {
