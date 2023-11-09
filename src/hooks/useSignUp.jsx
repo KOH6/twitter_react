@@ -2,82 +2,72 @@ import { useState } from "react";
 import { CONFIRM_SUCCESS_URL } from "../urls/index";
 
 export const useSignUp = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [phone, setPhone] = useState("");
-  const [birthdate, setBirthdate] = useState("");
+  const initialUser = {
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    phone: "",
+    birthdate: "",
+  };
+
+  const [newUser, setNewUser] = useState(initialUser);
+
+  const onChangeNewUser = (e) => {
+    const { name, value } = e.target;
+    setNewUser((prevNewUser) => ({ ...prevNewUser, [name]: value }));
+  };
 
   const signUpFields = [
     {
-      type: "text",
       label: "ユーザ名",
+      name: "name",
+      type: "text",
       helperText: "",
-      value: name,
-      setter: setName,
     },
     {
-      type: "text",
+      name: "email",
       label: "メールアドレス",
-      helperText: "",
-      value: email,
-      setter: setEmail,
-    },
-    {
-      type: "password",
-      label: "パスワード",
-      helperText: "6文字以上",
-      value: password,
-      setter: setPassword,
-    },
-    {
-      type: "password",
-      label: "パスワード(確認)",
-      helperText: "",
-      value: passwordConfirmation,
-      setter: setPasswordConfirmation,
-    },
-    {
       type: "text",
-      label: "電話番号",
       helperText: "",
-      value: phone,
-      setter: setPhone,
     },
     {
-      type: "date",
-      label: "生年月日",
+      name: "password",
+      label: "パスワード",
+      type: "password",
+      helperText: "6文字以上",
+    },
+    {
+      name: "password_confirmation",
+      label: "パスワード(確認)",
+      type: "password",
       helperText: "",
-      value: birthdate,
-      setter: setBirthdate,
+    },
+    {
+      name: "phone",
+      label: "電話番号",
+      type: "text",
+      helperText: "",
+    },
+    {
+      name: "birthdate",
+      label: "生年月日",
+      type: "date",
+      helperText: "",
     },
   ];
 
-  const signUpParams = {
-    name: name,
-    email: email,
-    password: password,
-    passwordConfirmation: passwordConfirmation,
-    phone: phone,
-    birthdate: birthdate,
-    confirm_success_url: CONFIRM_SUCCESS_URL,
-  };
+  const signUpParams = { ...newUser, confirm_success_url: CONFIRM_SUCCESS_URL };
 
-  const isBlankSomeField = () => {
-    return (
-      name === "" ||
-      email === "" ||
-      password === "" ||
-      passwordConfirmation === "" ||
-      phone === "" ||
-      birthdate === ""
-    );
+  const isBlankSomeField = (user) => {
+    return Object.keys(user).some((key) => !user[key]);
   };
 
   return {
+    newUser,
     signUpFields,
     signUpParams,
     isBlankSomeField,
+    onChangeNewUser,
   };
 };

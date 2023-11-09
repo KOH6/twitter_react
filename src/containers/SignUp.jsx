@@ -14,13 +14,19 @@ import { useToastDisplay } from "../hooks/useToastDisplay.jsx";
 import { useSignUp } from "../hooks/useSignUp.jsx";
 
 export const SignUp = () => {
-  const { signUpFields, signUpParams, isBlankSomeField } = useSignUp();
+  const {
+    newUser,
+    signUpFields,
+    signUpParams,
+    isBlankSomeField,
+    onChangeNewUser,
+  } = useSignUp();
   const { toastOpen, setToastOpen, toastProps, openToast } = useToastDisplay();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isBlankSomeField()) {
+    if (isBlankSomeField(newUser)) {
       openToast("info", "空欄の項目があります。");
       return;
     }
@@ -51,11 +57,12 @@ export const SignUp = () => {
                 fullWidth
                 type={field.type}
                 label={field.label}
-                value={field.value}
+                name={field.name}
+                value={newUser[field.name]}
                 margin="normal"
                 InputLabelProps={{ shrink: true }}
                 helperText={field.helperText}
-                onChange={(event) => field.setter(event.target.value)}
+                onChange={(e) => onChangeNewUser(e)}
               />
             ))}
             <Button
