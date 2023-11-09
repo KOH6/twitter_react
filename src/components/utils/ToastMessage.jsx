@@ -11,21 +11,19 @@ export const ToastMessage = (props) => {
   };
 
   return (
-    <>
-      <Snackbar
-        open={open}
-        autoHideDuration={5000}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+    <Snackbar
+      open={open}
+      autoHideDuration={5000}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      onClose={handleClose}
+    >
+      <Alert
+        sx={{ whiteSpace: "pre-line" }}
+        severity={severity}
         onClose={handleClose}
       >
-        <Alert
-          sx={{ whiteSpace: "pre-line" }}
-          severity={severity}
-          onClose={handleClose}
-        >
-          {message}
-        </Alert>
-      </Snackbar>
-    </>
+        {message}
+      </Alert>
+    </Snackbar>
   );
 };
