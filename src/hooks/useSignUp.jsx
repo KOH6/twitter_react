@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import { CONFIRM_SUCCESS_URL } from "../urls/index";
 
-import { flashState } from "../globalStates/atoms/flashAtom";
-import { loadingState } from "../globalStates/atoms/loadingAtom";
+import { flashState } from "../globalStates/atoms";
+import { loadingState } from "../globalStates/atoms";
 
 import { signUp } from "../apis/auth";
 

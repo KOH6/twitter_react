@@ -1,7 +1,7 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 import { Backdrop, CircularProgress } from "@mui/material";
-import { loadingState } from "../../globalStates/atoms/loadingAtom";
+import { loadingState } from "../../globalStates/atoms";
 
 export const Spinner = () => {
   const loading = useRecoilValue(loadingState);

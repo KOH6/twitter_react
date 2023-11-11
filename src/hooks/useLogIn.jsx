@@ -3,8 +3,8 @@ import { useSetRecoilState } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-import { flashState } from "../globalStates/atoms/flashAtom";
-import { loadingState } from "../globalStates/atoms/loadingAtom";
+import { flashState } from "../globalStates/atoms";
+import { loadingState } from "../globalStates/atoms";
 
 import { logIn } from "../apis/auth";
 
