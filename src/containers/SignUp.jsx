@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import { useSignUp } from "../hooks/useSignUp.jsx";
 
 export const SignUp = () => {
-  const { newUser, signUpFields, onChangeNewUser, handleSubmit } = useSignUp();
+  const { user, signUpFields, onChangeUser, handleSubmit } = useSignUp();
 
   return (
     <form>
@@ -24,11 +24,11 @@ export const SignUp = () => {
               type={field.type}
               label={field.label}
               name={field.name}
-              value={newUser[field.name]}
+              value={user[field.name]}
               margin="normal"
               InputLabelProps={{ shrink: true }}
               helperText={field.helperText}
-              onChange={(e) => onChangeNewUser(e)}
+              onChange={(e) => onChangeUser(e)}
             />
           ))}
           <Button

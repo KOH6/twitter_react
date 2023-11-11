@@ -57,13 +57,13 @@ export const useSignUp = () => {
     birthdate: "",
   };
 
-  const [newUser, setNewUser] = useState(initialUser);
+  const [user, setUser] = useState(initialUser);
 
-  const signUpParams = { ...newUser, confirm_success_url: CONFIRM_SUCCESS_URL };
+  const signUpParams = { ...user, confirm_success_url: CONFIRM_SUCCESS_URL };
 
-  const onChangeNewUser = (e) => {
+  const onChangeUser = (e) => {
     const { name, value } = e.target;
-    setNewUser((prevNewUser) => ({ ...prevNewUser, [name]: value }));
+    setUser((prevUser) => ({ ...prevUser, [name]: value }));
   };
 
   const isBlankSomeField = (user) => {
@@ -75,7 +75,7 @@ export const useSignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isBlankSomeField(newUser)) {
+    if (isBlankSomeField(user)) {
       setFlash({
         isOpen: true,
         severity: "info",
@@ -113,9 +113,9 @@ export const useSignUp = () => {
   };
 
   return {
-    newUser,
+    user,
     signUpFields,
-    onChangeNewUser,
+    onChangeUser,
     handleSubmit,
   };
 };
