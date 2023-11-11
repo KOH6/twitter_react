@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { CONFIRM_SUCCESS_URL } from "../urls/index";
-import { signUp } from "../apis/auth";
 import { useSetRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
+
+import { CONFIRM_SUCCESS_URL } from "../urls/index";
 import { flashState } from "../globalStates/atoms/flashAtom";
+import { signUp } from "../apis/auth";
 
 const signUpFields = [
   {
@@ -44,6 +46,8 @@ const signUpFields = [
 ];
 
 export const useSignUp = () => {
+  const navigate = useNavigate();
+
   const initialUser = {
     name: "",
     email: "",
@@ -82,8 +86,10 @@ export const useSignUp = () => {
 
     try {
       const res = await signUp(signUpParams);
-      console.log("res", res);
+
       if (res.status === 200) {
+        navigate("/home");
+
         setFlash({
           isOpen: true,
           severity: "success",
