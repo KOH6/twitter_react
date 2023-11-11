@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { SignUp } from "./containers/SignUp.jsx";
 import { PostIndex } from "./containers/PostIndex.jsx";
 import { ToastMessage } from "./components/utils/ToastMessage";
+import { LogIn } from "./containers/LogIn";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/signup" element={<SignUp />}></Route>
+          <Route exact path="/login" element={<LogIn />}></Route>
           <Route exact path="/home" element={<PostIndex />}></Route>
         </Routes>
       </Router>
