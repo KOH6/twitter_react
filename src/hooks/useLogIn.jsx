@@ -3,7 +3,7 @@ import { useSetRecoilState } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-import { flashState } from "../globalStates/atoms";
+import { currentUserState, flashState } from "../globalStates/atoms";
 import { loadingState } from "../globalStates/atoms";
 
 import { logIn } from "../apis/auth";
@@ -31,8 +31,10 @@ export const useLogIn = () => {
   const [user, setUser] = useState(initialUser);
 
   const navigate = useNavigate();
+
   const setFlash = useSetRecoilState(flashState);
   const setLoading = useSetRecoilState(loadingState);
+  const setCurrentUser = useSetRecoilState(currentUserState);
 
   const query = new URLSearchParams(useLocation().search);
   // 文字列で取得されるため、Booleanに型変換する
