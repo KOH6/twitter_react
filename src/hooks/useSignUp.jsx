@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CONFIRM_SUCCESS_URL } from "../urls/index";
-import { signUp } from "../apis/signUp";
+import { signUp } from "../apis/auth";
 import { useSetRecoilState } from "recoil";
 import { flashState } from "../globalStates/atoms/flashAtom";
 
@@ -82,7 +82,7 @@ export const useSignUp = () => {
 
     try {
       const res = await signUp(signUpParams);
-
+      console.log("res", res);
       if (res.status === 200) {
         setFlash({
           isOpen: true,
