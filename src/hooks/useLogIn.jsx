@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 import { flashState } from "../globalStates/atoms/flashAtom";
+import { loadingState } from "../globalStates/atoms/loadingAtom";
+
 import { logIn } from "../apis/auth";
 
 const logInFields = [
@@ -30,6 +32,7 @@ export const useLogIn = () => {
 
   const navigate = useNavigate();
   const setFlash = useSetRecoilState(flashState);
+  const setLoading = useSetRecoilState(loadingState);
 
   const query = new URLSearchParams(useLocation().search);
   // 文字列で取得されるため、Booleanに型変換する
@@ -71,6 +74,7 @@ export const useLogIn = () => {
     }
 
     try {
+      setLoading(true);
       const res = await logIn(user);
 
       if (res.status === 200) {
@@ -100,6 +104,8 @@ export const useLogIn = () => {
         severity: "error",
         message: err.response.data.errors.join("\r\n"),
       });
+    } finally {
+      setLoading(false);
     }
   };
 

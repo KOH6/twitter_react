@@ -3,7 +3,10 @@ import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { CONFIRM_SUCCESS_URL } from "../urls/index";
+
 import { flashState } from "../globalStates/atoms/flashAtom";
+import { loadingState } from "../globalStates/atoms/loadingAtom";
+
 import { signUp } from "../apis/auth";
 
 const signUpFields = [
@@ -58,6 +61,7 @@ export const useSignUp = () => {
 
   const navigate = useNavigate();
   const setFlash = useSetRecoilState(flashState);
+  const setLoading = useSetRecoilState(loadingState);
 
   const onChangeUser = (e) => {
     const { name, value } = e.target;
@@ -81,6 +85,8 @@ export const useSignUp = () => {
     }
 
     try {
+      setLoading(true);
+
       const signUpParams = {
         ...user,
         confirm_success_url: CONFIRM_SUCCESS_URL,
@@ -109,6 +115,8 @@ export const useSignUp = () => {
         severity: "error",
         message: err.response.data.errors.full_messages.join("\r\n"),
       });
+    } finally {
+      setLoading(false);
     }
   };
 
