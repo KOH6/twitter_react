@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 import { flashState } from "../globalStates/atoms/flashAtom";
@@ -22,14 +22,32 @@ const logInFields = [
 ];
 
 export const useLogIn = () => {
-  const navigate = useNavigate();
-
   const initialUser = {
     email: "",
     password: "",
   };
-
   const [user, setUser] = useState(initialUser);
+
+  const navigate = useNavigate();
+  const setFlash = useSetRecoilState(flashState);
+
+  const query = new URLSearchParams(useLocation().search);
+  // 文字列で取得されるため、Booleanに型変換する
+  const isAccountConfirmationSuccess = JSON.parse(
+    query.get("account_confirmation_success")
+  );
+
+  // メール認証後のログイン画面表示時のみflashを表示する
+  useEffect(() => {
+    if (!isAccountConfirmationSuccess) return;
+
+    setFlash({
+      isOpen: true,
+      severity: "success",
+      message: "メール認証に成功しました。\r\nログインを行ってください。",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onChangeUser = (e) => {
     const { name, value } = e.target;
@@ -39,8 +57,6 @@ export const useLogIn = () => {
   const isBlankSomeField = (user) => {
     return Object.keys(user).some((key) => !user[key]);
   };
-
-  const setFlash = useSetRecoilState(flashState);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

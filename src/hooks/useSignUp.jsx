@@ -46,8 +46,6 @@ const signUpFields = [
 ];
 
 export const useSignUp = () => {
-  const navigate = useNavigate();
-
   const initialUser = {
     name: "",
     email: "",
@@ -56,10 +54,10 @@ export const useSignUp = () => {
     phone: "",
     birthdate: "",
   };
-
   const [user, setUser] = useState(initialUser);
 
-  const signUpParams = { ...user, confirm_success_url: CONFIRM_SUCCESS_URL };
+  const navigate = useNavigate();
+  const setFlash = useSetRecoilState(flashState);
 
   const onChangeUser = (e) => {
     const { name, value } = e.target;
@@ -69,8 +67,6 @@ export const useSignUp = () => {
   const isBlankSomeField = (user) => {
     return Object.keys(user).some((key) => !user[key]);
   };
-
-  const setFlash = useSetRecoilState(flashState);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,6 +81,10 @@ export const useSignUp = () => {
     }
 
     try {
+      const signUpParams = {
+        ...user,
+        confirm_success_url: CONFIRM_SUCCESS_URL,
+      };
       const res = await signUp(signUpParams);
 
       if (res.status === 200) {
