@@ -1,21 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
-import { CONFIRM_SUCCESS_URL } from "../urls/index";
-
-import { flashState } from "../globalStates/atoms";
+import { currentUserState, flashState } from "../globalStates/atoms";
 import { loadingState } from "../globalStates/atoms";
 
-import { signUp } from "../apis/auth";
+import { logIn } from "../apis/auth";
 
-const signUpFields = [
-  {
-    label: "ユーザ名",
-    name: "name",
-    type: "text",
-    helperText: "",
-  },
+const logInFields = [
   {
     name: "email",
     label: "メールアドレス",
@@ -28,41 +21,39 @@ const signUpFields = [
     type: "password",
     helperText: "6文字以上",
   },
-  {
-    name: "password_confirmation",
-    label: "パスワード(確認)",
-    type: "password",
-    helperText: "",
-  },
-  {
-    name: "phone",
-    label: "電話番号",
-    type: "text",
-    helperText: "",
-  },
-  {
-    name: "birthdate",
-    label: "生年月日",
-    type: "date",
-    helperText: "",
-  },
 ];
 
 const initialUser = {
-  name: "",
   email: "",
   password: "",
-  password_confirmation: "",
-  phone: "",
-  birthdate: "",
 };
 
-export const useSignUp = () => {
+export const useLogIn = () => {
   const [user, setUser] = useState(initialUser);
 
   const navigate = useNavigate();
+
   const setFlash = useSetRecoilState(flashState);
   const setLoading = useSetRecoilState(loadingState);
+  const setCurrentUser = useSetRecoilState(currentUserState);
+
+  const query = new URLSearchParams(useLocation().search);
+  // 文字列で取得されるため、Booleanに型変換する
+  const isAccountConfirmationSuccess = JSON.parse(
+    query.get("account_confirmation_success")
+  );
+
+  // メール認証後のログイン画面表示時のみflashを表示する
+  useEffect(() => {
+    if (!isAccountConfirmationSuccess) return;
+
+    setFlash({
+      isOpen: true,
+      severity: "success",
+      message: "メール認証に成功しました。\r\nログインを行ってください。",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onChangeUser = (e) => {
     const { name, value } = e.target;
@@ -87,26 +78,26 @@ export const useSignUp = () => {
 
     try {
       setLoading(true);
-
-      const signUpParams = {
-        ...user,
-        confirm_success_url: CONFIRM_SUCCESS_URL,
-      };
-      const res = await signUp(signUpParams);
+      const res = await logIn(user);
 
       if (res.status === 200) {
+        // Cookieにログイン情報のtokenを保持
+        Cookies.set("_access_token", res.headers["access-token"]);
+        Cookies.set("_client", res.headers["client"]);
+        Cookies.set("_uid", res.headers["uid"]);
+
         navigate("/home");
 
         setFlash({
           isOpen: true,
           severity: "success",
-          message: "認証メールを送信しました。\r\nメールを確認してください。",
+          message: "ログインに成功しました。",
         });
       } else {
         setFlash({
           isOpen: true,
           severity: "error",
-          message: res.data.errors.full_messages.join("\r\n"),
+          message: res.data.errors.join("\r\n"),
         });
       }
     } catch (err) {
@@ -114,7 +105,7 @@ export const useSignUp = () => {
       setFlash({
         isOpen: true,
         severity: "error",
-        message: err.response.data.errors.full_messages.join("\r\n"),
+        message: err.response.data.errors.join("\r\n"),
       });
     } finally {
       setLoading(false);
@@ -123,7 +114,7 @@ export const useSignUp = () => {
 
   return {
     user,
-    signUpFields,
+    logInFields,
     onChangeUser,
     handleSubmit,
   };
