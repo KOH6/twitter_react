@@ -48,15 +48,16 @@ const signUpFields = [
   },
 ];
 
+const initialUser = {
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+  phone: "",
+  birthdate: "",
+};
+
 export const useSignUp = () => {
-  const initialUser = {
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-    phone: "",
-    birthdate: "",
-  };
   const [user, setUser] = useState(initialUser);
 
   const navigate = useNavigate();
