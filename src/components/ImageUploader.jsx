@@ -1,44 +1,40 @@
 import React from "react";
+
 import IconButton from "@mui/material/IconButton";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { Grid } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
+import { Grid } from "@mui/material";
 
 export const ImageUploader = (props) => {
+  const { images, setImages } = props;
+
   const inputId = Math.random().toString(32).substring(2);
 
-  const handleOnAddImage = async (e) => {
-    if (!e.target.files) return;
+  const handleAttachImage = async (e) => {
+    const addFiles = e.target.files;
+    if (!addFiles) return;
+
     const files = [];
+    Object.values(addFiles).forEach((file) => files.push(file));
+    setImages([...images, ...files]);
 
-    for (const file of e.target.files) {
-      files.push(file);
-    }
-
-    props.setImages([...props.images, ...files]);
     e.target.value = "";
   };
 
-  const handleOnRemoveImage = (index) => {
-    const newImages = [...props.images];
+  const handleRemoveImage = (index) => {
+    const newImages = [...images];
     newImages.splice(index, 1);
-    props.setImages(newImages);
+    setImages(newImages);
   };
 
   return (
     <>
-      <Grid
-        container
-        spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 8, sm: 12, md: 12 }}
-      >
-        {props.images.map((image, i) => (
+      <Grid container spacing={3} columns={12}>
+        {images.map((image, index) => (
           <Grid
+            key={index}
             item
             xs={4}
-            sm={4}
-            md={4}
-            key={i}
             sx={{
               display: "flex",
               justifyContent: "start",
@@ -54,7 +50,7 @@ export const ImageUploader = (props) => {
                 right: 0,
                 color: "#aaa",
               }}
-              onClick={() => handleOnRemoveImage(i)}
+              onClick={() => handleRemoveImage(index)}
             >
               <CancelIcon />
             </IconButton>
@@ -87,7 +83,7 @@ export const ImageUploader = (props) => {
           type="file"
           multiple
           accept="image/*,.png,.jpg,.jpeg,.gif"
-          onChange={(e) => handleOnAddImage(e)}
+          onChange={(e) => handleAttachImage(e)}
           style={{ display: "none" }}
         />
       </label>
