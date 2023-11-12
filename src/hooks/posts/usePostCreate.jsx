@@ -19,7 +19,7 @@ export const usePostCreate = () => {
   const setFlash = useSetRecoilState(flashState);
   const setLoading = useSetRecoilState(loadingState);
 
-  const onChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setPost((prevPost) => ({ ...prevPost, [name]: value }));
   };
@@ -94,7 +94,7 @@ export const usePostCreate = () => {
     post,
     images,
     setImages,
-    onChange,
+    handleChange,
     handleSubmit,
   };
 };

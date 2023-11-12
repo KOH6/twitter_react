@@ -3,7 +3,8 @@ import { PostForm } from "../components/forms/PostForm";
 import { usePostCreate } from "../hooks/posts/usePostCreate";
 
 export const PostIndex = () => {
-  const { post, images, setImages, onChange, handleSubmit } = usePostCreate();
+  const { post, images, setImages, handleChange, handleSubmit } =
+    usePostCreate();
 
   return (
     <>
@@ -12,7 +13,7 @@ export const PostIndex = () => {
         post={post}
         images={images}
         setImages={setImages}
-        handleChange={onChange}
+        handleChange={handleChange}
         handleSubmit={handleSubmit}
       />
     </>
