@@ -29,7 +29,7 @@ export const ImageUploader = (props) => {
 
   return (
     <>
-      <Grid container spacing={3} columns={12}>
+      <Grid container spacing={3} columns={12} sx={{ mb: 2 }}>
         {images.map((image, index) => (
           <Grid
             key={index}
@@ -67,26 +67,31 @@ export const ImageUploader = (props) => {
           </Grid>
         ))}
       </Grid>
-      <label htmlFor={inputId}>
-        <ImageIcon
-          color="primary"
-          fontSize="large"
-          sx={{
-            "&:hover": {
-              cursor: "pointer",
-              opacity: "0.8",
-            },
-          }}
-        />
-        <input
-          id={inputId}
-          type="file"
-          multiple
-          accept="image/*,.png,.jpg,.jpeg,.gif"
-          onChange={(e) => handleAttachImage(e)}
-          style={{ display: "none" }}
-        />
-      </label>
+      <div style={{ position: "relative" }}>
+        <label htmlFor={inputId}>
+          <ImageIcon
+            color="primary"
+            fontSize="large"
+            sx={{
+              position: "absolute",
+              left: 0,
+              bottom: 0,
+              "&:hover": {
+                cursor: "pointer",
+                opacity: "0.8",
+              },
+            }}
+          />
+          <input
+            id={inputId}
+            type="file"
+            multiple
+            accept="image/*,.png,.jpg,.jpeg,.gif"
+            onChange={(e) => handleAttachImage(e)}
+            style={{ display: "none" }}
+          />
+        </label>
+      </div>
     </>
   );
 };

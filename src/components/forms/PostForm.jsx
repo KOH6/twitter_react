@@ -4,8 +4,8 @@ import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import { Box, Grid } from "@mui/material";
-import ImageIcon from "@mui/icons-material/Image";
+import { Grid } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
 
 import { ImageUploader } from "../ImageUploader.jsx";
 
@@ -16,37 +16,27 @@ export const PostForm = (props) => {
     <form>
       <Card sx={{ width: "50%", margin: "3rem auto", textAlign: "center" }}>
         <CardContent>
-          <Grid container spacing={2}>
-            <Grid item={true} xs={1}>
-              <ImageIcon />
+          <Grid container>
+            <Grid item xs={3} sm={2} md={1} sx={{ textAlign: "left" }}>
+              <PersonIcon fontSize="large" />
             </Grid>
-            <Grid item={true} xs={11}>
+            <Grid item xs={9} sm={10} md={11}>
               <TextField
                 required
                 fullWidth
                 multiline
                 rows={4}
-                margin="normal"
                 name="content"
                 value={post.content}
                 InputLabelProps={{ shrink: true }}
                 onChange={handleChange}
               />
             </Grid>
-          </Grid>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <ImageIcon />
-            </div>
-            <div>
+            <Grid item xs={12} sx={{ mt: 7 }}>
+              <ImageUploader images={images} setImages={setImages} />
+            </Grid>
+            <Grid item xs={12} sx={{ textAlign: "right" }}>
               <Button
-                sx={{ margin: "1rem auto" }}
                 type="submit"
                 variant="contained"
                 size="large"
@@ -54,9 +44,8 @@ export const PostForm = (props) => {
               >
                 ポストする
               </Button>
-            </div>
-          </Box>
-          <ImageUploader images={images} setImages={setImages} />
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
     </form>
