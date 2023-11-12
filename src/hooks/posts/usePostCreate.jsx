@@ -58,6 +58,8 @@ export const usePostCreate = () => {
         await attachImages(formData, imageHeaders);
       }
 
+      setPost(inititalPost);
+      setImages([]);
       navigate("/home");
 
       setFlash({
