@@ -1,5 +1,21 @@
 import React from "react";
+import { PostForm } from "../components/forms/PostForm";
+import { usePostCreate } from "../hooks/posts/usePostCreate";
 
 export const PostIndex = () => {
-  return <div>ツイート一覧画面</div>;
+  const { post, images, setImages, handleChange, handleSubmit } =
+    usePostCreate();
+
+  return (
+    <>
+      <div>ツイート一覧画面</div>
+      <PostForm
+        post={post}
+        images={images}
+        setImages={setImages}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />
+    </>
+  );
 };
