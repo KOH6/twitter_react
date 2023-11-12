@@ -23,11 +23,12 @@ const logInFields = [
   },
 ];
 
+const initialUser = {
+  email: "",
+  password: "",
+};
+
 export const useLogIn = () => {
-  const initialUser = {
-    email: "",
-    password: "",
-  };
   const [user, setUser] = useState(initialUser);
 
   const navigate = useNavigate();
