@@ -3,33 +3,24 @@ import React from "react";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
 import Button from "@mui/material/Button";
 import { Box, Grid } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import ImageIcon from "@mui/icons-material/Image";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
+import { ImageUploader } from "../ImageUploader.jsx";
 
 export const PostForm = (props) => {
-  const { post, handleChange, handleSubmit } = props;
+  const { post, images, setImages, handleChange, handleSubmit } = props;
 
   return (
     <form>
       <Card sx={{ width: "50%", margin: "3rem auto", textAlign: "center" }}>
         <CardContent>
           <Grid container spacing={2}>
-            <Grid xs={1}>
+            <Grid item={true} xs={1}>
               <ImageIcon />
             </Grid>
-            <Grid xs={11}>
+            <Grid item={true} xs={11}>
               <TextField
                 required
                 fullWidth
@@ -65,6 +56,7 @@ export const PostForm = (props) => {
               </Button>
             </div>
           </Box>
+          <ImageUploader images={images} setImages={setImages} />
         </CardContent>
       </Card>
     </form>

@@ -7,19 +7,19 @@ import Cookies from "js-cookie";
 import { flashState, loadingState } from "../../globalStates/atoms";
 import { createPost, attachImages } from "../../apis/posts";
 
+const inititalPost = {
+  content: "",
+};
+
 export const usePostCreate = () => {
-  const inititalPost = {
-    content: "",
-    // images: [],
-  };
   const [post, setPost] = useState(inititalPost);
+  const [images, setImages] = useState([]);
 
   const navigate = useNavigate();
   const setFlash = useSetRecoilState(flashState);
   const setLoading = useSetRecoilState(loadingState);
 
   const onChange = (e) => {
-    // 画像対応必要かも
     const { name, value } = e.target;
     setPost((prevPost) => ({ ...prevPost, [name]: value }));
   };
@@ -33,6 +33,7 @@ export const usePostCreate = () => {
         severity: "info",
         message: "本文が未入力です",
       });
+      return;
     }
 
     try {
@@ -44,10 +45,18 @@ export const usePostCreate = () => {
         uid: Cookies.get("_uid"),
       };
 
-      // 本文の登録
-      const postResponse = await createPost({ post: post }, headers);
-      // 画像の登録
-      const imageResponre = await attachImages({ post: post }, headers);
+      // 本文を登録する
+      const postResponse = await createPost(post, headers);
+
+      // 画像添付されている場合、FormDataを作成し画像を登録する
+      if (images.length !== 0) {
+        const formData = createFormData(postResponse);
+        const imageHeaders = {
+          ...headers,
+          "content-type": "multipart/form-data",
+        };
+        await attachImages(formData, imageHeaders);
+      }
 
       navigate("/home");
 
@@ -68,8 +77,21 @@ export const usePostCreate = () => {
     }
   };
 
+  const createFormData = (postResponse) => {
+    const formData = new FormData();
+
+    formData.append("post_id", postResponse.data.data.id);
+    images.forEach((image) => {
+      formData.append("images[]", image);
+    });
+
+    return formData;
+  };
+
   return {
     post,
+    images,
+    setImages,
     onChange,
     handleSubmit,
   };
