@@ -3,11 +3,13 @@ import { useSetRecoilState } from "recoil";
 
 import { loadingState } from "../../globalStates/atoms";
 import { fetchPosts } from "../../apis/posts";
+
 const LIMIT = 10;
+
 const initialPostsData = {
   posts: [],
   prevOffset: 0,
-  nextOffset: 0,
+  nextOffset: LIMIT,
 };
 
 export const useAllPostsFetch = () => {
@@ -42,9 +44,8 @@ export const useAllPostsFetch = () => {
 
   const fetchPagenatePosts = async (offset) => {
     const { data } = await fetchPosts(LIMIT, offset);
-    console.log("data", data);
-
     const fetchedData = data.data;
+
     if (fetchedData.length === LIMIT) {
       setPostsData((prev) => ({
         ...prev,
@@ -53,7 +54,12 @@ export const useAllPostsFetch = () => {
         nextOffset: data.nextOffset,
       }));
     } else {
-      setPostsData((prev) => ({ ...prev, posts: fetchedData }));
+      // LIMITに満たない件数のデータが取得される=「次へ」で取得するデータが存在しないため、nextOffsetは更新しない。
+      setPostsData((prev) => ({
+        ...prev,
+        posts: fetchedData,
+        prevOffset: data.prevOffset,
+      }));
     }
   };
 

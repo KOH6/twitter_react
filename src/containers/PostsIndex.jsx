@@ -7,7 +7,7 @@ import { Button, Stack } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
-export const PostIndex = () => {
+export const PostsIndex = () => {
   const { postsData, fetchPagenatePosts, handleClickPrev, handleClickNext } =
     useAllPostsFetch();
   const posts = postsData.posts;
