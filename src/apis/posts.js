@@ -10,7 +10,6 @@ export const attachImages = (formData, headers) => {
   return axios.post(images, formData, { headers: headers });
 };
 
-export const fetchAllPosts = (limit, offset) => {
-  // TODO limit, offset対応
-  return axios.get(tweets);
+export const fetchPosts = (limit = 20, offset) => {
+  return axios.get(`${tweets}?limit=${limit}}&offset=${offset}}`);
 };
