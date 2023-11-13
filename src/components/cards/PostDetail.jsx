@@ -1,10 +1,14 @@
 import React from "react";
 
-import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { Grid, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import RepeatIcon from "@mui/icons-material/Repeat";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
 export const PostDetail = (props) => {
   const { post } = props;
@@ -20,7 +24,11 @@ export const PostDetail = (props) => {
             <PersonIcon fontSize="large" />
           </Grid>
           <Grid item xs={11}>
-            <Typography variant="body1" sx={{ textAlign: "left" }} gutterBottom>
+            <Typography
+              variant="body1"
+              sx={{ px: 3, textAlign: "left" }}
+              gutterBottom
+            >
               {post.content}
             </Typography>
             {post.image_paths.map((image_path, index) => (
@@ -35,6 +43,20 @@ export const PostDetail = (props) => {
                 alt=""
               />
             ))}
+            <Box sx={{ mt: 2 }}>
+              <Stack
+                spacing={{ xs: 1, sm: 2 }}
+                direction="row"
+                useFlexGap
+                flexWrap="wrap"
+                justifyContent="space-around"
+              >
+                <ChatBubbleOutlineIcon />
+                <RepeatIcon />
+                <FavoriteBorderIcon />
+                <BookmarkBorderIcon />
+              </Stack>
+            </Box>
           </Grid>
         </Grid>
       </CardContent>
