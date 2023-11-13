@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { useNavigate } from "react-router-dom";
 
-import { flashState, loadingState } from "../../globalStates/atoms";
+import { loadingState } from "../../globalStates/atoms";
 import { fetchPosts } from "../../apis/posts";
-
 const LIMIT = 10;
-
 const initialPostsData = {
   posts: [],
   prevOffset: 0,
@@ -15,25 +12,35 @@ const initialPostsData = {
 
 export const useAllPostsFetch = () => {
   const [postsData, setPostsData] = useState(initialPostsData);
-  const posts = postsData.posts;
 
   const setLoading = useSetRecoilState(loadingState);
 
   useEffect(() => {
-    (async () => await pagenatePosts(0))();
+    (async () => {
+      setLoading(true);
+      await fetchPagenatePosts(0);
+      setLoading(false);
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClickPrev = () => {
-    (async () => await pagenatePosts(postsData.prevOffset))();
+    (async () => {
+      setLoading(true);
+      await fetchPagenatePosts(postsData.prevOffset);
+      setLoading(false);
+    })();
   };
 
   const handleClickNext = () => {
-    (async () => await pagenatePosts(postsData.nextOffset))();
+    (async () => {
+      setLoading(true);
+      await fetchPagenatePosts(postsData.nextOffset);
+      setLoading(false);
+    })();
   };
 
-  const pagenatePosts = async (offset) => {
-    setLoading(true);
+  const fetchPagenatePosts = async (offset) => {
     const { data } = await fetchPosts(LIMIT, offset);
     console.log("data", data);
 
@@ -48,12 +55,12 @@ export const useAllPostsFetch = () => {
     } else {
       setPostsData((prev) => ({ ...prev, posts: fetchedData }));
     }
-    setLoading(false);
   };
 
   return {
-    posts,
+    postsData,
     handleClickPrev,
     handleClickNext,
+    fetchPagenatePosts,
   };
 };

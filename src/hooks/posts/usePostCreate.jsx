@@ -13,7 +13,9 @@ const inititalPost = {
 
 const MAX_LENGTH = 140;
 
-export const usePostCreate = () => {
+export const usePostCreate = (props) => {
+  const { fetchPagenatePosts } = props;
+
   const [post, setPost] = useState(inititalPost);
   const [images, setImages] = useState([]);
 
@@ -72,6 +74,9 @@ export const usePostCreate = () => {
       setPost(inititalPost);
       setImages([]);
       navigate("/home");
+
+      // 作成した投稿を描画するために再度fetchする
+      await fetchPagenatePosts(0);
 
       setFlash({
         isOpen: true,

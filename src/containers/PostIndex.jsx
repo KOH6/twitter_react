@@ -8,15 +8,17 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
 export const PostIndex = () => {
+  const { postsData, fetchPagenatePosts, handleClickPrev, handleClickNext } =
+    useAllPostsFetch();
+  const posts = postsData.posts;
+
   const {
     post: newPost,
     images,
     setImages,
     handleChange,
     handleSubmit,
-  } = usePostCreate();
-
-  const { posts, handleClickPrev, handleClickNext } = useAllPostsFetch();
+  } = usePostCreate({ fetchPagenatePosts });
 
   return (
     <>
