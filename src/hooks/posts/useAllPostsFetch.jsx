@@ -7,10 +7,15 @@ import { fetchPosts } from "../../apis/posts";
 
 const LIMIT = 10;
 
+const initialPostsData = {
+  posts: [],
+  prevOffset: 0,
+  nextOffset: 0,
+};
+
 export const useAllPostsFetch = () => {
-  const [posts, setPosts] = useState([]);
-  const [prevOffset, setPrevOffset] = useState(0);
-  const [nextOffset, setNextOffset] = useState(0);
+  const [postsData, setPostsData] = useState(initialPostsData);
+  const posts = postsData.posts;
 
   const setLoading = useSetRecoilState(loadingState);
 
@@ -20,11 +25,11 @@ export const useAllPostsFetch = () => {
   }, []);
 
   const handleClickPrev = () => {
-    (async () => await pagenatePosts(prevOffset))();
+    (async () => await pagenatePosts(postsData.prevOffset))();
   };
 
   const handleClickNext = () => {
-    (async () => await pagenatePosts(nextOffset))();
+    (async () => await pagenatePosts(postsData.nextOffset))();
   };
 
   const pagenatePosts = async (offset) => {
@@ -33,10 +38,15 @@ export const useAllPostsFetch = () => {
     console.log("data", data);
 
     const fetchedData = data.data;
-    setPosts(fetchedData);
     if (fetchedData.length === LIMIT) {
-      setPrevOffset(data.prevOffset);
-      setNextOffset(data.nextOffset);
+      setPostsData((prev) => ({
+        ...prev,
+        posts: fetchedData,
+        prevOffset: data.prevOffset,
+        nextOffset: data.nextOffset,
+      }));
+    } else {
+      setPostsData((prev) => ({ ...prev, posts: fetchedData }));
     }
     setLoading(false);
   };
