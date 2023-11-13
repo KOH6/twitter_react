@@ -24,7 +24,7 @@ export const PostIndex = () => {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
       />
-      {posts.map((post, index) => (
+      {posts.map((post) => (
         <PostDetail key={post.id} post={post}></PostDetail>
       ))}
     </>

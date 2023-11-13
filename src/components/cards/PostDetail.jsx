@@ -16,39 +16,26 @@ export const PostDetail = (props) => {
     >
       <CardContent>
         <Grid container>
-          <Grid item xs={3} sm={2} md={1} sx={{ textAlign: "left" }}>
+          <Grid item xs={1} sx={{ textAlign: "left" }}>
             <PersonIcon fontSize="large" />
           </Grid>
-          <Grid item xs={9} sm={10} md={11}>
+          <Grid item xs={11}>
             <Typography variant="body1" sx={{ textAlign: "left" }} gutterBottom>
               {post.content}
             </Typography>
-          </Grid>
-          {post.images &&
-            post.images.map((image, index) => (
-              <Grid
+            {post.image_paths.map((image_path, index) => (
+              <img
                 key={index}
-                item
-                xs={4}
-                sx={{
-                  display: "flex",
-                  justifyContent: "start",
-                  alignItems: "center",
-                  position: "relative",
+                src={image_path}
+                style={{
+                  width: "80%",
+                  margin: "1rem auto",
+                  borderRadius: "10px",
                 }}
-              >
-                <img
-                  src={URL.createObjectURL(image)}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                    aspectRatio: "1 / 1",
-                  }}
-                  alt=""
-                />
-              </Grid>
+                alt=""
+              />
             ))}
+          </Grid>
         </Grid>
       </CardContent>
     </Card>
