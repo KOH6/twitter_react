@@ -50,15 +50,15 @@ export const useAllPostsFetch = () => {
       setPostsData((prev) => ({
         ...prev,
         posts: fetchedData,
-        prevOffset: data.prevOffset,
-        nextOffset: data.nextOffset,
+        prevOffset: data.prev_offset,
+        nextOffset: data.next_offset,
       }));
     } else {
       // LIMITに満たない件数のデータが取得される=「次へ」で取得するデータが存在しないため、nextOffsetは更新しない。
       setPostsData((prev) => ({
         ...prev,
         posts: fetchedData,
-        prevOffset: data.prevOffset,
+        prevOffset: data.prev_offset,
       }));
     }
   };
