@@ -12,18 +12,14 @@ export const PostsIndex = () => {
     useAllPostsFetch();
   const posts = postsData.posts;
 
-  const {
-    post: newPost,
-    images,
-    setImages,
-    handleChange,
-    handleSubmit,
-  } = usePostCreate({ fetchPagenatePosts });
+  const { post, images, setImages, handleChange, handleSubmit } = usePostCreate(
+    { fetchPagenatePosts }
+  );
 
   return (
     <>
       <PostForm
-        post={newPost}
+        post={post}
         images={images}
         setImages={setImages}
         handleChange={handleChange}
