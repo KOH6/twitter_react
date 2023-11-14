@@ -1,6 +1,6 @@
 import "./App.css";
 import { RecoilRoot } from "recoil";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Router, Routes, Route } from "react-router-dom";
 
 import { ThemeProvider, createTheme } from "@mui/material";
 import { blue } from "@mui/material/colors";
@@ -11,6 +11,7 @@ import { PostsIndex } from "./containers/PostsIndex";
 import { PostsShow } from "./containers/PostsShow";
 import { Page404 } from "./pages/Page404";
 
+import { Layout } from "./layouts/Layout";
 import { ToastMessage } from "./components/utils/ToastMessage";
 import { Spinner } from "./components/utils/Spinner";
 
@@ -26,11 +27,17 @@ function App() {
       <RecoilRoot>
         <Router>
           <Routes>
-            <Route exact path="/home" element={<PostsIndex />}></Route>
             <Route exact path="/signup" element={<SignUp />}></Route>
             <Route exact path="/login" element={<LogIn />}></Route>
-            <Route exact path="/:user_name/:id" element={<PostsShow />}></Route>
-            <Route path="*" element={<Page404 />}></Route>
+            <Route path="/" element={<Layout />}>
+              <Route exact path="/home" element={<PostsIndex />}></Route>
+              <Route
+                exact
+                path="/:user_name/:id"
+                element={<PostsShow />}
+              ></Route>
+              <Route path="*" element={<Page404 />}></Route>
+            </Route>
           </Routes>
         </Router>
         <ToastMessage />

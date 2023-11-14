@@ -14,7 +14,7 @@ export const PostForm = (props) => {
 
   return (
     <form>
-      <Card sx={{ width: "50%", margin: "3rem auto", textAlign: "center" }}>
+      <Card sx={{ width: "80%", margin: "3rem auto", textAlign: "center" }}>
         <CardContent>
           <Grid container>
             <Grid item xs={3} sm={2} md={1} sx={{ textAlign: "left" }}>
