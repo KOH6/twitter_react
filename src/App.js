@@ -30,7 +30,7 @@ function App() {
             <Route exact path="/signup" element={<SignUp />}></Route>
             <Route exact path="/login" element={<LogIn />}></Route>
             <Route path="/" element={<Layout />}>
-              <Route exact path="/home" element={<PostsIndex />}></Route>
+              <Route path="/home" element={<PostsIndex />}></Route>
               <Route
                 exact
                 path="/:user_name/:id"

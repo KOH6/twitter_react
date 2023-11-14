@@ -16,7 +16,7 @@ export const PostDetail = (props) => {
   return (
     <Card
       variant="outlined"
-      sx={{ width: "50%", margin: "0 auto", textAlign: "center" }}
+      sx={{ width: "80%", margin: "0 auto", textAlign: "center" }}
     >
       <CardContent>
         <Grid container>
