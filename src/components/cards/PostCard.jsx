@@ -22,7 +22,7 @@ export const PostCard = (props) => {
     >
       <CardActionArea
         onClick={() => {
-          navigate(`/${post.id}`);
+          navigate(`/${post.user.name}/${post.id}`);
         }}
       >
         <CardContent>

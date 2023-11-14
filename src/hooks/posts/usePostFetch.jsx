@@ -3,7 +3,7 @@ import { useSetRecoilState } from "recoil";
 
 import { loadingState } from "../../globalStates/atoms";
 import { fetchPost } from "../../apis/posts";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const inititalPost = {
   content: "",
@@ -15,6 +15,7 @@ export const usePostFetch = () => {
   const { id } = useParams();
 
   const setLoading = useSetRecoilState(loadingState);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -30,9 +31,9 @@ export const usePostFetch = () => {
       const res = await fetchPost(id);
       setPost(res.data);
     } catch (err) {
-      // TODO データがなかった時のエラーハンドリング
-      // NotFoundページに遷移する
+      // TODO データがなかった場合、NotFoundページに遷移する
       console.log("err", err);
+      navigate("/not_found");
     }
   };
 
