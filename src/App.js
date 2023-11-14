@@ -8,6 +8,7 @@ import { blue } from "@mui/material/colors";
 import { SignUp } from "./containers/SignUp.jsx";
 import { LogIn } from "./containers/LogIn";
 import { PostsIndex } from "./containers/PostsIndex";
+import { PostsShow } from "./containers/PostsShow";
 
 import { ToastMessage } from "./components/utils/ToastMessage";
 import { Spinner } from "./components/utils/Spinner";
@@ -27,6 +28,7 @@ function App() {
             <Route exact path="/signup" element={<SignUp />}></Route>
             <Route exact path="/login" element={<LogIn />}></Route>
             <Route exact path="/home" element={<PostsIndex />}></Route>
+            <Route exact path="/:id" element={<PostsShow />}></Route>
           </Routes>
         </Router>
 
