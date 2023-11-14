@@ -9,3 +9,7 @@ export const createPost = (post, headers) => {
 export const attachImages = (formData, headers) => {
   return axios.post(images, formData, { headers: headers });
 };
+
+export const fetchPosts = (limit, offset) => {
+  return axios.get(`${tweets}?limit=${limit}}&offset=${offset}}`);
+};

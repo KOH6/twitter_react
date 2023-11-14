@@ -11,7 +11,11 @@ const inititalPost = {
   content: "",
 };
 
-export const usePostCreate = () => {
+const MAX_LENGTH = 140;
+
+export const usePostCreate = (props) => {
+  const { fetchPagenatePosts } = props;
+
   const [post, setPost] = useState(inititalPost);
   const [images, setImages] = useState([]);
 
@@ -32,6 +36,15 @@ export const usePostCreate = () => {
         isOpen: true,
         severity: "info",
         message: "本文が未入力です",
+      });
+      return;
+    }
+
+    if (post.content.length >= MAX_LENGTH) {
+      setFlash({
+        isOpen: true,
+        severity: "error",
+        message: "ポストは140文字以内で入力してください。",
       });
       return;
     }
@@ -61,6 +74,9 @@ export const usePostCreate = () => {
       setPost(inititalPost);
       setImages([]);
       navigate("/home");
+
+      // 作成した投稿を描画するために再度fetchする
+      await fetchPagenatePosts(0);
 
       setFlash({
         isOpen: true,
