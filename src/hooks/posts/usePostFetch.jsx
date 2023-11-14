@@ -31,7 +31,7 @@ export const usePostFetch = () => {
       const res = await fetchPost(id);
       setPost(res.data);
     } catch (err) {
-      // TODO データがなかった場合、NotFoundページに遷移する
+      // データがなかった場合、NotFoundページに遷移する
       console.log("err", err);
       navigate("/not_found");
     }

@@ -1,6 +1,6 @@
 import "./App.css";
 import { RecoilRoot } from "recoil";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { ThemeProvider, createTheme } from "@mui/material";
 import { blue } from "@mui/material/colors";
@@ -25,7 +25,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <RecoilRoot>
-        <BrowserRouter>
+        <Router>
           <Routes>
             <Route exact path="/signup" element={<SignUp />}></Route>
             <Route exact path="/login" element={<LogIn />}></Route>
@@ -39,7 +39,7 @@ function App() {
               <Route path="*" element={<Page404 />}></Route>
             </Route>
           </Routes>
-        </BrowserRouter>
+        </Router>
         <ToastMessage />
         <Spinner />
       </RecoilRoot>
