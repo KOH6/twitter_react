@@ -10,7 +10,7 @@ import RepeatIcon from "@mui/icons-material/Repeat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
-export const PostDetail = (props) => {
+export const PostCard = (props) => {
   const { post } = props;
 
   return (
