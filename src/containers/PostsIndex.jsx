@@ -1,7 +1,7 @@
 import React from "react";
 import { PostForm } from "../components/forms/PostForm";
 import { usePostCreate } from "../hooks/posts/usePostCreate";
-import { PostDetail } from "../components/cards/PostDetail";
+import { PostCard } from "../components/cards/PostCard";
 import { useAllPostsFetch } from "../hooks/posts/useAllPostsFetch";
 import { Button, Stack } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -49,7 +49,7 @@ export const PostsIndex = () => {
         </Button>
       </Stack>
       {posts.map((post) => (
-        <PostDetail key={post.id} post={post}></PostDetail>
+        <PostCard key={post.id} post={post}></PostCard>
       ))}
     </>
   );

@@ -32,7 +32,7 @@ export const ImageUploader = (props) => {
       <Grid container spacing={3} columns={12} sx={{ mb: 2 }}>
         {images.map((image, index) => (
           <Grid
-            key={index}
+            key={`newImage-${index}`}
             item
             xs={4}
             sx={{

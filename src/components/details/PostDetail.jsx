@@ -16,7 +16,7 @@ export const PostDetail = (props) => {
   return (
     <Card
       variant="outlined"
-      sx={{ width: "50%", margin: "0 auto", textAlign: "center" }}
+      sx={{ width: "80%", margin: "0 auto", textAlign: "center" }}
     >
       <CardContent>
         <Grid container>
@@ -31,9 +31,9 @@ export const PostDetail = (props) => {
             >
               {post.content}
             </Typography>
-            {post.image_paths.map((image_path, index) => (
+            {post.image_paths?.map((image_path, index) => (
               <img
-                key={index}
+                key={`post-${post.id}-image-${index}`}
                 src={image_path}
                 style={{
                   width: "80%",
