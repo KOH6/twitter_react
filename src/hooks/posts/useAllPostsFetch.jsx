@@ -46,19 +46,13 @@ export const useAllPostsFetch = () => {
     const { data } = await fetchPosts(LIMIT, offset);
     const fetchedData = data.data;
 
-    if (fetchedData.length === LIMIT) {
+    // fetchした際に次に表示するデータがある場合のみ、次の表示データとして格納する。
+    if (fetchedData.length !== 0) {
       setPostsData((prev) => ({
         ...prev,
         posts: fetchedData,
         prevOffset: data.prev_offset,
         nextOffset: data.next_offset,
-      }));
-    } else {
-      // LIMITに満たない件数のデータが取得される=「次へ」で取得するデータが存在しないため、nextOffsetは更新しない。
-      setPostsData((prev) => ({
-        ...prev,
-        posts: fetchedData,
-        prevOffset: data.prev_offset,
       }));
     }
   };
