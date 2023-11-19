@@ -27,16 +27,12 @@ function App() {
       <RecoilRoot>
         <Router>
           <Routes>
-            <Route exact path="/signup" element={<SignUp />}></Route>
-            <Route exact path="/login" element={<LogIn />}></Route>
+            <Route exact path="/signup" element={<SignUp />} />
+            <Route exact path="/login" element={<LogIn />} />
             <Route path="/" element={<Layout />}>
-              <Route path="/home" element={<PostsIndex />}></Route>
-              <Route
-                exact
-                path="/:user_name/:id"
-                element={<PostsShow />}
-              ></Route>
-              <Route path="*" element={<Page404 />}></Route>
+              <Route path="/home" element={<PostsIndex />} />
+              <Route exact path="/:user_name/:id" element={<PostsShow />} />
+              <Route path="*" element={<Page404 />} />
             </Route>
           </Routes>
         </Router>

@@ -6,9 +6,5 @@ import { usePostFetch } from "../hooks/posts/usePostFetch";
 export const PostsShow = () => {
   const { post } = usePostFetch();
 
-  return (
-    <>
-      <PostDetail post={post}></PostDetail>
-    </>
-  );
+  return <PostDetail post={post} />;
 };
