@@ -40,7 +40,7 @@ export const PostCard = (props) => {
               </Typography>
               {post.image_paths.map((image_path, index) => (
                 <img
-                  key={index}
+                  key={`post-${post.id}-image-${index}`}
                   src={image_path}
                   style={{
                     width: "80%",
