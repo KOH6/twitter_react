@@ -86,6 +86,8 @@ export const useLogIn = () => {
         Cookies.set("_client", res.headers["client"]);
         Cookies.set("_uid", res.headers["uid"]);
 
+        setCurrentUser(res.data);
+
         navigate("/home");
 
         setFlash({
