@@ -16,42 +16,42 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import Button from "@mui/material/Button";
 
-const navItems = [
-  {
-    icon: <HomeOutlinedIcon sx={{ fontSize: 40 }} />,
-    href: "/home",
-    title: "ホーム",
-  },
-  {
-    icon: <NotificationsOutlinedIcon sx={{ fontSize: 40 }} />,
-    href: "/home",
-    title: "通知",
-  },
-  {
-    icon: <MailOutlineIcon sx={{ fontSize: 40 }} />,
-    href: "/home",
-    title: "メッセージ",
-  },
-  {
-    icon: <BookmarkBorderIcon sx={{ fontSize: 40 }} />,
-    href: "/home",
-    title: "ブックマーク",
-  },
-  {
-    icon: <PersonOutlineIcon sx={{ fontSize: 40 }} />,
-    href: "/home",
-    title: "プロフィール",
-  },
-  {
-    icon: <ExitToAppIcon sx={{ fontSize: 40 }} />,
-    href: "/home",
-    title: "退会",
-  },
-];
-
 export const Layout = () => {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setFlash = useSetRecoilState(flashState);
+
+  const navItems = [
+    {
+      icon: <HomeOutlinedIcon sx={{ fontSize: 40 }} />,
+      href: "/home",
+      title: "ホーム",
+    },
+    {
+      icon: <NotificationsOutlinedIcon sx={{ fontSize: 40 }} />,
+      href: "/home",
+      title: "通知",
+    },
+    {
+      icon: <MailOutlineIcon sx={{ fontSize: 40 }} />,
+      href: "/home",
+      title: "メッセージ",
+    },
+    {
+      icon: <BookmarkBorderIcon sx={{ fontSize: 40 }} />,
+      href: "/home",
+      title: "ブックマーク",
+    },
+    {
+      icon: <PersonOutlineIcon sx={{ fontSize: 40 }} />,
+      href: `/${currentUser.user_name}`,
+      title: "プロフィール",
+    },
+    {
+      icon: <ExitToAppIcon sx={{ fontSize: 40 }} />,
+      href: "/home",
+      title: "退会",
+    },
+  ];
 
   const isLogin = Object.keys(currentUser).length !== 0;
 
