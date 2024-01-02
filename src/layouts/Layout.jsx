@@ -8,8 +8,8 @@ import { currentUserState, flashState } from "../globalStates/atoms";
 import { UnLoggedInHome } from "../pages/UnLoggedInHome";
 
 import { Box, ListItem, Stack, Typography } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -18,12 +18,12 @@ import Button from "@mui/material/Button";
 
 const navItems = [
   {
-    icon: <HomeIcon sx={{ fontSize: 40 }} />,
+    icon: <HomeOutlinedIcon sx={{ fontSize: 40 }} />,
     href: "/home",
     title: "ホーム",
   },
   {
-    icon: <NotificationsIcon sx={{ fontSize: 40 }} />,
+    icon: <NotificationsOutlinedIcon sx={{ fontSize: 40 }} />,
     href: "/home",
     title: "通知",
   },
