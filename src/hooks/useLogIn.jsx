@@ -88,7 +88,7 @@ export const useLogIn = () => {
         Cookies.set("_uid", res.headers["uid"]);
 
         // プロフィール画像情報を取得するため、再度fetchする
-        const fetched = await fetchUser(res.data.data.id);
+        const fetched = await fetchUser(res.data.data.user_name);
         setCurrentUser(fetched.data);
 
         navigate("/home");

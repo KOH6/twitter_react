@@ -2,6 +2,6 @@ import axios from "axios";
 
 import { users } from "../urls/index";
 
-export const fetchUser = (id) => {
-  return axios.get(`${users}/${id}`);
+export const fetchUser = (user_name) => {
+  return axios.get(`${users}/${user_name}`);
 };
