@@ -19,32 +19,32 @@ import Button from "@mui/material/Button";
 const navItems = [
   {
     icon: <HomeIcon sx={{ fontSize: 40 }} />,
-    href: "/",
+    href: "/home",
     title: "ホーム",
   },
   {
     icon: <NotificationsIcon sx={{ fontSize: 40 }} />,
-    href: "/",
+    href: "/home",
     title: "通知",
   },
   {
     icon: <MailOutlineIcon sx={{ fontSize: 40 }} />,
-    href: "/",
+    href: "/home",
     title: "メッセージ",
   },
   {
     icon: <BookmarkBorderIcon sx={{ fontSize: 40 }} />,
-    href: "/",
+    href: "/home",
     title: "ブックマーク",
   },
   {
     icon: <PersonOutlineIcon sx={{ fontSize: 40 }} />,
-    href: "/",
+    href: "/home",
     title: "プロフィール",
   },
   {
     icon: <ExitToAppIcon sx={{ fontSize: 40 }} />,
-    href: "/",
+    href: "/home",
     title: "退会",
   },
 ];
