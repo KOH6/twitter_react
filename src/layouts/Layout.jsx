@@ -7,7 +7,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { currentUserState, flashState } from "../globalStates/atoms";
 import { UnLoggedInHome } from "../pages/UnLoggedInHome";
 
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, ListItem, Stack, Typography } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -95,15 +95,22 @@ export const Layout = () => {
                   {navItems.map(({ icon, href, title }) => (
                     <li className="mx-2 py-4" key={title}>
                       <NavLink to={href}>
-                        <Stack
-                          direction="row"
-                          justifyContent="flex-start"
-                          alignItems="center"
-                          spacing={3}
+                        <ListItem
+                          button
+                          sx={{
+                            padding: "0",
+                          }}
                         >
-                          {icon}
-                          <Typography variant="h5">{title}</Typography>
-                        </Stack>
+                          <Stack
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="center"
+                            spacing={3}
+                          >
+                            {icon}
+                            <Typography variant="h5">{title}</Typography>
+                          </Stack>
+                        </ListItem>
                       </NavLink>
                     </li>
                   ))}
