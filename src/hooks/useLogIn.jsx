@@ -7,6 +7,7 @@ import { currentUserState, flashState } from "../globalStates/atoms";
 import { loadingState } from "../globalStates/atoms";
 
 import { logIn } from "../apis/auth";
+import { fetchUser } from "../apis/users";
 
 const logInFields = [
   {
@@ -86,7 +87,9 @@ export const useLogIn = () => {
         Cookies.set("_client", res.headers["client"]);
         Cookies.set("_uid", res.headers["uid"]);
 
-        setCurrentUser(res.data);
+        // プロフィール画像情報を取得するため、再度fetchする
+        const fetched = await fetchUser(res.data.data.id);
+        setCurrentUser(fetched.data);
 
         navigate("/home");
 
