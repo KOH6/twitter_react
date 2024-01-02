@@ -6,11 +6,14 @@ import { useAllPostsFetch } from "../hooks/posts/useAllPostsFetch";
 import { Button, Stack } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import { useRecoilValue } from "recoil";
+import { currentUserState } from "../globalStates/atoms";
 
 export const PostsIndex = () => {
   const { postsData, fetchPagenatePosts, handleClickPrev, handleClickNext } =
     useAllPostsFetch();
   const posts = postsData.posts;
+  const currentUser = useRecoilValue(currentUserState);
 
   const { post, images, setImages, handleChange, handleSubmit } = usePostCreate(
     { fetchPagenatePosts }
@@ -19,6 +22,7 @@ export const PostsIndex = () => {
   return (
     <>
       <PostForm
+        user={currentUser}
         post={post}
         images={images}
         setImages={setImages}

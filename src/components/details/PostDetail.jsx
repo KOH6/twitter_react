@@ -3,7 +3,6 @@ import React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { Box, Grid, Stack, Typography } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
 
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import RepeatIcon from "@mui/icons-material/Repeat";
@@ -21,7 +20,15 @@ export const PostDetail = (props) => {
       <CardContent>
         <Grid container>
           <Grid item xs={1} sx={{ textAlign: "left" }}>
-            <PersonIcon fontSize="large" />
+            <img
+              key={`post-${post.id}-user-${post.user?.id}`}
+              src={post.user?.profile_image_path}
+              style={{
+                width: "80%",
+                borderRadius: "50%",
+              }}
+              alt=""
+            />
           </Grid>
           <Grid item xs={11}>
             <Typography
