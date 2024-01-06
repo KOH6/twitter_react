@@ -133,7 +133,7 @@ export const Layout = () => {
                 </Box>
               </nav>
             </aside>
-            <main className="flex-1 p-4 ml-80">
+            <main className="flex-1 ml-80">
               <Outlet />
             </main>
           </div>

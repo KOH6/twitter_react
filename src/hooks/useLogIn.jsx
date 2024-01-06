@@ -87,7 +87,7 @@ export const useLogIn = () => {
         Cookies.set("_client", res.headers["client"]);
         Cookies.set("_uid", res.headers["uid"]);
 
-        // プロフィール画像情報を取得するため、再度fetchする
+        // プロフィール画像やツイート一覧情報を取得する
         const fetched = await fetchUser(res.data.data.user_name);
         setCurrentUser(fetched.data);
 

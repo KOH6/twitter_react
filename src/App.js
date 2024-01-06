@@ -32,6 +32,7 @@ function App() {
             <Route exact path="/login" element={<LogIn />} />
             <Route path="/" element={<Layout />}>
               <Route exact path="/home" element={<PostsIndex />} />
+              <Route exact path="/not_found" element={<Page404 />} />
               <Route path="/:user_name" element={<UsersShow />} />
               <Route exact path="/:user_name/:id" element={<PostsShow />} />
               <Route path="*" element={<Page404 />} />
