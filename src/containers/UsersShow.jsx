@@ -1,50 +1,91 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Card, Box, Tab } from "@mui/material";
 
 import { UserDetail } from "../components/details/UserDetail";
-import { currentUserState } from "../globalStates/atoms";
-import { useRecoilValue } from "recoil";
 import { PostCard } from "../components/cards/PostCard";
-import { Card, Container } from "@mui/material";
+import { currentUserState, loadingState } from "../globalStates/atoms";
+import { fetchUser } from "../apis/users";
 
 export const UsersShow = () => {
   const currentUser = useRecoilValue(currentUserState);
+  const setLoading = useSetRecoilState(loadingState);
+  const [user, setUser] = useState(currentUser);
+  const { user_name } = useParams();
+  const navigate = useNavigate();
 
-  const [value, setValue] = React.useState("1");
+  const profileTabs = [
+    {
+      label: "ポスト",
+      value: "posts",
+      items: user.tweets.map((post) => <PostCard key={post.id} post={post} />),
+    },
+    {
+      label: "コメント一覧",
+      value: "comments",
+      items: "item2",
+    },
+    {
+      label: "いいね",
+      value: "likes",
+      items: "item3",
+    },
+    {
+      label: "フォロー",
+      value: "followings",
+      items: "item4",
+    },
+  ];
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const defaultTab = profileTabs[0].value;
+  const [selectedTab, setSelectedTab] = useState(defaultTab);
+
+  useEffect(() => {
+    // ログインユーザの場合はglobal stateの情報を使用して描画する。再度fetchしない。
+    if (user_name === currentUser.user_name) return;
+
+    // ログインユーザでない場合は該当ユーザの情報をfetchする。
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await fetchUser(user_name);
+        setUser(res.data);
+      } catch (err) {
+        // データがなかった場合、NotFoundページに遷移する
+        console.log("err", err);
+        navigate("/not_found");
+      } finally {
+        setLoading(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <Container>
-      <Card variant="outlined">
-        <UserDetail user={currentUser} />
-        <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList
-              onChange={handleChange}
-              aria-label="lab API tabs example"
-              centered
-              variant="fullWidth"
-            >
-              <Tab label="Item One" value="1" />
-              <Tab label="Item Two" value="2" />
-              <Tab label="Item Three" value="3" />
-            </TabList>
-          </Box>
-          <TabPanel value="1">Item One</TabPanel>
-          <TabPanel value="2">Item Two</TabPanel>
-          <TabPanel value="3">Item Three</TabPanel>
-        </TabContext>
-        {currentUser.tweets.map((post) => (
-          <PostCard key={post.id} post={post} />
+    <Card variant="outlined" sx={{ border: "none" }}>
+      <UserDetail user={user} />
+      <TabContext value={selectedTab}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <TabList
+            onChange={(e, selectedValue) => {
+              setSelectedTab(selectedValue);
+            }}
+            centered
+            variant="fullWidth"
+          >
+            {profileTabs.map((tab) => (
+              <Tab key={tab.value} label={tab.label} value={tab.value} />
+            ))}
+          </TabList>
+        </Box>
+        {profileTabs.map((tab) => (
+          <TabPanel key={tab.value} value={tab.value}>
+            {tab.items}
+          </TabPanel>
         ))}
-      </Card>
-    </Container>
+      </TabContext>
+    </Card>
   );
 };
