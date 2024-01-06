@@ -68,7 +68,7 @@ export const UsersShow = () => {
   return (
     <>
       {user && (
-        <Card variant="outlined" sx={{ border: "none" }}>
+        <Card variant="outlined" sx={{ border: "none", px: 0 }}>
           <UserDetail user={user} />
           <TabContext value={selectedTab}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -85,7 +85,7 @@ export const UsersShow = () => {
               </TabList>
             </Box>
             {profileTabs.map((tab) => (
-              <TabPanel key={tab.value} value={tab.value}>
+              <TabPanel sx={{ p: 0 }} key={tab.value} value={tab.value}>
                 {tab.items}
               </TabPanel>
             ))}

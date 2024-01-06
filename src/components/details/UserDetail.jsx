@@ -49,7 +49,7 @@ export const UserDetail = (props) => {
         <Typography gutterBottom color="text.secondary">
           {"@".concat(`${user.user_name}`)}
         </Typography>
-        <Typography variant="body2">{user.name}</Typography>
+        <Typography variant="body1">{user.introduction}</Typography>
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
