@@ -2,71 +2,63 @@ import React from "react";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { Box, Grid, Stack, Typography } from "@mui/material";
-
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import RepeatIcon from "@mui/icons-material/Repeat";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import CardActions from "@mui/material/CardActions";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShareIcon from "@mui/icons-material/Share";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 export const UserDetail = (props) => {
-  const { post } = props;
+  const { user } = props;
+  console.log("user", user);
 
   return (
-    <Card
-      variant="outlined"
-      sx={{ width: "80%", margin: "0 auto", textAlign: "center" }}
-    >
+    <Card variant="outlined" sx={{ border: "none" }}>
+      <CardHeader
+        title={`${user.name}`}
+        titleTypographyProps={{ variant: "h5" }}
+        subheader={`${user.tweets?.length}` + "件のポスト"}
+      />
+      <CardMedia
+        component="img"
+        height="10"
+        sx={{ height: "30vh", margin: "0 auto" }}
+        image={user.header_image_path}
+        alt="背景画像"
+      />
+      <CardHeader
+        avatar={
+          <Avatar
+            sx={{ height: "10vh", width: "10vh" }}
+            alt={`${user.name}`}
+            src={`${user.profile_image_path}`}
+          />
+        }
+        action={
+          <IconButton aria-label="settings">
+            <MoreVertIcon />
+          </IconButton>
+        }
+      />
       <CardContent>
-        <Grid container>
-          <Grid item xs={1} sx={{ textAlign: "left" }}>
-            <img
-              key={`post-${post.id}-user-${post.user?.id}`}
-              src={post.user?.profile_image_path}
-              style={{
-                width: "80%",
-                borderRadius: "50%",
-              }}
-              alt=""
-            />
-          </Grid>
-          <Grid item xs={11}>
-            <Typography
-              variant="body1"
-              sx={{ px: 3, textAlign: "left" }}
-              gutterBottom
-            >
-              {post.content}
-            </Typography>
-            {post.image_paths?.map((image_path, index) => (
-              <img
-                key={`post-${post.id}-image-${index}`}
-                src={image_path}
-                style={{
-                  width: "80%",
-                  margin: "1rem auto",
-                  borderRadius: "10px",
-                }}
-                alt=""
-              />
-            ))}
-            <Box sx={{ mt: 2 }}>
-              <Stack
-                spacing={{ xs: 1, sm: 2 }}
-                direction="row"
-                useFlexGap
-                flexWrap="wrap"
-                justifyContent="space-around"
-              >
-                <ChatBubbleOutlineIcon />
-                <RepeatIcon />
-                <FavoriteBorderIcon />
-                <BookmarkBorderIcon />
-              </Stack>
-            </Box>
-          </Grid>
-        </Grid>
+        <Typography variant="h5">{`${user.name}`}</Typography>
+        <Typography gutterBottom color="text.secondary">
+          {"@".concat(`${user.user_name}`)}
+        </Typography>
+        <Typography variant="body2">{user.name}</Typography>
       </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites">
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="share">
+          <ShareIcon />
+        </IconButton>
+      </CardActions>
     </Card>
   );
 };
