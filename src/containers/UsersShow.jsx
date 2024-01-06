@@ -12,7 +12,7 @@ import { fetchUser } from "../apis/users";
 export const UsersShow = () => {
   const currentUser = useRecoilValue(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
-  const [user, setUser] = useState(currentUser);
+  const [user, setUser] = useState(null);
   const { user_name } = useParams();
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ export const UsersShow = () => {
     {
       label: "ポスト",
       value: "posts",
-      items: user.tweets.map((post) => <PostCard key={post.id} post={post} />),
+      items: user?.tweets.map((post) => <PostCard key={post.id} post={post} />),
     },
     {
       label: "コメント一覧",
@@ -44,7 +44,9 @@ export const UsersShow = () => {
 
   useEffect(() => {
     // ログインユーザの場合はglobal stateの情報を使用して描画する。再度fetchしない。
-    if (user_name === currentUser.user_name) return;
+    if (user_name === currentUser.user_name) {
+      setUser(currentUser);
+    }
 
     // ログインユーザでない場合は該当ユーザの情報をfetchする。
     (async () => {
@@ -64,28 +66,32 @@ export const UsersShow = () => {
   }, []);
 
   return (
-    <Card variant="outlined" sx={{ border: "none" }}>
-      <UserDetail user={user} />
-      <TabContext value={selectedTab}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList
-            onChange={(e, selectedValue) => {
-              setSelectedTab(selectedValue);
-            }}
-            centered
-            variant="fullWidth"
-          >
+    <>
+      {user && (
+        <Card variant="outlined" sx={{ border: "none" }}>
+          <UserDetail user={user} />
+          <TabContext value={selectedTab}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                onChange={(e, selectedValue) => {
+                  setSelectedTab(selectedValue);
+                }}
+                centered
+                variant="fullWidth"
+              >
+                {profileTabs.map((tab) => (
+                  <Tab key={tab.value} label={tab.label} value={tab.value} />
+                ))}
+              </TabList>
+            </Box>
             {profileTabs.map((tab) => (
-              <Tab key={tab.value} label={tab.label} value={tab.value} />
+              <TabPanel key={tab.value} value={tab.value}>
+                {tab.items}
+              </TabPanel>
             ))}
-          </TabList>
-        </Box>
-        {profileTabs.map((tab) => (
-          <TabPanel key={tab.value} value={tab.value}>
-            {tab.items}
-          </TabPanel>
-        ))}
-      </TabContext>
-    </Card>
+          </TabContext>
+        </Card>
+      )}
+    </>
   );
 };
