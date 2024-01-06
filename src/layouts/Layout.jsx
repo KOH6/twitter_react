@@ -4,17 +4,17 @@ import Cookies from "js-cookie";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { NavLink, Outlet } from "react-router-dom";
 
-import { currentUserState, flashState } from "../globalStates/atoms";
-import { UnLoggedInHome } from "../pages/UnLoggedInHome";
-
-import { Box, ListItem, Stack, Typography } from "@mui/material";
+import { Box, Button, ListItem, Stack, Typography } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import Button from "@mui/material/Button";
+
+import { currentUserState, flashState } from "../globalStates/atoms";
+import { UnLoggedInHome } from "../pages/UnLoggedInHome";
+import { SideBarFooter } from "../components/SideBarFooter";
 
 export const Layout = () => {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -95,12 +95,7 @@ export const Layout = () => {
                   {navItems.map(({ icon, href, title }) => (
                     <li className="mx-2 py-4" key={title}>
                       <NavLink to={href}>
-                        <ListItem
-                          button
-                          sx={{
-                            padding: "0",
-                          }}
-                        >
+                        <ListItem button sx={{ p: 0 }}>
                           <Stack
                             direction="row"
                             justifyContent="flex-start"
@@ -120,16 +115,36 @@ export const Layout = () => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    my: 4,
                   }}
                 >
                   <Button
                     type="submit"
                     variant="contained"
                     size="large"
-                    onClick={handleLogout}
+                    onClick={() => {}}
+                    sx={{
+                      borderRadius: 50,
+                      fontWeight: "bold",
+                      width: "80%",
+                    }}
                   >
-                    ログアウト
+                    ポストする
                   </Button>
+                </Box>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    boxSizing: "border-box",
+                    width: "90%",
+                    bottom: 0,
+                    mb: 2,
+                  }}
+                >
+                  <SideBarFooter
+                    user={currentUser}
+                    handleLogout={handleLogout}
+                  />
                 </Box>
               </nav>
             </aside>

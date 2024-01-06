@@ -14,14 +14,13 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 export const UserDetail = (props) => {
   const { user } = props;
-  console.log("user", user);
 
   return (
     <Card variant="outlined" sx={{ border: "none" }}>
       <CardHeader
         title={`${user.name}`}
-        titleTypographyProps={{ variant: "h5" }}
-        subheader={`${user.tweets?.length}` + "件のポスト"}
+        titleTypographyProps={{ variant: "h5", fontWeight: "bold" }}
+        subheader={`${user.tweets?.length}`.concat("件のポスト")}
       />
       <CardMedia
         component="img"
@@ -33,7 +32,7 @@ export const UserDetail = (props) => {
       <CardHeader
         avatar={
           <Avatar
-            sx={{ height: "10vh", width: "10vh" }}
+            sx={{ height: "20%", width: "20%" }}
             alt={`${user.name}`}
             src={`${user.profile_image_path}`}
           />
@@ -45,20 +44,12 @@ export const UserDetail = (props) => {
         }
       />
       <CardContent>
-        <Typography variant="h5">{`${user.name}`}</Typography>
+        <Typography variant="h5" fontWeight="bold">{`${user.name}`}</Typography>
         <Typography gutterBottom color="text.secondary">
           {"@".concat(`${user.user_name}`)}
         </Typography>
         <Typography variant="body1">{user.introduction}</Typography>
       </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
     </Card>
   );
 };

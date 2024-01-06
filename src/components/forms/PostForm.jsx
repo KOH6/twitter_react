@@ -21,7 +21,10 @@ export const PostForm = (props) => {
 
   return (
     <form>
-      <Card variant="outlined" sx={{ border: "none" }}>
+      <Card
+        variant="outlined"
+        sx={{ borderRight: "none", borderLeft: "none", borderRadius: "0%" }}
+      >
         <CardContent>
           <Grid container>
             <Grid item xs={1} sx={{ textAlign: "left" }}>
