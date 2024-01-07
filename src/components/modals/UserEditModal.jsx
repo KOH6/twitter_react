@@ -104,10 +104,11 @@ export const UserEditModal = (props) => {
                 height: "4vh",
                 width: "4vh",
                 background: "grey",
+                opacity: "0.7",
                 "&:hover": {
                   background: "grey",
                   cursor: "pointer",
-                  opacity: "0.8",
+                  opacity: "0.6",
                 },
               }}
             >
@@ -155,10 +156,11 @@ export const UserEditModal = (props) => {
                 height: "4vh",
                 width: "4vh",
                 background: "grey",
+                opacity: "0.7",
                 "&:hover": {
                   background: "grey",
                   cursor: "pointer",
-                  opacity: "0.8",
+                  opacity: "0.6",
                 },
               }}
             >
