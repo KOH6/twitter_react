@@ -13,6 +13,7 @@ export const UsersShow = () => {
   const currentUser = useRecoilValue(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const [user, setUser] = useState(null);
+  const [isLoggedInUser, setIsLoggedInUser] = useState(false);
   const { user_name } = useParams();
   const navigate = useNavigate();
 
@@ -46,6 +47,8 @@ export const UsersShow = () => {
     // ログインユーザの場合はglobal stateの情報を使用して描画する。再度fetchしない。
     if (user_name === currentUser.user_name) {
       setUser(currentUser);
+      setIsLoggedInUser(true);
+      return;
     }
 
     // ログインユーザでない場合は該当ユーザの情報をfetchする。
@@ -60,16 +63,18 @@ export const UsersShow = () => {
         navigate("/not_found");
       } finally {
         setLoading(false);
+        setIsLoggedInUser(false);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user_name]);
 
   return (
     <>
+      {/* 初期描画時の画面ちらつき対策で、userの存在を明示的に確認した上でコンポーネントを描画する */}
       {user && (
         <Card variant="outlined" sx={{ border: "none", px: 0 }}>
-          <UserDetail user={user} />
+          <UserDetail user={user} isLoggedInUser={isLoggedInUser} />
           <TabContext value={selectedTab}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <TabList
