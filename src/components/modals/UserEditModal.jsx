@@ -36,13 +36,6 @@ const userEditFields = [
     helperText: "投稿上に表示されるアカウント名（表示名）です。",
   },
   {
-    label: "ユーザ名",
-    name: "user_name",
-    type: "text",
-    required: true,
-    helperText: "ユーザを固有に識別する名前です。",
-  },
-  {
     name: "birthdate",
     label: "生年月日",
     type: "date",
@@ -123,7 +116,6 @@ export const UserEditModal = (props) => {
 
       // プロフィールを更新する
       const formData = createFormData(user);
-      console.log("formData", ...formData.entries());
       const res = await updateUser(formData, headers);
 
       setCurrentUser(res.data);
@@ -143,6 +135,8 @@ export const UserEditModal = (props) => {
   const createFormData = (user) => {
     const formData = new FormData();
 
+    // keyとなるuser_nameと更新モーダル上の内容をappendする
+    formData.append("user_name", user["user_name"]);
     userEditFields.forEach(({ name }) => {
       formData.append(name, user[name]);
     });
