@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 import { styled } from "@mui/material/styles";
@@ -88,10 +87,8 @@ export const UserEditModal = (props) => {
 
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const [user, setUser] = useState(currentUser);
-  const [profileImage, setProfileImage] = useState(
-    currentUser.profile_image_path
-  );
-  const [headerImage, setHeaderImage] = useState(currentUser.header_image_path);
+  const [profileImage, setProfileImage] = useState(null);
+  const [headerImage, setHeaderImage] = useState(null);
 
   const setFlash = useSetRecoilState(flashState);
   const setLoading = useSetRecoilState(loadingState);
@@ -102,7 +99,7 @@ export const UserEditModal = (props) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setter(URL.createObjectURL(file));
+    setter(file);
     e.target.value = "";
   };
 
@@ -149,6 +146,8 @@ export const UserEditModal = (props) => {
     userEditFields.forEach(({ name }) => {
       formData.append(name, user[name]);
     });
+    if (headerImage) formData.append("header_image", headerImage);
+    if (profileImage) formData.append("profile_image", profileImage);
 
     return formData;
   };
@@ -195,7 +194,13 @@ export const UserEditModal = (props) => {
             <CardMedia
               component="img"
               sx={{ height: "10vh", margin: "0 auto" }}
-              image={headerImage}
+              // 初期描画時はuserに格納されたurlを使用。
+              // 新たに添付された場合その画像からURLを生成して表示する。
+              src={
+                headerImage
+                  ? URL.createObjectURL(headerImage)
+                  : user.header_image_path
+              }
               alt="背景画像"
             />
             <IconButton
@@ -243,7 +248,11 @@ export const UserEditModal = (props) => {
             <Avatar
               sx={{ height: "8vh", width: "8vh" }}
               alt={`${user.name}`}
-              src={`${profileImage}`}
+              src={
+                profileImage
+                  ? URL.createObjectURL(profileImage)
+                  : user.profile_image_path
+              }
             />
             <IconButton
               sx={{
