@@ -66,8 +66,9 @@ export const UsersShow = () => {
         setIsLoggedInUser(false);
       }
     })();
+    // 別ユーザプロフィールへのURL遷移とログインユーザ情報の更新を検知
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user_name]);
+  }, [user_name, currentUser]);
 
   return (
     <>
