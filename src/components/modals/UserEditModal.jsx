@@ -10,8 +10,16 @@ import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import { IconButton, Modal, Toolbar, Typography } from "@mui/material";
+import {
+  Avatar,
+  CardMedia,
+  IconButton,
+  Modal,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
 
 import {
   currentUserState,
@@ -80,10 +88,11 @@ export const UserEditModal = (props) => {
 
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const [user, setUser] = useState(currentUser);
-  const [profileImage, setProfileImage] = useState([]);
-  const [headerImage, setHeaderImage] = useState([]);
+  const [profileImage, setProfileImage] = useState(
+    currentUser.profile_image_path
+  );
+  const [headerImage, setHeaderImage] = useState(currentUser.header_image_path);
 
-  const navigate = useNavigate();
   const setFlash = useSetRecoilState(flashState);
   const setLoading = useSetRecoilState(loadingState);
 
@@ -110,7 +119,8 @@ export const UserEditModal = (props) => {
 
       // プロフィールを更新する
       const formData = createFormData(user);
-      const res = await updateUser(user, headers);
+      console.log("formData", ...formData.entries());
+      const res = await updateUser(formData, headers);
 
       setCurrentUser(res.data);
       handleClose();
@@ -129,6 +139,10 @@ export const UserEditModal = (props) => {
   const createFormData = (user) => {
     const formData = new FormData();
 
+    userEditFields.forEach(({ name }) => {
+      formData.append(name, user[name]);
+    });
+
     return formData;
   };
 
@@ -136,10 +150,11 @@ export const UserEditModal = (props) => {
     <Modal
       open={open}
       onClose={handleClose}
-      sx={{ width: "50%", margin: "15vh auto", textAlign: "center" }}
+      sx={{ width: "50%", margin: "5vh auto", textAlign: "center" }}
     >
       <form>
         <Card>
+          {/* ヘッダー */}
           <Toolbar>
             <IconButton
               edge="start"
@@ -168,6 +183,60 @@ export const UserEditModal = (props) => {
               保存
             </ColorButton>
           </Toolbar>
+          {/* 背景画像 */}
+          <div style={{ position: "relative" }}>
+            <CardMedia
+              component="img"
+              sx={{ height: "10vh", margin: "0 auto" }}
+              image={headerImage}
+              alt="背景画像"
+            />
+            <IconButton
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                margin: "auto",
+                height: "4vh",
+                width: "4vh",
+                background: "grey",
+                "&:hover": {
+                  background: "grey",
+                  cursor: "pointer",
+                  opacity: "0.8",
+                },
+              }}
+            >
+              <label htmlFor={user.header_image_path}>
+                <AddAPhotoOutlinedIcon
+                  color="secondary"
+                  sx={{
+                    textAlign: "center",
+                    "&:hover": {
+                      cursor: "pointer",
+                    },
+                  }}
+                />
+                <input
+                  id={user.header_image_path}
+                  type="file"
+                  multiple
+                  accept="image/*,.png,.jpg,.jpeg,.gif"
+                  // onChange={(e) => handleAttachImage(e)}
+                  style={{ display: "none" }}
+                />
+              </label>
+            </IconButton>
+          </div>
+          {/* プロフィール画像 */}
+          <Avatar
+            sx={{ height: "12%", width: "12%", m: 1 }}
+            alt={`${user.name}`}
+            src={`${profileImage}`}
+          />
+          {/* テキスト項目 */}
           <CardContent>
             {userEditFields.map((field) => (
               <TextField
