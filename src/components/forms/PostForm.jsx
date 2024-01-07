@@ -35,8 +35,8 @@ export const PostForm = (props) => {
               >
                 <Avatar
                   sx={{
-                    height: "90%",
-                    width: "90%",
+                    height: "4vh",
+                    width: "4vh",
                     "&:hover": {
                       cursor: "pointer",
                       opacity: "0.8",
@@ -47,7 +47,7 @@ export const PostForm = (props) => {
                 />
               </CardActions>
             </Grid>
-            <Grid item xs={9} sm={10} md={11}>
+            <Grid item xs={11}>
               <TextField
                 required
                 fullWidth

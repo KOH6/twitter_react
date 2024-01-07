@@ -31,7 +31,7 @@ export const UserDetail = (props) => {
         <CardHeader
           avatar={
             <Avatar
-              sx={{ height: "20%", width: "20%" }}
+              sx={{ height: "8vh", width: "8vh" }}
               alt={`${user.name}`}
               src={`${user.profile_image_path}`}
             />

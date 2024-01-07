@@ -52,8 +52,8 @@ export const PostCard = (props) => {
               >
                 <Avatar
                   sx={{
-                    height: "90%",
-                    width: "90%",
+                    height: "4vh",
+                    width: "4vh",
                     "&:hover": {
                       cursor: "pointer",
                       opacity: "0.8",
