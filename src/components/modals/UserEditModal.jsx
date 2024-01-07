@@ -75,7 +75,7 @@ const userEditFields = [
   },
 ];
 
-const ColorButton = styled(Button)(({ theme }) => ({
+const SaveButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(grey[900]),
   backgroundColor: grey[900],
   "&:hover": {
@@ -96,8 +96,15 @@ export const UserEditModal = (props) => {
   const setFlash = useSetRecoilState(flashState);
   const setLoading = useSetRecoilState(loadingState);
 
-  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleAttachImage = (e, setter) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setter(URL.createObjectURL(file));
+    e.target.value = "";
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -171,7 +178,7 @@ export const UserEditModal = (props) => {
             >
               プロフィールを編集する
             </Typography>
-            <ColorButton
+            <SaveButton
               variant="contained"
               onClick={handleSubmit}
               sx={{
@@ -181,7 +188,7 @@ export const UserEditModal = (props) => {
               }}
             >
               保存
-            </ColorButton>
+            </SaveButton>
           </Toolbar>
           {/* 背景画像 */}
           <div style={{ position: "relative" }}>
@@ -222,20 +229,60 @@ export const UserEditModal = (props) => {
                 <input
                   id={user.header_image_path}
                   type="file"
-                  multiple
                   accept="image/*,.png,.jpg,.jpeg,.gif"
-                  // onChange={(e) => handleAttachImage(e)}
+                  onChange={(e) => handleAttachImage(e, setHeaderImage)}
                   style={{ display: "none" }}
                 />
               </label>
             </IconButton>
           </div>
           {/* プロフィール画像 */}
-          <Avatar
-            sx={{ height: "12%", width: "12%", m: 1 }}
-            alt={`${user.name}`}
-            src={`${profileImage}`}
-          />
+          <div
+            style={{ height: "8vh", width: "8vh", position: "relative", m: 1 }}
+          >
+            <Avatar
+              sx={{ height: "8vh", width: "8vh" }}
+              alt={`${user.name}`}
+              src={`${profileImage}`}
+            />
+            <IconButton
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                margin: "auto",
+                height: "4vh",
+                width: "4vh",
+                background: "grey",
+                "&:hover": {
+                  background: "grey",
+                  cursor: "pointer",
+                  opacity: "0.8",
+                },
+              }}
+            >
+              <label htmlFor={user.profile_image_path}>
+                <AddAPhotoOutlinedIcon
+                  color="secondary"
+                  sx={{
+                    textAlign: "center",
+                    "&:hover": {
+                      cursor: "pointer",
+                    },
+                  }}
+                />
+                <input
+                  id={user.profile_image_path}
+                  type="file"
+                  accept="image/*,.png,.jpg,.jpeg,.gif"
+                  onChange={(e) => handleAttachImage(e, setProfileImage)}
+                  style={{ display: "none" }}
+                />
+              </label>
+            </IconButton>
+          </div>
           {/* テキスト項目 */}
           <CardContent>
             {userEditFields.map((field) => (
