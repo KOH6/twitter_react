@@ -83,8 +83,6 @@ export const UserEditModal = (props) => {
   const [profileImage, setProfileImage] = useState([]);
   const [headerImage, setHeaderImage] = useState([]);
 
-  console.log("user", user);
-
   const navigate = useNavigate();
   const setFlash = useSetRecoilState(flashState);
   const setLoading = useSetRecoilState(loadingState);
@@ -121,7 +119,7 @@ export const UserEditModal = (props) => {
       setFlash({
         isOpen: true,
         severity: "error",
-        message: err.response.data.errors,
+        message: err.response.data.errors.join("\r\n"),
       });
     } finally {
       setLoading(false);
