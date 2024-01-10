@@ -1,21 +1,65 @@
 import React from "react";
+import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import {
   Avatar,
-  Box,
   Button,
   Card,
   CardActionArea,
   CardActions,
   CardHeader,
-  Icon,
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { ExpandableMenu } from "./utils/ExpandableMenu";
+
+import { confirmingState } from "../globalStates/atoms";
 
 export const SideBarFooter = (props) => {
   const { user, handleLogout } = props;
+  const setConfirming = useSetRecoilState(confirmingState);
+
   const navigate = useNavigate();
+
+  const menuItems = [
+    {
+      icon: null,
+      title: `@${user.user_name}からログアウト`,
+      onClick: () => setConfirming(confirming),
+    },
+  ];
+
+  /**
+   * 確認ダイアログ上の情報
+   */
+  const confirming = {
+    isOpen: true,
+    title: "Xからログアウトしますか？",
+    message: "いつでもログインし直すことができます。",
+    agree: (
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={(prev) => {
+          handleLogout();
+          setConfirming({ ...prev, isOpen: false });
+        }}
+        sx={{ borderRadius: 50 }}
+      >
+        ログアウト
+      </Button>
+    ),
+    disagree: (
+      <Button
+        variant="outlined"
+        color="secondary"
+        sx={{ borderRadius: 50, color: "black" }}
+        onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
+      >
+        キャンセル
+      </Button>
+    ),
+  };
 
   return (
     <Card
@@ -60,9 +104,10 @@ export const SideBarFooter = (props) => {
             </CardActions>
           }
           action={
-            <Icon>
-              <MoreHorizIcon />
-            </Icon>
+            <ExpandableMenu
+              displayIcon={<MoreHorizIcon />}
+              menuItems={menuItems}
+            />
           }
           title={`${user.name}`}
           titleTypographyProps={{
@@ -74,27 +119,6 @@ export const SideBarFooter = (props) => {
           subheaderTypographyProps={{ px: 1 }}
         />
       </CardActionArea>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Button
-          type="submit"
-          variant="outlined"
-          size="large"
-          onClick={handleLogout}
-          sx={{
-            borderRadius: 50,
-            fontWeight: "bold",
-            width: "80%",
-          }}
-        >
-          ログアウト
-        </Button>
-      </Box>
     </Card>
   );
 };
