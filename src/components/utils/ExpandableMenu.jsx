@@ -16,6 +16,11 @@ export const ExpandableMenu = (props) => {
       <Box
         sx={{
           zIndex: 10000,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "5vh",
+          width: "5vh",
           p: 0,
           "&:hover": {
             background: "#E4E4E4",

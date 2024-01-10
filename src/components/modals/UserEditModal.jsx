@@ -112,7 +112,14 @@ export const UserEditModal = (props) => {
                 },
               }}
             >
-              <label htmlFor={user.header_image_path}>
+              <label
+                htmlFor={user.header_image_path}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <AddAPhotoOutlinedIcon
                   color="secondary"
                   sx={{
@@ -164,7 +171,14 @@ export const UserEditModal = (props) => {
                 },
               }}
             >
-              <label htmlFor={user.profile_image_path}>
+              <label
+                htmlFor={user.profile_image_path}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <AddAPhotoOutlinedIcon
                   color="secondary"
                   sx={{
