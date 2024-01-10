@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import Cookies from "js-cookie";
+import React from "react";
+import { useRecoilValue } from "recoil";
 
 import {
   Avatar,
@@ -17,78 +16,17 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 
-import {
-  currentUserState,
-  flashState,
-  loadingState,
-} from "../../globalStates/atoms.js";
-import { createComment } from "../../apis/comments.js";
-import { formatDateTime } from "../../lib/utility.js";
+import { currentUserState } from "../../globalStates/atoms.js";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
-
-const inititalComment = {
-  content: "",
-};
-
-const MAX_LENGTH = 140;
+import { useCommentCreate } from "../../hooks/comments/useCommentCreate.jsx";
+import { formatDateTime } from "../../lib/utility.js";
 
 export const CommentCreateModal = (props) => {
   const { post, open, setOpen } = props;
-  const [comment, setComment] = useState(inititalComment);
   const currentUser = useRecoilValue(currentUserState);
-  const setLoading = useSetRecoilState(loadingState);
-  const setFlash = useSetRecoilState(flashState);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setComment((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCreateComment = async (e) => {
-    e.preventDefault();
-
-    if (comment.content.length >= MAX_LENGTH) {
-      setFlash({
-        isOpen: true,
-        severity: "error",
-        message: "コメントは140文字以内で入力してください。",
-      });
-      return;
-    }
-    try {
-      setLoading(true);
-
-      const headers = {
-        "access-token": Cookies.get("_access_token"),
-        client: Cookies.get("_client"),
-        uid: Cookies.get("_uid"),
-      };
-
-      const requestComment = {
-        post_id: post.id,
-        content: comment.content,
-      };
-      await createComment(requestComment, headers);
-
-      setOpen(false);
-      setComment(inititalComment);
-
-      setFlash({
-        isOpen: true,
-        severity: "success",
-        message: "コメントしました",
-      });
-    } catch (err) {
-      console.log("err", err);
-      setFlash({
-        isOpen: true,
-        severity: "error",
-        message: err.response.data.errors,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { comment, handleChange, handleCreateComment } =
+    useCommentCreate(props);
 
   return (
     <Modal
