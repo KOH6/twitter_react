@@ -27,10 +27,19 @@ export const useAllPostsFetch = () => {
   }, []);
 
   /**
-   * 投稿削除後、コメント投稿後は0ページ目の一覧の情報を再取得
+   * 投稿削除後は0ページ目の一覧の情報を再取得
    */
   const afterDeletePost = async () => await fetchPagenatePosts(0);
-  const afterCreateComment = async () => await fetchPagenatePosts(0);
+
+  /**
+   * コメント投稿後は現在表示中のページの一覧の情報を再取得
+   */
+  const afterCreateComment = async () => {
+    const { prevOffset, nextOffset } = postsData;
+    const currentOffset =
+      nextOffset - prevOffset === LIMIT ? 0 : nextOffset - LIMIT;
+    await fetchPagenatePosts(currentOffset);
+  };
 
   const handleClickPrev = () => {
     (async () => {
