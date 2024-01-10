@@ -65,6 +65,27 @@ export const PostCard = (props) => {
   const setConfirming = useSetRecoilState(confirmingState);
   const navigate = useNavigate();
 
+  const LoggedInMenuItems = [
+    {
+      icon: <DeleteOutlineIcon />,
+      title: "削除",
+      fontColor: "red",
+      onClick: () => setConfirming(confirming),
+    },
+  ];
+
+  // TODO フォロー済みかいなかでの分岐
+  const UnLoggedInMenuItems = [
+    {
+      icon: <PersonAddAltIcon />,
+      title: `@${post.user.user_name}をフォロー`,
+      onClick: () => {},
+    },
+  ];
+
+  /**
+   * 確認ダイアログ上の情報
+   */
   const confirming = {
     isOpen: true,
     title: "投稿を削除しますか？",
@@ -103,24 +124,6 @@ export const PostCard = (props) => {
       setConfirming((prev) => ({ ...prev, isOpen: false }));
     }
   };
-
-  const LoggedInMenuItems = [
-    {
-      icon: <DeleteOutlineIcon />,
-      title: "削除",
-      fontColor: "red",
-      onClick: () => setConfirming(confirming),
-    },
-  ];
-
-  // TODO フォロー済みかいなかでの分岐
-  const UnLoggedInMenuItems = [
-    {
-      icon: <PersonAddAltIcon />,
-      title: `@${post.user.user_name}をフォロー`,
-      onClick: () => {},
-    },
-  ];
 
   return (
     <Card
