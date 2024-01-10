@@ -15,6 +15,7 @@ import { Page404 } from "./pages/Page404";
 import { Layout } from "./layouts/Layout";
 import { ToastMessage } from "./components/utils/ToastMessage";
 import { Spinner } from "./components/utils/Spinner";
+import { ConfirmationDialog } from "./components/utils/ConfirmationDialog.jsx";
 
 const theme = createTheme({
   palette: {
@@ -42,6 +43,7 @@ function App() {
         </Router>
         <ToastMessage />
         <Spinner />
+        <ConfirmationDialog />
       </RecoilRoot>
     </ThemeProvider>
   );

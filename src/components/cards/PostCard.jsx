@@ -2,7 +2,11 @@ import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
-import { currentUserState, loadingState } from "../../globalStates/atoms.js";
+import {
+  confirmingState,
+  currentUserState,
+  loadingState,
+} from "../../globalStates/atoms.js";
 import { deletePost } from "../../apis/posts.js";
 
 import { formatDateTime } from "../../lib/utility.js";
@@ -13,6 +17,7 @@ import CardContent from "@mui/material/CardContent";
 import {
   Avatar,
   Box,
+  Button,
   CardActionArea,
   CardActions,
   CardHeader,
@@ -26,6 +31,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 const HeaderTitle = (props) => {
   const { header, subHeader } = props;
@@ -56,17 +62,45 @@ export const PostCard = (props) => {
 
   const currentUser = useRecoilValue(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
+  const setConfirming = useSetRecoilState(confirmingState);
   const navigate = useNavigate();
+
+  const confirming = {
+    isOpen: true,
+    title: "投稿を削除しますか？",
+    message:
+      "この操作は取り消せません。プロフィール、あなたをフォローしているアカウントのタイムラインから投稿が削除されます。 ",
+    agree: (
+      <Button
+        variant="contained"
+        color="error"
+        onClick={async () => await handleDelete()}
+      >
+        削除
+      </Button>
+    ),
+    disagree: (
+      <Button
+        variant="outlined"
+        color="secondary"
+        sx={{ color: "black" }}
+        onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
+      >
+        キャンセル
+      </Button>
+    ),
+  };
 
   const handleDelete = async () => {
     try {
       setLoading(true);
       await deletePost(post.id);
-      afterDeletePost();
+      await afterDeletePost();
     } catch (err) {
       console.log("err", err);
     } finally {
       setLoading(false);
+      setConfirming((prev) => ({ ...prev, isOpen: false }));
     }
   };
 
@@ -75,15 +109,15 @@ export const PostCard = (props) => {
       icon: <DeleteOutlineIcon />,
       title: "削除",
       fontColor: "red",
-      onClick: async () => await handleDelete(),
+      onClick: () => setConfirming(confirming),
     },
   ];
 
-  // TODO 非ログインユーザのMenuItems
+  // TODO フォロー済みかいなかでの分岐
   const UnLoggedInMenuItems = [
     {
-      icon: <DeleteOutlineIcon />,
-      title: "フォロー関係",
+      icon: <PersonAddAltIcon />,
+      title: `@${post.user.user_name}をフォロー`,
       onClick: () => {},
     },
   ];
