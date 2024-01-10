@@ -44,26 +44,18 @@ export const UsersShow = () => {
   const [selectedTab, setSelectedTab] = useState(defaultTab);
 
   useEffect(() => {
-    // ログインユーザの場合はglobal stateの情報を使用して描画する。再度fetchしない。
-    if (user_name === currentUser.user_name) {
-      setUser(currentUser);
-      setIsLoggedInUser(true);
-      return;
-    }
-
-    // ログインユーザでない場合は該当ユーザの情報をfetchする。
     (async () => {
       try {
         setLoading(true);
         const res = await fetchUser(user_name);
         setUser(res.data);
+        setIsLoggedInUser(user_name === currentUser.user_name);
       } catch (err) {
         // データがなかった場合、NotFoundページに遷移する
         console.log("err", err);
         navigate("/not_found");
       } finally {
         setLoading(false);
-        setIsLoggedInUser(false);
       }
     })();
     // 別ユーザプロフィールへのURL遷移とログインユーザ情報の更新を検知
