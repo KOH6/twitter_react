@@ -1,9 +1,12 @@
 import React from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
-import { loadingState } from "../../globalStates/atoms.js";
+import { currentUserState, loadingState } from "../../globalStates/atoms.js";
 import { deletePost } from "../../apis/posts.js";
+
+import { formatDateTime } from "../../lib/utility.js";
+import { ExpandableMenu } from "../utils/ExpandableMenu.jsx";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -17,16 +20,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-
-import { formatDateTime } from "../../lib/utility.js";
-import { ExpandableMenu } from "../utils/ExpandableMenu.jsx";
 
 const HeaderTitle = (props) => {
   const { header, subHeader } = props;
@@ -52,8 +51,10 @@ const HeaderTitle = (props) => {
 };
 
 export const PostCard = (props) => {
+  // 削除後の後処理はページごとに異なるので、propsで渡す
   const { post, afterDeletePost } = props;
 
+  const currentUser = useRecoilValue(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const navigate = useNavigate();
 
@@ -69,16 +70,21 @@ export const PostCard = (props) => {
     }
   };
 
-  const menuItems = [
-    {
-      icon: <DeleteOutlineIcon />,
-      title: "削除",
-      fontColor: "red",
-      onClick: async () => {
-        await handleDelete();
-      },
-    },
-  ];
+  const defaultMenuItems = [];
+
+  const deleteMenuItem = {
+    icon: <DeleteOutlineIcon />,
+    title: "削除",
+    fontColor: "red",
+    onClick: async () => await handleDelete(),
+  };
+
+  const createMenuItems = () => {
+    const isLoggedInUser = post.user.user_name === currentUser.user_name;
+    return isLoggedInUser
+      ? [deleteMenuItem, ...defaultMenuItems]
+      : defaultMenuItems;
+  };
 
   return (
     <Card
@@ -130,7 +136,7 @@ export const PostCard = (props) => {
                 action={
                   <ExpandableMenu
                     displayIcon={<MoreHorizIcon />}
-                    menuItems={menuItems}
+                    menuItems={createMenuItems()}
                   />
                 }
                 title={
