@@ -6,9 +6,19 @@ export const ExpandableMenu = (props) => {
   const [anchorEl, setAnchorEl] = useState(false);
   const open = Boolean(anchorEl);
 
-  const handleClick = (e, func) => {
+  const handleOpen = (e) => {
     e.stopPropagation();
-    func();
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleClose = (e) => {
+    e.stopPropagation();
+    setAnchorEl(false);
+  };
+
+  const handleItemClick = (e, handleClick) => {
+    e.stopPropagation();
+    handleClick();
   };
 
   return (
@@ -28,7 +38,8 @@ export const ExpandableMenu = (props) => {
             opacity: 0.99,
           },
         }}
-        onClick={(e) => handleClick(e, () => setAnchorEl(e.currentTarget))}
+        // onClick={(e) => handleClick(e, () => setAnchorEl(e.currentTarget))}
+        onClick={handleOpen}
       >
         {props.displayIcon}
       </Box>
@@ -36,7 +47,8 @@ export const ExpandableMenu = (props) => {
         id="fade-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={(e) => handleClick(e, () => setAnchorEl(false))}
+        // onClose={(e) => handleClick(e, () => setAnchorEl(false))}
+        onClose={handleClose}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "top" }}
       >
@@ -44,7 +56,7 @@ export const ExpandableMenu = (props) => {
           <MenuItem
             key={item.title}
             sx={{ p: 1, fontWeight: "bold", color: item.fontColor }}
-            onClick={(e) => handleClick(e, item.onClick)}
+            onClick={(e) => handleItemClick(e, item.onClick)}
           >
             {item.icon} {item.title}
           </MenuItem>
