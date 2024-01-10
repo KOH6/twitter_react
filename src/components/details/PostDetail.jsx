@@ -33,7 +33,7 @@ export const PostDetail = (props) => {
           <Grid item xs={11}>
             <Typography
               variant="body1"
-              sx={{ px: 3, textAlign: "left" }}
+              sx={{ px: 3, textAlign: "left", whiteSpace: "pre-line" }}
               gutterBottom
             >
               {post.content}

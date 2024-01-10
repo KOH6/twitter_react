@@ -56,6 +56,11 @@ export const PostForm = (props) => {
                 name="content"
                 value={post.content}
                 InputLabelProps={{ shrink: true }}
+                placeholder="いまどうしてる？"
+                variant="standard"
+                InputProps={{
+                  disableUnderline: true,
+                }}
                 onChange={handleChange}
               />
             </Grid>

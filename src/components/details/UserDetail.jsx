@@ -65,7 +65,9 @@ export const UserDetail = (props) => {
           <Typography gutterBottom color="text.secondary">
             {"@".concat(`${user.user_name}`)}
           </Typography>
-          <Typography variant="body1">{user.introduction}</Typography>
+          <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
+            {user.introduction}
+          </Typography>
         </CardContent>
       </Card>
       {/* 編集モーダル */}
