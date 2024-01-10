@@ -23,14 +23,16 @@ import RepeatIcon from "@mui/icons-material/Repeat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { formatDateTime } from "../../lib/utility.js";
 import { ExpandableMenu } from "../utils/ExpandableMenu.jsx";
 
 const menuItems = [
   {
-    icon: <Avatar sx={{ fontSize: 40 }} />,
-    title: "プロフィール",
+    icon: <DeleteOutlineIcon />,
+    title: "削除",
+    fontColor: "red",
     onClick: () => {
       console.log("click");
     },
@@ -110,11 +112,7 @@ export const PostCard = (props) => {
               <CardHeader
                 sx={{
                   p: 1,
-                  textAlign: "left",
-                  display: "flex",
-                  flexDirection: "row",
                 }}
-                direction="row"
                 action={
                   <ExpandableMenu
                     displayIcon={<MoreHorizIcon />}

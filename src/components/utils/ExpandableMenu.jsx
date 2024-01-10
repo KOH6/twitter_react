@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-import { Menu, MenuItem } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
+import { Icon, Menu, MenuItem } from "@mui/material";
 
 export const ExpandableMenu = (props) => {
   const [anchorEl, setAnchorEl] = useState(false);
@@ -14,16 +13,15 @@ export const ExpandableMenu = (props) => {
 
   return (
     <>
-      <IconButton
+      <Icon
         sx={{
           p: 0,
           zIndex: 10000,
         }}
-        disableSpacing
         onClick={(e) => handleClick(e, () => setAnchorEl(e.currentTarget))}
       >
         {props.displayIcon}
-      </IconButton>
+      </Icon>
       <Menu
         id="fade-menu"
         anchorEl={anchorEl}
@@ -31,7 +29,11 @@ export const ExpandableMenu = (props) => {
         onClose={(e) => handleClick(e, () => setAnchorEl(false))}
       >
         {props.menuItems.map((item) => (
-          <MenuItem onClick={(e) => handleClick(e, item.onClick)}>
+          <MenuItem
+            key={item.title}
+            sx={{ p: 1, fontWeight: "bold", color: item.fontColor }}
+            onClick={(e) => handleClick(e, item.onClick)}
+          >
             {item.icon} {item.title}
           </MenuItem>
         ))}
