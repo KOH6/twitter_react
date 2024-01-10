@@ -40,11 +40,9 @@ export const PostDetail = (props) => {
             </Typography>
             <Grid container>
               {post.image_paths?.map((image_path, index) => (
-                <Grid item xs={6}>
+                <Grid key={`post-${post.id}-image-${index}`} item xs={6}>
                   <img
-                    item
                     xs={8}
-                    key={`post-${post.id}-image-${index}`}
                     src={image_path}
                     style={{
                       width: "80%",
