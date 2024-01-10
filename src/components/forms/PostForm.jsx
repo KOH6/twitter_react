@@ -4,23 +4,50 @@ import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import { Grid } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
+import { Avatar, CardActions, Grid } from "@mui/material";
 
 import { ImageUploader } from "../ImageUploader.jsx";
 
 export const PostForm = (props) => {
-  const { post, images, setImages, handleChange, handleSubmit } = props;
+  const {
+    navigate,
+    user,
+    post,
+    images,
+    setImages,
+    handleChange,
+    handleSubmit,
+  } = props;
 
   return (
     <form>
-      <Card sx={{ width: "80%", margin: "3rem auto", textAlign: "center" }}>
+      <Card
+        variant="outlined"
+        sx={{ borderRight: "none", borderLeft: "none", borderRadius: "0%" }}
+      >
         <CardContent>
           <Grid container>
-            <Grid item xs={3} sm={2} md={1} sx={{ textAlign: "left" }}>
-              <PersonIcon fontSize="large" />
+            <Grid item xs={1} sx={{ textAlign: "left" }}>
+              <CardActions
+                onClick={() => {
+                  navigate(`/${user.user_name}`);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    height: "4vh",
+                    width: "4vh",
+                    "&:hover": {
+                      cursor: "pointer",
+                      opacity: "0.8",
+                    },
+                  }}
+                  alt={`${user.name}`}
+                  src={`${user.profile_image_path}`}
+                />
+              </CardActions>
             </Grid>
-            <Grid item xs={9} sm={10} md={11}>
+            <Grid item xs={11}>
               <TextField
                 required
                 fullWidth

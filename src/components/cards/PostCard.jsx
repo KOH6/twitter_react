@@ -2,8 +2,15 @@ import React from "react";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { Box, CardActionArea, Grid, Stack, Typography } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
+import {
+  Avatar,
+  Box,
+  CardActionArea,
+  CardActions,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import RepeatIcon from "@mui/icons-material/Repeat";
@@ -18,17 +25,44 @@ export const PostCard = (props) => {
   return (
     <Card
       variant="outlined"
-      sx={{ width: "80%", margin: "0 auto", textAlign: "center" }}
+      sx={{
+        textAlign: "center",
+        borderRight: "none",
+        borderLeft: "none",
+        borderRadius: "0%",
+      }}
     >
       <CardActionArea
         onClick={() => {
-          navigate(`/${post.user.name}/${post.id}`);
+          navigate(`/${post.user.user_name}/${post.id}`);
         }}
       >
         <CardContent>
           <Grid container>
             <Grid item xs={1} sx={{ textAlign: "left" }}>
-              <PersonIcon fontSize="large" />
+              <CardActions
+                sx={{
+                  zIndex: 10000,
+                }}
+                disableSpacing
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/${post.user.user_name}`);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    height: "4vh",
+                    width: "4vh",
+                    "&:hover": {
+                      cursor: "pointer",
+                      opacity: "0.8",
+                    },
+                  }}
+                  alt={`${post.user.name}`}
+                  src={`${post.user.profile_image_path}`}
+                />
+              </CardActions>
             </Grid>
             <Grid item xs={11}>
               <Typography

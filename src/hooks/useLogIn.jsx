@@ -7,6 +7,7 @@ import { currentUserState, flashState } from "../globalStates/atoms";
 import { loadingState } from "../globalStates/atoms";
 
 import { logIn } from "../apis/auth";
+import { fetchUser } from "../apis/users";
 
 const logInFields = [
   {
@@ -85,6 +86,10 @@ export const useLogIn = () => {
         Cookies.set("_access_token", res.headers["access-token"]);
         Cookies.set("_client", res.headers["client"]);
         Cookies.set("_uid", res.headers["uid"]);
+
+        // プロフィール画像やツイート一覧情報を取得する
+        const fetched = await fetchUser(res.data.data.user_name);
+        setCurrentUser(fetched.data);
 
         navigate("/home");
 

@@ -11,10 +11,16 @@ import { signUp } from "../apis/auth";
 
 const signUpFields = [
   {
-    label: "ユーザ名",
+    label: "表示名",
     name: "name",
     type: "text",
-    helperText: "",
+    helperText: "投稿上に表示されるアカウント名（表示名）です。",
+  },
+  {
+    label: "ユーザ名",
+    name: "user_name",
+    type: "text",
+    helperText: "ユーザを固有に識別する名前です。",
   },
   {
     name: "email",
