@@ -38,7 +38,7 @@ import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
 
 export const PostCard = (props) => {
   // 削除後の後処理はページごとに異なるので、propsで渡す
-  const { post, afterDeletePost } = props;
+  const { post, afterDeletePost, afterCreateComment } = props;
   const [open, setOpen] = useState(false);
 
   const currentUser = useRecoilValue(currentUserState);
@@ -67,7 +67,19 @@ export const PostCard = (props) => {
 
   const footerItems = [
     {
-      icon: <ChatBubbleOutlineIcon />,
+      icon: (
+        <Stack
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+        >
+          <ChatBubbleOutlineIcon />
+          {post.comment_count !== 0 && (
+            <Typography>{post.comment_count}</Typography>
+          )}
+        </Stack>
+      ),
       onClick: (e) => {
         e.stopPropagation();
         setOpen(true);
@@ -234,8 +246,6 @@ export const PostCard = (props) => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        height: "2rem",
-                        width: "2rem",
                         "&:hover": {
                           background: "#E4E4E4",
                           borderRadius: "50%",
@@ -253,7 +263,12 @@ export const PostCard = (props) => {
           </Grid>
         </CardContent>
       </CardActionArea>
-      <CommentCreateModal post={post} open={open} setOpen={setOpen} />
+      <CommentCreateModal
+        post={post}
+        open={open}
+        setOpen={setOpen}
+        afterCreateComment={afterCreateComment}
+      />
     </Card>
   );
 };

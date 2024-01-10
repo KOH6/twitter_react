@@ -27,9 +27,10 @@ export const useAllPostsFetch = () => {
   }, []);
 
   /**
-   * 投稿削除後は0ページ目の一覧に戻る
+   * 投稿削除後、コメント投稿後は0ページ目の一覧の情報を再取得
    */
   const afterDeletePost = async () => await fetchPagenatePosts(0);
+  const afterCreateComment = async () => await fetchPagenatePosts(0);
 
   const handleClickPrev = () => {
     (async () => {
@@ -68,5 +69,6 @@ export const useAllPostsFetch = () => {
     handleClickNext,
     fetchPagenatePosts,
     afterDeletePost,
+    afterCreateComment,
   };
 };

@@ -12,7 +12,7 @@ const inititalComment = {
 const MAX_LENGTH = 140;
 
 export const useCommentCreate = (props) => {
-  const { post, setOpen } = props;
+  const { post, setOpen, afterCreateComment } = props;
   const [comment, setComment] = useState(inititalComment);
   const setLoading = useSetRecoilState(loadingState);
   const setFlash = useSetRecoilState(flashState);
@@ -50,6 +50,7 @@ export const useCommentCreate = (props) => {
 
       setOpen(false);
       setComment(inititalComment);
+      await afterCreateComment();
 
       setFlash({
         isOpen: true,
