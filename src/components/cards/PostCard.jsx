@@ -251,7 +251,7 @@ export const PostCard = (props) => {
                     <Box
                       key={`post-${post.id}-fotterItem-${index}`}
                       sx={{
-                        zIndex: 10000,
+                        zIndex: 100,
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
