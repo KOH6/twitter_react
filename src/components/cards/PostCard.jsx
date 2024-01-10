@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
+
+import { loadingState } from "../../globalStates/atoms.js";
+import { deletePost } from "../../apis/posts.js";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,10 +14,6 @@ import {
   CardActions,
   CardHeader,
   Grid,
-  Icon,
-  IconButton,
-  Menu,
-  MenuItem,
   Stack,
   Typography,
 } from "@mui/material";
@@ -27,17 +27,6 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { formatDateTime } from "../../lib/utility.js";
 import { ExpandableMenu } from "../utils/ExpandableMenu.jsx";
-
-const menuItems = [
-  {
-    icon: <DeleteOutlineIcon />,
-    title: "削除",
-    fontColor: "red",
-    onClick: () => {
-      console.log("click");
-    },
-  },
-];
 
 const HeaderTitle = (props) => {
   const { header, subHeader } = props;
@@ -63,8 +52,33 @@ const HeaderTitle = (props) => {
 };
 
 export const PostCard = (props) => {
-  const { post } = props;
+  const { post, afterDeletePost } = props;
+
+  const setLoading = useSetRecoilState(loadingState);
   const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await deletePost(post.id);
+      afterDeletePost();
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const menuItems = [
+    {
+      icon: <DeleteOutlineIcon />,
+      title: "削除",
+      fontColor: "red",
+      onClick: async () => {
+        await handleDelete();
+      },
+    },
+  ];
 
   return (
     <Card
@@ -130,7 +144,7 @@ export const PostCard = (props) => {
               />
               <Typography
                 variant="body1"
-                sx={{ px: 3, textAlign: "left" }}
+                sx={{ px: 1, textAlign: "left" }}
                 gutterBottom
               >
                 {post.content}

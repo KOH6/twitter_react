@@ -17,3 +17,7 @@ export const createPost = (post, headers) => {
 export const attachImages = (formData, headers) => {
   return axios.post(images, formData, { headers: headers });
 };
+
+export const deletePost = (id) => {
+  return axios.delete(`${tweets}/${id}`);
+};
