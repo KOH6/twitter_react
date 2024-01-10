@@ -70,21 +70,23 @@ export const PostCard = (props) => {
     }
   };
 
-  const defaultMenuItems = [];
+  const LoggedInMenuItems = [
+    {
+      icon: <DeleteOutlineIcon />,
+      title: "削除",
+      fontColor: "red",
+      onClick: async () => await handleDelete(),
+    },
+  ];
 
-  const deleteMenuItem = {
-    icon: <DeleteOutlineIcon />,
-    title: "削除",
-    fontColor: "red",
-    onClick: async () => await handleDelete(),
-  };
-
-  const createMenuItems = () => {
-    const isLoggedInUser = post.user.user_name === currentUser.user_name;
-    return isLoggedInUser
-      ? [deleteMenuItem, ...defaultMenuItems]
-      : defaultMenuItems;
-  };
+  // TODO 非ログインユーザのMenuItems
+  const UnLoggedInMenuItems = [
+    {
+      icon: <DeleteOutlineIcon />,
+      title: "フォロー関係",
+      onClick: () => {},
+    },
+  ];
 
   return (
     <Card
@@ -136,7 +138,11 @@ export const PostCard = (props) => {
                 action={
                   <ExpandableMenu
                     displayIcon={<MoreHorizIcon />}
-                    menuItems={createMenuItems()}
+                    menuItems={
+                      post.user.user_name === currentUser.user_name
+                        ? LoggedInMenuItems
+                        : UnLoggedInMenuItems
+                    }
                   />
                 }
                 title={
