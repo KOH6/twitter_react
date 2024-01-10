@@ -199,18 +199,22 @@ export const PostCard = (props) => {
               >
                 {post.content}
               </Typography>
-              {post.image_paths.map((image_path, index) => (
-                <img
-                  key={`post-${post.id}-image-${index}`}
-                  src={image_path}
-                  style={{
-                    width: "80%",
-                    margin: "1rem auto",
-                    borderRadius: "10px",
-                  }}
-                  alt=""
-                />
-              ))}
+              <Grid container>
+                {post.image_paths.map((image_path, index) => (
+                  <Grid item xs={6}>
+                    <img
+                      key={`post-${post.id}-image-${index}`}
+                      src={image_path}
+                      style={{
+                        width: "80%",
+                        margin: "1rem auto",
+                        borderRadius: "10px",
+                      }}
+                      alt=""
+                    />
+                  </Grid>
+                ))}
+              </Grid>
               <Box sx={{ mt: 2 }}>
                 <Stack
                   spacing={{ xs: 1, sm: 2 }}
