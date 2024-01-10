@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -7,7 +8,12 @@ import {
   Box,
   CardActionArea,
   CardActions,
+  CardHeader,
   Grid,
+  Icon,
+  IconButton,
+  Menu,
+  MenuItem,
   Stack,
   Typography,
 } from "@mui/material";
@@ -16,7 +22,43 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import { useNavigate } from "react-router-dom";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+
+import { formatDateTime } from "../../lib/utility.js";
+import { ExpandableMenu } from "../utils/ExpandableMenu.jsx";
+
+const menuItems = [
+  {
+    icon: <Avatar sx={{ fontSize: 40 }} />,
+    title: "プロフィール",
+    onClick: () => {
+      console.log("click");
+    },
+  },
+];
+
+const HeaderTitle = (props) => {
+  const { header, subHeader } = props;
+
+  return (
+    <Stack
+      direction="row"
+      justifyContent="flex-start"
+      alignItems="center"
+      spacing={0}
+    >
+      <Typography
+        variant="body1"
+        sx={{ fontWeight: "bold", textAlign: "left" }}
+      >
+        {header}
+      </Typography>
+      <Typography variant="body1" sx={{ color: "grey", px: 1 }}>
+        {subHeader}
+      </Typography>
+    </Stack>
+  );
+};
 
 export const PostCard = (props) => {
   const { post } = props;
@@ -65,6 +107,29 @@ export const PostCard = (props) => {
               </CardActions>
             </Grid>
             <Grid item xs={11}>
+              <CardHeader
+                sx={{
+                  p: 1,
+                  textAlign: "left",
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+                direction="row"
+                action={
+                  <ExpandableMenu
+                    displayIcon={<MoreHorizIcon />}
+                    menuItems={menuItems}
+                  />
+                }
+                title={
+                  <HeaderTitle
+                    header={post.user.name}
+                    subHeader={`@${post.user.user_name}・${formatDateTime(
+                      new Date(post.created_at)
+                    )}`}
+                  />
+                }
+              />
               <Typography
                 variant="body1"
                 sx={{ px: 3, textAlign: "left" }}
