@@ -1,5 +1,4 @@
-import React from "react";
-import Cookies from "js-cookie";
+import React, { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
@@ -33,7 +32,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import { createComment } from "../../apis/comments.js";
+import { CommentCreateModal } from "../modals/CommentCreateModal.jsx";
 
 const HeaderTitle = (props) => {
   const { header, subHeader } = props;
@@ -61,10 +60,12 @@ const HeaderTitle = (props) => {
 export const PostCard = (props) => {
   // 削除後の後処理はページごとに異なるので、propsで渡す
   const { post, afterDeletePost } = props;
+  const [open, setOpen] = useState(false);
 
   const currentUser = useRecoilValue(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
+
   const navigate = useNavigate();
 
   const LoggedInMenuItems = [
@@ -88,19 +89,22 @@ export const PostCard = (props) => {
   const footerItems = [
     {
       icon: <ChatBubbleOutlineIcon />,
-      onClick: (e) => handleCreateComment(e),
+      onClick: (e) => {
+        e.stopPropagation();
+        setOpen(true);
+      },
     },
     {
       icon: <RepeatIcon />,
-      onClick: (e) => handleCreateComment(e),
+      onClick: () => {},
     },
     {
       icon: <FavoriteBorderIcon />,
-      onClick: (e) => handleCreateComment(e),
+      onClick: () => {},
     },
     {
       icon: <BookmarkBorderIcon />,
-      onClick: (e) => handleCreateComment(e),
+      onClick: () => {},
     },
   ];
 
@@ -144,33 +148,6 @@ export const PostCard = (props) => {
     } finally {
       setLoading(false);
       setConfirming((prev) => ({ ...prev, isOpen: false }));
-    }
-  };
-
-  const handleCreateComment = async (e) => {
-    e.stopPropagation();
-
-    try {
-      setLoading(true);
-
-      const headers = {
-        "access-token": Cookies.get("_access_token"),
-        client: Cookies.get("_client"),
-        uid: Cookies.get("_uid"),
-      };
-
-      // TODO:入力内容を画面から受け取る
-      const comment = {
-        post_id: post.id,
-        content: "form react",
-      };
-
-      // 本文を登録する
-      const res = await createComment(comment, headers);
-    } catch (err) {
-      console.log("err", err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -242,7 +219,7 @@ export const PostCard = (props) => {
               />
               <Typography
                 variant="body1"
-                sx={{ px: 1, textAlign: "left" }}
+                sx={{ px: 1, textAlign: "left", whiteSpace: "pre-line" }}
                 gutterBottom
               >
                 {post.content}
@@ -297,6 +274,7 @@ export const PostCard = (props) => {
           </Grid>
         </CardContent>
       </CardActionArea>
+      <CommentCreateModal post={post} open={open} setOpen={setOpen} />
     </Card>
   );
 };
