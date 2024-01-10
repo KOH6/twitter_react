@@ -9,18 +9,7 @@ export const ExpandableMenu = (props) => {
 
   const handleClick = (e, func) => {
     e.stopPropagation();
-    // item.onClick();
-    func(e);
-  };
-
-  const handleOpen = (e) => {
-    e.stopPropagation();
-    setAnchorEl(e.currentTarget);
-  };
-
-  const handleClose = (e) => {
-    e.stopPropagation();
-    setAnchorEl(false);
+    func();
   };
 
   return (
@@ -31,7 +20,7 @@ export const ExpandableMenu = (props) => {
           zIndex: 10000,
         }}
         disableSpacing
-        onClick={(e) => handleOpen(e)}
+        onClick={(e) => handleClick(e, () => setAnchorEl(e.currentTarget))}
       >
         {props.displayIcon}
       </IconButton>
@@ -39,7 +28,7 @@ export const ExpandableMenu = (props) => {
         id="fade-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={(e) => handleClose(e)}
+        onClose={(e) => handleClick(e, () => setAnchorEl(false))}
       >
         {props.menuItems.map((item) => (
           <MenuItem onClick={(e) => handleClick(e, item.onClick)}>
