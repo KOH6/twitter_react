@@ -1,16 +1,30 @@
 import React, { useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import Cookies from "js-cookie";
 
-import { Avatar, Grid, IconButton, Modal, Toolbar } from "@mui/material";
+import {
+  Avatar,
+  CardHeader,
+  Grid,
+  IconButton,
+  Modal,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { flashState, loadingState } from "../../globalStates/atoms.js";
+import {
+  currentUserState,
+  flashState,
+  loadingState,
+} from "../../globalStates/atoms.js";
 import { createComment } from "../../apis/comments.js";
+import { formatDateTime } from "../../lib/utility.js";
+import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
 
 const inititalComment = {
   content: "",
@@ -21,6 +35,7 @@ const MAX_LENGTH = 140;
 export const CommentCreateModal = (props) => {
   const { post, open, setOpen } = props;
   const [comment, setComment] = useState(inititalComment);
+  const currentUser = useRecoilValue(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const setFlash = useSetRecoilState(flashState);
 
@@ -31,15 +46,6 @@ export const CommentCreateModal = (props) => {
 
   const handleCreateComment = async (e) => {
     e.preventDefault();
-
-    if (!comment.content) {
-      setFlash({
-        isOpen: true,
-        severity: "info",
-        message: "本文が未入力です",
-      });
-      return;
-    }
 
     if (comment.content.length >= MAX_LENGTH) {
       setFlash({
@@ -62,8 +68,16 @@ export const CommentCreateModal = (props) => {
         post_id: post.id,
         content: comment.content,
       };
-
       await createComment(requestComment, headers);
+
+      setOpen(false);
+      setComment(inititalComment);
+
+      setFlash({
+        isOpen: true,
+        severity: "success",
+        message: "コメントしました",
+      });
     } catch (err) {
       console.log("err", err);
       setFlash({
@@ -94,6 +108,7 @@ export const CommentCreateModal = (props) => {
               <CloseIcon />
             </IconButton>
           </Toolbar>
+          {/* コメント先の投稿 */}
           <CardContent>
             <Grid container>
               <Grid item xs={1} sx={{ textAlign: "left" }}>
@@ -101,13 +116,41 @@ export const CommentCreateModal = (props) => {
                   sx={{
                     height: "4vh",
                     width: "4vh",
-                    "&:hover": {
-                      cursor: "pointer",
-                      opacity: "0.8",
-                    },
                   }}
                   alt={`${post.user.name}`}
                   src={`${post.user.profile_image_path}`}
+                />
+              </Grid>
+              <Grid item xs={11}>
+                <CardHeader
+                  sx={{ p: 1 }}
+                  title={
+                    <PostCardHeaderTitle
+                      header={post.user.name}
+                      subHeader={`@${post.user.user_name}・${formatDateTime(
+                        new Date(post.created_at)
+                      )}`}
+                    />
+                  }
+                />
+                <Typography
+                  variant="body1"
+                  sx={{ px: 1, textAlign: "left", whiteSpace: "pre-line" }}
+                  gutterBottom
+                >
+                  {post.content}
+                </Typography>
+              </Grid>
+            </Grid>
+          </CardContent>
+          {/* コメント投稿欄 */}
+          <CardContent>
+            <Grid container>
+              <Grid item xs={1} sx={{ textAlign: "left" }}>
+                <Avatar
+                  sx={{ height: "4vh", width: "4vh" }}
+                  alt={`${post.user.name}`}
+                  src={`${currentUser.profile_image_path}`}
                 />
               </Grid>
               <Grid item xs={11}>
@@ -119,7 +162,7 @@ export const CommentCreateModal = (props) => {
                   name="content"
                   value={comment.content}
                   InputLabelProps={{ shrink: true }}
-                  placeholder="別のポストを追加"
+                  placeholder="コメントを追加"
                   variant="standard"
                   InputProps={{
                     disableUnderline: true,
@@ -130,6 +173,7 @@ export const CommentCreateModal = (props) => {
               <Grid item xs={12} sx={{ textAlign: "right" }}>
                 <Button
                   type="submit"
+                  disabled={comment.content.length === 0}
                   variant="contained"
                   size="large"
                   sx={{ borderRadius: 50, fontWeight: "bold" }}

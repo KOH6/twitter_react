@@ -32,30 +32,9 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+
 import { CommentCreateModal } from "../modals/CommentCreateModal.jsx";
-
-const HeaderTitle = (props) => {
-  const { header, subHeader } = props;
-
-  return (
-    <Stack
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="center"
-      spacing={0}
-    >
-      <Typography
-        variant="body1"
-        sx={{ fontWeight: "bold", textAlign: "left" }}
-      >
-        {header}
-      </Typography>
-      <Typography variant="body1" sx={{ color: "grey", px: 1 }}>
-        {subHeader}
-      </Typography>
-    </Stack>
-  );
-};
+import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
 
 export const PostCard = (props) => {
   // 削除後の後処理はページごとに異なるので、propsで渡す
@@ -209,7 +188,7 @@ export const PostCard = (props) => {
                   />
                 }
                 title={
-                  <HeaderTitle
+                  <PostCardHeaderTitle
                     header={post.user.name}
                     subHeader={`@${post.user.user_name}・${formatDateTime(
                       new Date(post.created_at)
