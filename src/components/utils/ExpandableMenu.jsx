@@ -37,6 +37,8 @@ export const ExpandableMenu = (props) => {
         anchorEl={anchorEl}
         open={open}
         onClose={(e) => handleClick(e, () => setAnchorEl(false))}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
       >
         {props.menuItems.map((item) => (
           <MenuItem
