@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Icon, Menu, MenuItem } from "@mui/material";
+import { Box, Menu, MenuItem } from "@mui/material";
 
 export const ExpandableMenu = (props) => {
   const [anchorEl, setAnchorEl] = useState(false);
@@ -13,15 +13,20 @@ export const ExpandableMenu = (props) => {
 
   return (
     <>
-      <Icon
+      <Box
         sx={{
-          p: 0,
           zIndex: 10000,
+          p: 0,
+          "&:hover": {
+            background: "#E4E4E4",
+            borderRadius: "50%",
+            opacity: 0.99,
+          },
         }}
         onClick={(e) => handleClick(e, () => setAnchorEl(e.currentTarget))}
       >
         {props.displayIcon}
-      </Icon>
+      </Box>
       <Menu
         id="fade-menu"
         anchorEl={anchorEl}
