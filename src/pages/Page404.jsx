@@ -16,6 +16,7 @@ export const Page404 = () => {
         type="submit"
         variant="contained"
         size="large"
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
         onClick={() => {
           navigate("/home");
         }}

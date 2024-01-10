@@ -34,6 +34,7 @@ export const UserForm = (props) => {
             variant="contained"
             size="large"
             margin="normal"
+            sx={{ borderRadius: 50, fontWeight: "bold" }}
             onClick={handleSubmit}
           >
             {buttonName}
