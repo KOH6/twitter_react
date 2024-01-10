@@ -38,7 +38,6 @@ export const ExpandableMenu = (props) => {
             opacity: 0.99,
           },
         }}
-        // onClick={(e) => handleClick(e, () => setAnchorEl(e.currentTarget))}
         onClick={handleOpen}
       >
         {props.displayIcon}
@@ -47,7 +46,6 @@ export const ExpandableMenu = (props) => {
         id="fade-menu"
         anchorEl={anchorEl}
         open={open}
-        // onClose={(e) => handleClick(e, () => setAnchorEl(false))}
         onClose={handleClose}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "top" }}
