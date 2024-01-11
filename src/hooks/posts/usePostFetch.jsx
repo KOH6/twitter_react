@@ -5,13 +5,8 @@ import { loadingState } from "../../globalStates/atoms";
 import { fetchPost } from "../../apis/posts";
 import { useNavigate, useParams } from "react-router-dom";
 
-const inititalPost = {
-  content: "",
-  image_paths: [],
-};
-
 export const usePostFetch = () => {
-  const [post, setPost] = useState(inititalPost);
+  const [post, setPost] = useState(null);
   const { id } = useParams();
 
   const setLoading = useSetRecoilState(loadingState);
