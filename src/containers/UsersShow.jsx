@@ -64,14 +64,21 @@ export const UsersShow = () => {
       )),
     },
     {
+      label: "リポスト",
+      value: "reposts",
+      items: user?.retweets.map((post) => (
+        <PostCard
+          key={post.id}
+          post={post}
+          afterDeletePost={async () => reFetchUser()}
+          afterCreateComment={async () => reFetchUser()}
+        />
+      )),
+    },
+    {
       label: "いいね",
       value: "likes",
       items: "item3",
-    },
-    {
-      label: "フォロー",
-      value: "followings",
-      items: "item4",
     },
   ];
 
