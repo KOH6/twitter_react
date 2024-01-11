@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import {
   confirmingState,
   currentUserState,
+  flashState,
   loadingState,
 } from "../../globalStates/atoms.js";
 import { deletePost } from "../../apis/posts.js";
@@ -44,6 +45,7 @@ export const PostCard = (props) => {
   const currentUser = useRecoilValue(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
+  const setFlash = useSetRecoilState(flashState);
 
   const navigate = useNavigate();
 
@@ -134,6 +136,12 @@ export const PostCard = (props) => {
       setLoading(true);
       await deletePost(post.id);
       await afterDeletePost();
+
+      setFlash({
+        isOpen: true,
+        severity: "success",
+        message: "投稿を削除しました",
+      });
     } catch (err) {
       console.log("err", err);
     } finally {

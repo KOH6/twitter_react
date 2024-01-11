@@ -22,6 +22,7 @@ import { PostCardHeaderTitle } from "../PostCardHeaderTitle";
 import {
   confirmingState,
   currentUserState,
+  flashState,
   loadingState,
 } from "../../globalStates/atoms";
 import { formatDateTime } from "../../lib/utility";
@@ -32,6 +33,7 @@ export const CommentCard = (props) => {
   const currentUser = useRecoilValue(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
+  const setFlash = useSetRecoilState(flashState);
 
   const navigate = useNavigate();
 
@@ -88,6 +90,12 @@ export const CommentCard = (props) => {
       setLoading(true);
       await deleteComment(comment.id);
       await afterDeleteComment();
+
+      setFlash({
+        isOpen: true,
+        severity: "success",
+        message: "コメントを削除しました",
+      });
     } catch (err) {
       console.log("err", err);
     } finally {
