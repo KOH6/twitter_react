@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -36,13 +36,15 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 import { CommentCreateModal } from "../modals/CommentCreateModal.jsx";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
+import { createRepost } from "../../apis/reposts.js";
+import { fetchUser } from "../../apis/users.js";
 
 export const PostCard = (props) => {
   // 削除後の後処理はページごとに異なるので、propsで渡す
-  const { post, afterDeletePost, afterCreateComment } = props;
+  const { post, afterDeletePost, afterCreateComment, reFetch } = props;
   const [open, setOpen] = useState(false);
 
-  const currentUser = useRecoilValue(currentUserState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
   const setFlash = useSetRecoilState(flashState);
@@ -68,28 +70,39 @@ export const PostCard = (props) => {
   ];
 
   const footerItems = [
+    // コメント
     {
+      color: "#1E9BF0",
+      background: "#E7EFF8",
       icon: (
-        <Stack
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          spacing={1}
-        >
+        <>
           <ChatBubbleOutlineIcon />
           {post.comment_count !== 0 && (
             <Typography>{post.comment_count}</Typography>
           )}
-        </Stack>
+        </>
       ),
       onClick: (e) => {
         e.stopPropagation();
         setOpen(true);
       },
     },
+    // リツイート
     {
-      icon: <RepeatIcon />,
-      onClick: () => {},
+      color: "#00BA7C",
+      background: "#E7F2EC",
+      icon: (
+        <>
+          <RepeatIcon />
+          {post.retweet_count !== 0 && (
+            <Typography>{post.retweet_count}</Typography>
+          )}
+        </>
+      ),
+      onClick: async (e) => {
+        e.stopPropagation();
+        await handleCreateRepost();
+      },
     },
     {
       icon: <FavoriteBorderIcon />,
@@ -148,6 +161,13 @@ export const PostCard = (props) => {
       setLoading(false);
       setConfirming((prev) => ({ ...prev, isOpen: false }));
     }
+  };
+
+  const handleCreateRepost = async () => {
+    await createRepost(post.id);
+    await reFetch();
+    const res = await fetchUser(currentUser.user_name);
+    setCurrentUser(res.data);
   };
 
   return (
@@ -255,14 +275,28 @@ export const PostCard = (props) => {
                         justifyContent: "center",
                         alignItems: "center",
                         "&:hover": {
-                          background: "#E4E4E4",
+                          background: item.background,
                           borderRadius: "50%",
                           opacity: 0.99,
                         },
                       }}
                       onClick={item.onClick}
                     >
-                      {item.icon}
+                      <Stack
+                        direction="row"
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={1}
+                        sx={{
+                          width: "4vh",
+                          "&:hover": {
+                            color: item.color,
+                            transition: "0.2s",
+                          },
+                        }}
+                      >
+                        {item.icon}
+                      </Stack>
                     </Box>
                   ))}
                 </Stack>
