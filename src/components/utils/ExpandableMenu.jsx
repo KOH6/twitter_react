@@ -33,6 +33,7 @@ export const ExpandableMenu = (props) => {
           width: "5vh",
           p: 0,
           "&:hover": {
+            cursor: "pointer",
             background: "#E4E4E4",
             borderRadius: "50%",
             opacity: 0.99,
