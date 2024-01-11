@@ -11,8 +11,13 @@ import { currentUserState } from "../globalStates/atoms";
 import { useNavigate } from "react-router-dom";
 
 export const PostsIndex = () => {
-  const { postsData, fetchPagenatePosts, handleClickPrev, handleClickNext } =
-    useAllPostsFetch();
+  const {
+    postsData,
+    fetchPagenatePosts,
+    handleClickPrev,
+    handleClickNext,
+    afterDeletePost,
+  } = useAllPostsFetch();
   const posts = postsData.posts;
   const currentUser = useRecoilValue(currentUserState);
   const navigate = useNavigate();
@@ -56,7 +61,11 @@ export const PostsIndex = () => {
         </Button>
       </Stack>
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
+        <PostCard
+          key={post.id}
+          post={post}
+          afterDeletePost={() => afterDeletePost()}
+        />
       ))}
     </Card>
   );

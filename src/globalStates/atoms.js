@@ -19,3 +19,14 @@ export const currentUserState = atom({
   key: "currentUser",
   default: await initializeCurrentUser(),
 });
+
+export const confirmingState = atom({
+  key: "confirming",
+  default: {
+    isOpen: false,
+    title: "",
+    message: "",
+    agree: null,
+    disagree: null,
+  },
+});

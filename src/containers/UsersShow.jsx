@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Card, Box, Tab } from "@mui/material";
 
@@ -10,7 +10,8 @@ import { currentUserState, loadingState } from "../globalStates/atoms";
 import { fetchUser } from "../apis/users";
 
 export const UsersShow = () => {
-  const currentUser = useRecoilValue(currentUserState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+
   const setLoading = useSetRecoilState(loadingState);
   const [user, setUser] = useState(null);
   const [isLoggedInUser, setIsLoggedInUser] = useState(false);
@@ -21,7 +22,13 @@ export const UsersShow = () => {
     {
       label: "ポスト",
       value: "posts",
-      items: user?.tweets.map((post) => <PostCard key={post.id} post={post} />),
+      items: user?.tweets.map((post) => (
+        <PostCard
+          key={post.id}
+          post={post}
+          afterDeletePost={() => afterDeletePost()}
+        />
+      )),
     },
     {
       label: "コメント一覧",
@@ -44,31 +51,31 @@ export const UsersShow = () => {
   const [selectedTab, setSelectedTab] = useState(defaultTab);
 
   useEffect(() => {
-    // ログインユーザの場合はglobal stateの情報を使用して描画する。再度fetchしない。
-    if (user_name === currentUser.user_name) {
-      setUser(currentUser);
-      setIsLoggedInUser(true);
-      return;
-    }
-
-    // ログインユーザでない場合は該当ユーザの情報をfetchする。
     (async () => {
       try {
         setLoading(true);
         const res = await fetchUser(user_name);
         setUser(res.data);
+        setIsLoggedInUser(user_name === currentUser.user_name);
       } catch (err) {
         // データがなかった場合、NotFoundページに遷移する
         console.log("err", err);
         navigate("/not_found");
       } finally {
         setLoading(false);
-        setIsLoggedInUser(false);
       }
     })();
     // 別ユーザプロフィールへのURL遷移とログインユーザ情報の更新を検知
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_name, currentUser]);
+
+  /**
+   * 投稿削除後は投稿一覧を含んだユーザ情報を再取得する
+   */
+  const afterDeletePost = async () => {
+    const res = await fetchUser(user_name);
+    setCurrentUser(res.data);
+  };
 
   return (
     <>

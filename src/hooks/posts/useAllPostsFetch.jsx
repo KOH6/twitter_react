@@ -26,6 +26,11 @@ export const useAllPostsFetch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /**
+   * 投稿削除後は0ページ目の一覧に戻る
+   */
+  const afterDeletePost = async () => await fetchPagenatePosts(0);
+
   const handleClickPrev = () => {
     (async () => {
       setLoading(true);
@@ -62,5 +67,6 @@ export const useAllPostsFetch = () => {
     handleClickPrev,
     handleClickNext,
     fetchPagenatePosts,
+    afterDeletePost,
   };
 };

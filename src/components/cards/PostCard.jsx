@@ -1,26 +1,130 @@
 import React from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
+
+import {
+  confirmingState,
+  currentUserState,
+  loadingState,
+} from "../../globalStates/atoms.js";
+import { deletePost } from "../../apis/posts.js";
+
+import { formatDateTime } from "../../lib/utility.js";
+import { ExpandableMenu } from "../utils/ExpandableMenu.jsx";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import {
   Avatar,
   Box,
+  Button,
   CardActionArea,
   CardActions,
+  CardHeader,
   Grid,
   Stack,
   Typography,
 } from "@mui/material";
-
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import { useNavigate } from "react-router-dom";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+
+const HeaderTitle = (props) => {
+  const { header, subHeader } = props;
+
+  return (
+    <Stack
+      direction="row"
+      justifyContent="flex-start"
+      alignItems="center"
+      spacing={0}
+    >
+      <Typography
+        variant="body1"
+        sx={{ fontWeight: "bold", textAlign: "left" }}
+      >
+        {header}
+      </Typography>
+      <Typography variant="body1" sx={{ color: "grey", px: 1 }}>
+        {subHeader}
+      </Typography>
+    </Stack>
+  );
+};
 
 export const PostCard = (props) => {
-  const { post } = props;
+  // 削除後の後処理はページごとに異なるので、propsで渡す
+  const { post, afterDeletePost } = props;
+
+  const currentUser = useRecoilValue(currentUserState);
+  const setLoading = useSetRecoilState(loadingState);
+  const setConfirming = useSetRecoilState(confirmingState);
   const navigate = useNavigate();
+
+  const LoggedInMenuItems = [
+    {
+      icon: <DeleteOutlineIcon />,
+      title: "削除",
+      fontColor: "red",
+      onClick: () => setConfirming(confirming),
+    },
+  ];
+
+  // TODO フォロー済みかいなかでの分岐
+  const UnLoggedInMenuItems = [
+    {
+      icon: <PersonAddAltIcon />,
+      title: `@${post.user.user_name}をフォロー`,
+      onClick: () => {},
+    },
+  ];
+
+  /**
+   * 確認ダイアログ上の情報
+   */
+  const confirming = {
+    isOpen: true,
+    title: "投稿を削除しますか？",
+    message:
+      "この操作は取り消せません。プロフィール、あなたをフォローしているアカウントのタイムラインから投稿が削除されます。 ",
+    agree: (
+      <Button
+        variant="contained"
+        color="error"
+        sx={{ borderRadius: 50 }}
+        onClick={async () => await handleDelete()}
+      >
+        削除
+      </Button>
+    ),
+    disagree: (
+      <Button
+        variant="outlined"
+        color="secondary"
+        sx={{ borderRadius: 50, color: "black" }}
+        onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
+      >
+        キャンセル
+      </Button>
+    ),
+  };
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await deletePost(post.id);
+      await afterDeletePost();
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
+      setConfirming((prev) => ({ ...prev, isOpen: false }));
+    }
+  };
 
   return (
     <Card
@@ -65,25 +169,51 @@ export const PostCard = (props) => {
               </CardActions>
             </Grid>
             <Grid item xs={11}>
+              <CardHeader
+                sx={{
+                  p: 1,
+                }}
+                action={
+                  <ExpandableMenu
+                    displayIcon={<MoreHorizIcon />}
+                    menuItems={
+                      post.user.user_name === currentUser.user_name
+                        ? LoggedInMenuItems
+                        : UnLoggedInMenuItems
+                    }
+                  />
+                }
+                title={
+                  <HeaderTitle
+                    header={post.user.name}
+                    subHeader={`@${post.user.user_name}・${formatDateTime(
+                      new Date(post.created_at)
+                    )}`}
+                  />
+                }
+              />
               <Typography
                 variant="body1"
-                sx={{ px: 3, textAlign: "left" }}
+                sx={{ px: 1, textAlign: "left" }}
                 gutterBottom
               >
                 {post.content}
               </Typography>
-              {post.image_paths.map((image_path, index) => (
-                <img
-                  key={`post-${post.id}-image-${index}`}
-                  src={image_path}
-                  style={{
-                    width: "80%",
-                    margin: "1rem auto",
-                    borderRadius: "10px",
-                  }}
-                  alt=""
-                />
-              ))}
+              <Grid container>
+                {post.image_paths.map((image_path, index) => (
+                  <Grid key={`post-${post.id}-image-${index}`} item xs={6}>
+                    <img
+                      src={image_path}
+                      style={{
+                        width: "80%",
+                        margin: "1rem auto",
+                        borderRadius: "10px",
+                      }}
+                      alt=""
+                    />
+                  </Grid>
+                ))}
+              </Grid>
               <Box sx={{ mt: 2 }}>
                 <Stack
                   spacing={{ xs: 1, sm: 2 }}

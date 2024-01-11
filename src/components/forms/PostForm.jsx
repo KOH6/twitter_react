@@ -67,6 +67,7 @@ export const PostForm = (props) => {
                 type="submit"
                 variant="contained"
                 size="large"
+                sx={{ borderRadius: 50, fontWeight: "bold" }}
                 onClick={handleSubmit}
               >
                 ポストする
