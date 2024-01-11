@@ -37,6 +37,7 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { CommentCreateModal } from "../modals/CommentCreateModal.jsx";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
 import { createRepost, deleteRepost } from "../../apis/reposts.js";
+import { createLike, deleteLike } from "../../apis/likes.js";
 import { fetchUser } from "../../apis/users.js";
 
 export const PostCard = (props) => {
@@ -53,6 +54,8 @@ export const PostCard = (props) => {
 
   const alreadyReposted =
     currentUser.retweets.filter((item) => item.id === post.id).length !== 0;
+  const alreadyLiked =
+    currentUser.likes.filter((item) => item.id === post.id).length !== 0;
 
   const LoggedInMenuItems = [
     {
@@ -105,12 +108,24 @@ export const PostCard = (props) => {
       ),
       onClick: async (e) => {
         e.stopPropagation();
-        await handleClickRepost();
+        await handleClickIcon(alreadyReposted, createRepost, deleteRepost);
       },
     },
+    // いいね
     {
-      icon: <FavoriteBorderIcon />,
-      onClick: () => {},
+      color: "#F91780",
+      background: "#FAE6ED",
+      alreadyDone: alreadyLiked,
+      icon: (
+        <>
+          <FavoriteBorderIcon />
+          {post.like_count !== 0 && <Typography>{post.like_count}</Typography>}
+        </>
+      ),
+      onClick: async (e) => {
+        e.stopPropagation();
+        await handleClickIcon(alreadyLiked, createLike, deleteLike);
+      },
     },
     {
       icon: <BookmarkBorderIcon />,
@@ -167,14 +182,14 @@ export const PostCard = (props) => {
     }
   };
 
-  const handleClickRepost = async () => {
+  const handleClickIcon = async (alreadyDone, createRecord, deleteRecord) => {
     try {
       setLoading(true);
 
-      if (alreadyReposted) {
-        await deleteRepost(post.id);
+      if (alreadyDone) {
+        await deleteRecord(post.id);
       } else {
-        await createRepost(post.id);
+        await createRecord(post.id);
       }
 
       await reFetch();

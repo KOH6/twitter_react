@@ -81,7 +81,15 @@ export const UsersShow = () => {
     {
       label: "いいね",
       value: "likes",
-      items: "item3",
+      items: user?.likes.map((post) => (
+        <PostCard
+          key={post.id}
+          post={post}
+          afterDeletePost={async () => reFetchUser()}
+          afterCreateComment={async () => reFetchUser()}
+          reFetch={() => reFetchUser()}
+        />
+      )),
     },
   ];
 
