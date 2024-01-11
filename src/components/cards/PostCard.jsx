@@ -36,7 +36,7 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 import { CommentCreateModal } from "../modals/CommentCreateModal.jsx";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
-import { createRepost } from "../../apis/reposts.js";
+import { createRepost, deleteRepost } from "../../apis/reposts.js";
 import { fetchUser } from "../../apis/users.js";
 
 export const PostCard = (props) => {
@@ -50,6 +50,9 @@ export const PostCard = (props) => {
   const setFlash = useSetRecoilState(flashState);
 
   const navigate = useNavigate();
+
+  const alreadyReposted =
+    currentUser.retweets.filter((item) => item.id === post.id).length !== 0;
 
   const LoggedInMenuItems = [
     {
@@ -91,6 +94,7 @@ export const PostCard = (props) => {
     {
       color: "#00BA7C",
       background: "#E7F2EC",
+      alreadyDone: alreadyReposted,
       icon: (
         <>
           <RepeatIcon />
@@ -101,7 +105,7 @@ export const PostCard = (props) => {
       ),
       onClick: async (e) => {
         e.stopPropagation();
-        await handleCreateRepost();
+        await handleClickRepost();
       },
     },
     {
@@ -163,8 +167,13 @@ export const PostCard = (props) => {
     }
   };
 
-  const handleCreateRepost = async () => {
-    await createRepost(post.id);
+  const handleClickRepost = async () => {
+    if (alreadyReposted) {
+      await deleteRepost(post.id);
+    } else {
+      await createRepost(post.id);
+    }
+
     await reFetch();
     const res = await fetchUser(currentUser.user_name);
     setCurrentUser(res.data);
@@ -287,6 +296,7 @@ export const PostCard = (props) => {
                         justifyContent="center"
                         alignItems="center"
                         spacing={1}
+                        color={item.alreadyDone && item.color}
                         sx={{
                           width: "4vh",
                           "&:hover": {

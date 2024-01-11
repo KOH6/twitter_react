@@ -14,5 +14,5 @@ export const createRepost = (id) => {
 };
 
 export const deleteRepost = (id) => {
-  return axios.delete(`${tweets}/${id}/retweets`, null, { headers: headers });
+  return axios.delete(`${tweets}/${id}/retweets`, { headers: headers });
 };
