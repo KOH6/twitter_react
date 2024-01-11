@@ -19,46 +19,6 @@ export const UsersShow = () => {
   const { user_name } = useParams();
   const navigate = useNavigate();
 
-  const profileTabs = [
-    {
-      label: "ポスト",
-      value: "posts",
-      items: user?.tweets.map((post) => (
-        <PostCard
-          key={post.id}
-          post={post}
-          afterDeletePost={() => afterDeletePost()}
-          afterCreateComment={() => afterCreateComment()}
-        />
-      )),
-    },
-    {
-      label: "コメント一覧",
-      value: "comments",
-      items: user?.comments.map((comment) => (
-        <CommentCard
-          key={comment.id}
-          comment={comment}
-          afterDeleteComment={() => afterDeleteComment()}
-          afterCreateComment={() => afterCreateComment()}
-        />
-      )),
-    },
-    {
-      label: "いいね",
-      value: "likes",
-      items: "item3",
-    },
-    {
-      label: "フォロー",
-      value: "followings",
-      items: "item4",
-    },
-  ];
-
-  const defaultTab = profileTabs[0].value;
-  const [selectedTab, setSelectedTab] = useState(defaultTab);
-
   useEffect(() => {
     (async () => {
       try {
@@ -78,12 +38,45 @@ export const UsersShow = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_name, currentUser]);
 
-  /**
-   * 投稿削除後、コメント投稿・削除後はユーザ情報を再取得する
-   */
-  const afterDeletePost = async () => reFetchUser();
-  const afterCreateComment = async () => reFetchUser();
-  const afterDeleteComment = async () => reFetchUser();
+  const profileTabs = [
+    {
+      label: "ポスト",
+      value: "posts",
+      items: user?.tweets.map((post) => (
+        <PostCard
+          key={post.id}
+          post={post}
+          afterDeletePost={async () => reFetchUser()}
+          afterCreateComment={async () => reFetchUser()}
+        />
+      )),
+    },
+    {
+      label: "コメント一覧",
+      value: "comments",
+      items: user?.comments.map((comment) => (
+        <CommentCard
+          key={comment.id}
+          comment={comment}
+          afterDeleteComment={async () => reFetchUser()}
+          afterCreateComment={async () => reFetchUser()}
+        />
+      )),
+    },
+    {
+      label: "いいね",
+      value: "likes",
+      items: "item3",
+    },
+    {
+      label: "フォロー",
+      value: "followings",
+      items: "item4",
+    },
+  ];
+
+  const defaultTab = profileTabs[0].value;
+  const [selectedTab, setSelectedTab] = useState(defaultTab);
 
   const reFetchUser = async () => {
     const res = await fetchUser(user_name);
