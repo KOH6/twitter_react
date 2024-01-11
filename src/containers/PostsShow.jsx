@@ -6,8 +6,13 @@ import { Card } from "@mui/material";
 import { PostCard } from "../components/cards/PostCard";
 
 export const PostsShow = () => {
-  const { post, afterDeletePost, afterCreateComment, afterDeleteComment } =
-    usePostFetch();
+  const {
+    post,
+    afterDeletePost,
+    afterCreateComment,
+    afterDeleteComment,
+    reFetch,
+  } = usePostFetch();
 
   return (
     <>
@@ -26,6 +31,7 @@ export const PostsShow = () => {
             post={post}
             afterDeletePost={() => afterDeletePost()}
             afterCreateComment={() => afterCreateComment()}
+            reFetch={() => reFetch()}
           />
           {post.comments?.map((comment) => (
             <CommentCard

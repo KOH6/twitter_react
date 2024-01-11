@@ -48,6 +48,7 @@ export const UsersShow = () => {
           post={post}
           afterDeletePost={async () => reFetchUser()}
           afterCreateComment={async () => reFetchUser()}
+          reFetch={() => reFetchUser()}
         />
       )),
     },
@@ -60,6 +61,7 @@ export const UsersShow = () => {
           comment={comment}
           afterDeleteComment={async () => reFetchUser()}
           afterCreateComment={async () => reFetchUser()}
+          reFetch={() => reFetchUser()}
         />
       )),
     },
@@ -72,6 +74,7 @@ export const UsersShow = () => {
           post={post}
           afterDeletePost={async () => reFetchUser()}
           afterCreateComment={async () => reFetchUser()}
+          reFetch={() => reFetchUser()}
         />
       )),
     },
@@ -87,7 +90,7 @@ export const UsersShow = () => {
 
   const reFetchUser = async () => {
     const res = await fetchUser(user_name);
-    setCurrentUser(res.data);
+    setUser(res.data);
   };
 
   return (

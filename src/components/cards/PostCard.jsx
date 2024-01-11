@@ -168,15 +168,23 @@ export const PostCard = (props) => {
   };
 
   const handleClickRepost = async () => {
-    if (alreadyReposted) {
-      await deleteRepost(post.id);
-    } else {
-      await createRepost(post.id);
-    }
+    try {
+      setLoading(true);
 
-    await reFetch();
-    const res = await fetchUser(currentUser.user_name);
-    setCurrentUser(res.data);
+      if (alreadyReposted) {
+        await deleteRepost(post.id);
+      } else {
+        await createRepost(post.id);
+      }
+
+      await reFetch();
+      const res = await fetchUser(currentUser.user_name);
+      setCurrentUser(res.data);
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
