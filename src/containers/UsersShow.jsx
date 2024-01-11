@@ -8,6 +8,7 @@ import { UserDetail } from "../components/details/UserDetail";
 import { PostCard } from "../components/cards/PostCard";
 import { currentUserState, loadingState } from "../globalStates/atoms";
 import { fetchUser } from "../apis/users";
+import { CommentCard } from "../components/cards/CommentCard";
 
 export const UsersShow = () => {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -34,7 +35,14 @@ export const UsersShow = () => {
     {
       label: "コメント一覧",
       value: "comments",
-      items: "item2",
+      items: user?.comments.map((comment) => (
+        <CommentCard
+          key={comment.id}
+          comment={comment}
+          afterDeleteComment={() => afterDeleteComment()}
+          afterCreateComment={() => afterCreateComment()}
+        />
+      )),
     },
     {
       label: "いいね",
@@ -71,10 +79,11 @@ export const UsersShow = () => {
   }, [user_name, currentUser]);
 
   /**
-   * 投稿削除後、コメント投稿後はユーザ情報を再取得する
+   * 投稿削除後、コメント投稿・削除後はユーザ情報を再取得する
    */
   const afterDeletePost = async () => reFetchUser();
   const afterCreateComment = async () => reFetchUser();
+  const afterDeleteComment = async () => reFetchUser();
 
   const reFetchUser = async () => {
     const res = await fetchUser(user_name);
