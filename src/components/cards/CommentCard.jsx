@@ -19,12 +19,18 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { ExpandableMenu } from "../utils/ExpandableMenu";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle";
 
-import { confirmingState, currentUserState } from "../../globalStates/atoms";
+import {
+  confirmingState,
+  currentUserState,
+  loadingState,
+} from "../../globalStates/atoms";
 import { formatDateTime } from "../../lib/utility";
+import { deleteComment } from "../../apis/comments";
 
 export const CommentCard = (props) => {
-  const { comment } = props;
+  const { comment, afterDeleteComment } = props;
   const currentUser = useRecoilValue(currentUserState);
+  const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
 
   const navigate = useNavigate();
@@ -78,16 +84,16 @@ export const CommentCard = (props) => {
   };
 
   const handleDelete = async () => {
-    // try {
-    //   setLoading(true);
-    //   await deletePost(post.id);
-    //   await afterDeletePost();
-    // } catch (err) {
-    //   console.log("err", err);
-    // } finally {
-    //   setLoading(false);
-    //   setConfirming((prev) => ({ ...prev, isOpen: false }));
-    // }
+    try {
+      setLoading(true);
+      await deleteComment(comment.id);
+      await afterDeleteComment();
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
+      setConfirming((prev) => ({ ...prev, isOpen: false }));
+    }
   };
 
   return (

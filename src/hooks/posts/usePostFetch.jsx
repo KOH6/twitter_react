@@ -13,26 +13,34 @@ export const usePostFetch = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      await initializeShowingPost(id);
-      setLoading(false);
-    })();
+    (async () => await initializeShowingPost(id))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const initializeShowingPost = async (id) => {
     try {
+      setLoading(true);
       const res = await fetchPost(id);
       setPost(res.data);
     } catch (err) {
       // データがなかった場合、NotFoundページに遷移する
       console.log("err", err);
       navigate("/not_found");
+    } finally {
+      setLoading(false);
     }
   };
 
-  return {
-    post,
-  };
+  /**
+   * コメント削除後、コメント投稿後は投稿詳細を再取得する
+   */
+  const afterDeleteComment = async () => initializeShowingPost(id);
+  const afterCreateComment = async () => initializeShowingPost(id);
+
+  /**
+   * 投稿削除後はプロフィール画面を表示する
+   */
+  const afterDeletePost = () => navigate(`/${post.user.user_name}`);
+
+  return { post, afterDeletePost, afterCreateComment, afterDeleteComment };
 };
