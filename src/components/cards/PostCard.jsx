@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
-import {
-  confirmingState,
-  currentUserState,
-  flashState,
-  loadingState,
-} from "../../globalStates/atoms.js";
+import { currentUserState, loadingState } from "../../globalStates/atoms.js";
 import { deletePost } from "../../apis/posts.js";
 
 import { formatDateTime } from "../../lib/utility.js";
@@ -45,8 +40,12 @@ export const PostCard = (props) => {
 
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
-  const setConfirming = useSetRecoilState(confirmingState);
-  const setFlash = useSetRecoilState(flashState);
+
+  const menuItems = useGeneratePostCardMenuItems({
+    record: post,
+    deleteRecord: () => deletePost(post.id),
+    afterDeleteRecord: afterDeletePost,
+  });
 
   const navigate = useNavigate();
 
@@ -113,25 +112,6 @@ export const PostCard = (props) => {
     },
   ];
 
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      await deletePost(post.id);
-      await afterDeletePost();
-
-      setFlash({
-        isOpen: true,
-        severity: "success",
-        message: "投稿を削除しました",
-      });
-    } catch (err) {
-      console.log("err", err);
-    } finally {
-      setLoading(false);
-      setConfirming((prev) => ({ ...prev, isOpen: false }));
-    }
-  };
-
   const handleClickIcon = async (alreadyDone, createRecord, deleteRecord) => {
     try {
       setLoading(true);
@@ -151,11 +131,6 @@ export const PostCard = (props) => {
       setLoading(false);
     }
   };
-
-  const menuItems = useGeneratePostCardMenuItems({
-    record: post,
-    handleDelete: handleDelete,
-  });
 
   const handleClickUser = (e) => {
     e.stopPropagation();

@@ -1,5 +1,4 @@
 import React from "react";
-import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -16,45 +15,19 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { ExpandableMenu } from "../utils/ExpandableMenu";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle";
 
-import {
-  confirmingState,
-  flashState,
-  loadingState,
-} from "../../globalStates/atoms";
 import { formatDateTime } from "../../lib/utility";
 import { deleteComment } from "../../apis/comments";
 import { useGeneratePostCardMenuItems } from "../../hooks/posts/useGeneratePostCardMenuItems";
 
 export const CommentCard = (props) => {
   const { comment, afterDeleteComment } = props;
-  const setLoading = useSetRecoilState(loadingState);
-  const setConfirming = useSetRecoilState(confirmingState);
-  const setFlash = useSetRecoilState(flashState);
 
   const navigate = useNavigate();
 
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      await deleteComment(comment.id);
-      await afterDeleteComment();
-
-      setFlash({
-        isOpen: true,
-        severity: "success",
-        message: "コメントを削除しました",
-      });
-    } catch (err) {
-      console.log("err", err);
-    } finally {
-      setLoading(false);
-      setConfirming((prev) => ({ ...prev, isOpen: false }));
-    }
-  };
-
   const menuItems = useGeneratePostCardMenuItems({
     record: comment,
-    handleDelete: handleDelete,
+    deleteRecord: () => deleteComment(comment.id),
+    afterDeleteRecord: afterDeleteComment,
   });
 
   const handleClickUser = (e) => {

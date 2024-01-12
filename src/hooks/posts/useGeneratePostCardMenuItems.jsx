@@ -5,13 +5,21 @@ import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { confirmingState, currentUserState } from "../../globalStates/atoms";
+import {
+  confirmingState,
+  currentUserState,
+  flashState,
+  loadingState,
+} from "../../globalStates/atoms";
 import { Button } from "@mui/material";
 
 export const useGeneratePostCardMenuItems = (props) => {
-  const { record, handleDelete } = props;
-  const setConfirming = useSetRecoilState(confirmingState);
+  const { record, deleteRecord, afterDeleteRecord } = props;
+
   const currentUser = useRecoilValue(currentUserState);
+  const setConfirming = useSetRecoilState(confirmingState);
+  const setLoading = useSetRecoilState(loadingState);
+  const setFlash = useSetRecoilState(flashState);
 
   const isLoggedInUser = record.user.id === currentUser.id;
 
@@ -19,6 +27,25 @@ export const useGeneratePostCardMenuItems = (props) => {
   const isFollowing = !!currentUser.followees.find(
     (followee) => followee.id === record.user.id
   );
+
+  const handleDeleteRecord = async () => {
+    try {
+      setLoading(true);
+      await deleteRecord(record.id);
+      await afterDeleteRecord();
+
+      setFlash({
+        isOpen: true,
+        severity: "success",
+        message: "投稿を削除しました",
+      });
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
+      setConfirming((prev) => ({ ...prev, isOpen: false }));
+    }
+  };
 
   /**
    * 確認ダイアログ上の情報
@@ -32,7 +59,7 @@ export const useGeneratePostCardMenuItems = (props) => {
       <Button
         variant="contained"
         color="error"
-        onClick={async () => await handleDelete()}
+        onClick={async () => await handleDeleteRecord()}
         sx={{ borderRadius: 50, fontWeight: "bold" }}
       >
         削除
