@@ -44,7 +44,7 @@ export const SideBarFooter = (props) => {
           handleLogout();
           setConfirming({ ...prev, isOpen: false });
         }}
-        sx={{ borderRadius: 50 }}
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
       >
         ログアウト
       </Button>
@@ -53,7 +53,7 @@ export const SideBarFooter = (props) => {
       <Button
         variant="outlined"
         color="black"
-        sx={{ borderRadius: 50 }}
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
         onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
       >
         キャンセル

@@ -145,8 +145,8 @@ export const PostCard = (props) => {
       <Button
         variant="contained"
         color="error"
-        sx={{ borderRadius: 50 }}
         onClick={async () => await handleDelete()}
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
       >
         削除
       </Button>
@@ -154,8 +154,8 @@ export const PostCard = (props) => {
     disagree: (
       <Button
         variant="outlined"
-        color="secondary"
-        sx={{ borderRadius: 50, color: "black" }}
+        color="black"
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
         onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
       >
         キャンセル

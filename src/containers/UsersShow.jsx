@@ -11,7 +11,7 @@ import { fetchUser } from "../apis/users";
 import { CommentCard } from "../components/cards/CommentCard";
 
 export const UsersShow = () => {
-  const [currentUser] = useRecoilValue(currentUserState);
+  const currentUser = useRecoilValue(currentUserState);
 
   const setLoading = useSetRecoilState(loadingState);
   const [user, setUser] = useState(null);
