@@ -9,15 +9,15 @@ import { confirmingState, currentUserState } from "../../globalStates/atoms";
 import { Button } from "@mui/material";
 
 export const useGeneratePostCardMenuItems = (props) => {
-  const { comment, handleDelete } = props;
+  const { record, handleDelete } = props;
   const setConfirming = useSetRecoilState(confirmingState);
   const currentUser = useRecoilValue(currentUserState);
 
-  const isLoggedInUser = comment.user.id === currentUser.id;
+  const isLoggedInUser = record.user.id === currentUser.id;
 
   // ログインユーザのfolloweesに表示ユーザが含まれていたらフォローしている。明示的にBoolean型にキャストする。
   const isFollowing = !!currentUser.followees.find(
-    (followee) => followee.id === comment.user.id
+    (followee) => followee.id === record.user.id
   );
 
   /**
@@ -62,7 +62,7 @@ export const useGeneratePostCardMenuItems = (props) => {
   const followingMenuItems = [
     {
       icon: <PersonAddAltOutlinedIcon />,
-      title: `@${comment.user.user_name}をフォロー`,
+      title: `@${record.user.user_name}をフォロー`,
       onClick: () => {},
     },
   ];
@@ -70,7 +70,7 @@ export const useGeneratePostCardMenuItems = (props) => {
   const unFollowingMenuItems = [
     {
       icon: <PersonRemoveOutlinedIcon />,
-      title: `@${comment.user.user_name}のフォローを解除`,
+      title: `@${record.user.user_name}のフォローを解除`,
       onClick: () => {},
     },
   ];

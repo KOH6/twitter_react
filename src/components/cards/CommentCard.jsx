@@ -1,10 +1,9 @@
 import React from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import {
   Avatar,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -13,77 +12,26 @@ import {
   Typography,
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 import { ExpandableMenu } from "../utils/ExpandableMenu";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle";
 
 import {
   confirmingState,
-  currentUserState,
   flashState,
   loadingState,
 } from "../../globalStates/atoms";
 import { formatDateTime } from "../../lib/utility";
 import { deleteComment } from "../../apis/comments";
+import { useGeneratePostCardMenuItems } from "../../hooks/posts/useGeneratePostCardMenuItems";
 
 export const CommentCard = (props) => {
   const { comment, afterDeleteComment } = props;
-  const currentUser = useRecoilValue(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
   const setFlash = useSetRecoilState(flashState);
 
   const navigate = useNavigate();
-
-  const LoggedInMenuItems = [
-    {
-      icon: <DeleteOutlineIcon />,
-      title: "コメント削除",
-      fontColor: "red",
-      onClick: () => setConfirming(confirming),
-    },
-  ];
-
-  // TODO フォロー済みかいなかでの分岐
-  const UnLoggedInMenuItems = [
-    {
-      icon: <PersonAddAltIcon />,
-      title: `@${comment.user.user_name}をフォロー`,
-      onClick: () => {},
-    },
-  ];
-
-  /**
-   * 確認ダイアログ上の情報
-   */
-  const confirming = {
-    isOpen: true,
-    title: "コメントを削除しますか？",
-    message:
-      "この操作は取り消せません。プロフィール、あなたをフォローしているアカウントのタイムラインからコメントが削除されます。 ",
-    agree: (
-      <Button
-        variant="contained"
-        color="error"
-        sx={{ borderRadius: 50 }}
-        onClick={async () => await handleDelete()}
-      >
-        削除
-      </Button>
-    ),
-    disagree: (
-      <Button
-        variant="outlined"
-        color="secondary"
-        sx={{ borderRadius: 50, color: "black" }}
-        onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
-      >
-        キャンセル
-      </Button>
-    ),
-  };
 
   const handleDelete = async () => {
     try {
@@ -103,6 +51,11 @@ export const CommentCard = (props) => {
       setConfirming((prev) => ({ ...prev, isOpen: false }));
     }
   };
+
+  const menuItems = useGeneratePostCardMenuItems({
+    record: comment,
+    handleDelete: handleDelete,
+  });
 
   const handleClickUser = (e) => {
     e.stopPropagation();
@@ -147,11 +100,7 @@ export const CommentCard = (props) => {
               action={
                 <ExpandableMenu
                   displayIcon={<MoreHorizIcon />}
-                  menuItems={
-                    comment.user.user_name === currentUser.user_name
-                      ? LoggedInMenuItems
-                      : UnLoggedInMenuItems
-                  }
+                  menuItems={menuItems}
                 />
               }
               title={

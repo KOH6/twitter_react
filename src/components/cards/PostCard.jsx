@@ -18,7 +18,6 @@ import CardContent from "@mui/material/CardContent";
 import {
   Avatar,
   Box,
-  Button,
   CardActionArea,
   CardActions,
   CardHeader,
@@ -31,14 +30,13 @@ import RepeatIcon from "@mui/icons-material/Repeat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 import { CommentCreateModal } from "../modals/CommentCreateModal.jsx";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
 import { createRepost, deleteRepost } from "../../apis/reposts.js";
 import { createLike, deleteLike } from "../../apis/likes.js";
 import { fetchUser } from "../../apis/users.js";
+import { useGeneratePostCardMenuItems } from "../../hooks/posts/useGeneratePostCardMenuItems.jsx";
 
 export const PostCard = (props) => {
   // 削除後の後処理はページごとに異なるので、propsで渡す
@@ -56,24 +54,6 @@ export const PostCard = (props) => {
     currentUser.retweets.filter((item) => item.id === post.id).length !== 0;
   const alreadyLiked =
     currentUser.likes.filter((item) => item.id === post.id).length !== 0;
-
-  const LoggedInMenuItems = [
-    {
-      icon: <DeleteOutlineIcon />,
-      title: "削除",
-      fontColor: "red",
-      onClick: () => setConfirming(confirming),
-    },
-  ];
-
-  // TODO フォロー済みかいなかでの分岐
-  const UnLoggedInMenuItems = [
-    {
-      icon: <PersonAddAltIcon />,
-      title: `@${post.user.user_name}をフォロー`,
-      onClick: () => {},
-    },
-  ];
 
   const footerItems = [
     // コメント
@@ -133,36 +113,6 @@ export const PostCard = (props) => {
     },
   ];
 
-  /**
-   * 確認ダイアログ上の情報
-   */
-  const confirming = {
-    isOpen: true,
-    title: "投稿を削除しますか？",
-    message:
-      "この操作は取り消せません。プロフィール、あなたをフォローしているアカウントのタイムラインから投稿が削除されます。 ",
-    agree: (
-      <Button
-        variant="contained"
-        color="error"
-        onClick={async () => await handleDelete()}
-        sx={{ borderRadius: 50, fontWeight: "bold" }}
-      >
-        削除
-      </Button>
-    ),
-    disagree: (
-      <Button
-        variant="outlined"
-        color="black"
-        sx={{ borderRadius: 50, fontWeight: "bold" }}
-        onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
-      >
-        キャンセル
-      </Button>
-    ),
-  };
-
   const handleDelete = async () => {
     try {
       setLoading(true);
@@ -201,6 +151,11 @@ export const PostCard = (props) => {
       setLoading(false);
     }
   };
+
+  const menuItems = useGeneratePostCardMenuItems({
+    record: post,
+    handleDelete: handleDelete,
+  });
 
   const handleClickUser = (e) => {
     e.stopPropagation();
@@ -254,11 +209,7 @@ export const PostCard = (props) => {
                 action={
                   <ExpandableMenu
                     displayIcon={<MoreHorizIcon />}
-                    menuItems={
-                      post.user.user_name === currentUser.user_name
-                        ? LoggedInMenuItems
-                        : UnLoggedInMenuItems
-                    }
+                    menuItems={menuItems}
                   />
                 }
                 title={
