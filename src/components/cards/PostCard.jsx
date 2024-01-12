@@ -45,6 +45,7 @@ export const PostCard = (props) => {
     record: post,
     deleteRecord: () => deletePost(post.id),
     afterDeleteRecord: afterDeletePost,
+    reFetch: reFetch,
   });
 
   const navigate = useNavigate();

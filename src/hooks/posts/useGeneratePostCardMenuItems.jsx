@@ -4,7 +4,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   confirmingState,
   currentUserState,
@@ -12,11 +12,13 @@ import {
   loadingState,
 } from "../../globalStates/atoms";
 import { Button } from "@mui/material";
+import { createFollow, deleteFollow } from "../../apis/follows";
+import { fetchUser } from "../../apis/users";
 
 export const useGeneratePostCardMenuItems = (props) => {
-  const { record, deleteRecord, afterDeleteRecord } = props;
+  const { record, deleteRecord, afterDeleteRecord, reFetch } = props;
 
-  const currentUser = useRecoilValue(currentUserState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setConfirming = useSetRecoilState(confirmingState);
   const setLoading = useSetRecoilState(loadingState);
   const setFlash = useSetRecoilState(flashState);
@@ -47,10 +49,39 @@ export const useGeneratePostCardMenuItems = (props) => {
     }
   };
 
+  const handleClickFollowButton = async () => {
+    try {
+      setLoading(true);
+
+      if (isFollowing) {
+        await deleteFollow(record.user.user_name);
+      } else {
+        await createFollow(record.user.user_name);
+      }
+
+      await reFetch;
+      const res = await fetchUser(currentUser.user_name);
+      setCurrentUser(res.data);
+
+      setFlash({
+        isOpen: true,
+        severity: "success",
+        message: `@${record.user.user_name}さん${
+          isFollowing ? "のフォローを解除しました" : "をフォローしました"
+        }`,
+      });
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
+      setConfirming((prev) => ({ ...prev, isOpen: false }));
+    }
+  };
+
   /**
-   * 確認ダイアログ上の情報
+   * 削除確認ダイアログ上の情報
    */
-  const confirming = {
+  const confirmingDelete = {
     isOpen: true,
     title: "投稿を削除しますか？",
     message:
@@ -77,12 +108,42 @@ export const useGeneratePostCardMenuItems = (props) => {
     ),
   };
 
+  /**
+   * フォロー解除確認ダイアログ上の情報
+   */
+  const confirmingUnFollow = {
+    isOpen: true,
+    title: `@${record.user.user_name}さんをフォロー解除しますか？`,
+    message:
+      "このアカウントのポストがフォロー中タイムラインに表示されなくなります。プロフィールを表示することはできます。 ",
+    agree: (
+      <Button
+        variant="contained"
+        color="black"
+        onClick={async () => handleClickFollowButton()}
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
+      >
+        フォロー解除
+      </Button>
+    ),
+    disagree: (
+      <Button
+        variant="outlined"
+        color="black"
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
+        onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
+      >
+        キャンセル
+      </Button>
+    ),
+  };
+
   const loggedInMenuItems = [
     {
       icon: <DeleteOutlineIcon />,
       title: "削除",
       fontColor: "red",
-      onClick: () => setConfirming(confirming),
+      onClick: () => setConfirming(confirmingDelete),
     },
   ];
 
@@ -90,7 +151,7 @@ export const useGeneratePostCardMenuItems = (props) => {
     {
       icon: <PersonAddAltOutlinedIcon />,
       title: `@${record.user.user_name}をフォロー`,
-      onClick: () => {},
+      onClick: () => handleClickFollowButton(),
     },
   ];
 
@@ -98,15 +159,15 @@ export const useGeneratePostCardMenuItems = (props) => {
     {
       icon: <PersonRemoveOutlinedIcon />,
       title: `@${record.user.user_name}のフォローを解除`,
-      onClick: () => {},
+      onClick: () => setConfirming(confirmingUnFollow),
     },
   ];
 
   const menuItems = isLoggedInUser
     ? loggedInMenuItems
     : isFollowing
-    ? followingMenuItems
-    : unFollowingMenuItems;
+    ? unFollowingMenuItems
+    : followingMenuItems;
 
   return menuItems;
 };

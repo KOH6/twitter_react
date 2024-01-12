@@ -20,7 +20,7 @@ import { deleteComment } from "../../apis/comments";
 import { useGeneratePostCardMenuItems } from "../../hooks/posts/useGeneratePostCardMenuItems";
 
 export const CommentCard = (props) => {
-  const { comment, afterDeleteComment } = props;
+  const { comment, afterDeleteComment, reFetch } = props;
 
   const navigate = useNavigate();
 
@@ -28,6 +28,7 @@ export const CommentCard = (props) => {
     record: comment,
     deleteRecord: () => deleteComment(comment.id),
     afterDeleteRecord: afterDeleteComment,
+    reFetch: reFetch,
   });
 
   const handleClickUser = (e) => {
