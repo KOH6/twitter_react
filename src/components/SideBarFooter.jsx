@@ -39,7 +39,7 @@ export const SideBarFooter = (props) => {
     agree: (
       <Button
         variant="contained"
-        color="primary"
+        color="black"
         onClick={(prev) => {
           handleLogout();
           setConfirming({ ...prev, isOpen: false });
@@ -52,8 +52,8 @@ export const SideBarFooter = (props) => {
     disagree: (
       <Button
         variant="outlined"
-        color="secondary"
-        sx={{ borderRadius: 50, color: "black" }}
+        color="black"
+        sx={{ borderRadius: 50 }}
         onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
       >
         キャンセル

@@ -41,7 +41,7 @@ export const UserDetail = (props) => {
               <Button
                 type="submit"
                 variant="outlined"
-                color="secondary"
+                color="black"
                 size="large"
                 onClick={() => {
                   setOpen(true);
@@ -49,7 +49,6 @@ export const UserDetail = (props) => {
                 sx={{
                   borderRadius: 50,
                   fontWeight: "bold",
-                  color: "black",
                 }}
               >
                 プロフィールを編集
