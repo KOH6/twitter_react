@@ -10,7 +10,11 @@ import Typography from "@mui/material/Typography";
 import { Button } from "@mui/material";
 import { UserEditModal } from "../modals/UserEditModal";
 
-import { currentUserState, loadingState } from "../../globalStates/atoms";
+import {
+  confirmingState,
+  currentUserState,
+  loadingState,
+} from "../../globalStates/atoms";
 import { fetchUser } from "../../apis/users";
 import { createFollow, deleteFollow } from "../../apis/follows.js";
 
@@ -82,9 +86,44 @@ const UnFollowingButton = (props) => {
 
 export const UserDetail = (props) => {
   const { user, isLoggedInUser } = props;
+  const [openEditModal, setOpenEditModal] = useState(false);
+
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
-  const [openEditModal, setOpenEditModal] = useState(false);
+  const setConfirming = useSetRecoilState(confirmingState);
+
+  /**
+   * 確認ダイアログ上の情報
+   */
+  const confirming = {
+    isOpen: true,
+    title: `@${user.user_name}さんをフォロー解除しますか？`,
+    message:
+      "このアカウントのポストがフォロー中タイムラインに表示されなくなります。プロフィールを表示することはできます。 ",
+    agree: (
+      <Button
+        variant="contained"
+        color="black"
+        onClick={(prev) => {
+          handleClickUnFollowing();
+          setConfirming({ ...prev, isOpen: false });
+        }}
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
+      >
+        フォロー解除
+      </Button>
+    ),
+    disagree: (
+      <Button
+        variant="outlined"
+        color="black"
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
+        onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
+      >
+        キャンセル
+      </Button>
+    ),
+  };
 
   // ログインユーザのfolloweesに表示ユーザが含まれていたらフォローしている。明示的にBoolean型にキャストする。
   const isFollowing = !!currentUser.followees.find(
@@ -148,7 +187,7 @@ export const UserDetail = (props) => {
             isLoggedInUser ? (
               <LoggedInButton onClick={() => setOpenEditModal(true)} />
             ) : isFollowing ? (
-              <UnFollowingButton onClick={() => handleClickUnFollowing()} />
+              <UnFollowingButton onClick={() => setConfirming(confirming)} />
             ) : (
               <FollowingButton onClick={() => handleClickFollowing()} />
             )
