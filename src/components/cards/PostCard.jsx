@@ -202,6 +202,11 @@ export const PostCard = (props) => {
     }
   };
 
+  const handleClickUser = (e) => {
+    e.stopPropagation();
+    navigate(`/${post.user.user_name}`);
+  };
+
   return (
     <Card
       variant="outlined"
@@ -225,10 +230,7 @@ export const PostCard = (props) => {
                   zIndex: 10000,
                 }}
                 disableSpacing
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`/${post.user.user_name}`);
-                }}
+                onClick={handleClickUser}
               >
                 <Avatar
                   sx={{
@@ -265,6 +267,8 @@ export const PostCard = (props) => {
                     subHeader={`@${post.user.user_name}・${formatDateTime(
                       new Date(post.created_at)
                     )}`}
+                    canClick
+                    onClick={handleClickUser}
                   />
                 }
               />

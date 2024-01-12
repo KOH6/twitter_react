@@ -104,6 +104,11 @@ export const CommentCard = (props) => {
     }
   };
 
+  const handleClickUser = (e) => {
+    e.stopPropagation();
+    navigate(`/${comment.user.user_name}`);
+  };
+
   return (
     <Card
       variant="outlined"
@@ -118,14 +123,9 @@ export const CommentCard = (props) => {
         <Grid container>
           <Grid item xs={1} sx={{ textAlign: "left" }}>
             <CardActions
-              sx={{
-                zIndex: 10000,
-              }}
+              sx={{ zIndex: 10000 }}
               disableSpacing
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/${comment.user.user_name}`);
-              }}
+              onClick={handleClickUser}
             >
               <Avatar
                 sx={{
@@ -160,6 +160,8 @@ export const CommentCard = (props) => {
                   subHeader={`@${comment.user.user_name}・${formatDateTime(
                     new Date(comment.created_at)
                   )}`}
+                  canClick
+                  onClick={handleClickUser}
                 />
               }
             />
