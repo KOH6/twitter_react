@@ -105,7 +105,7 @@ export const UserDetail = (props) => {
         variant="contained"
         color="black"
         onClick={(prev) => {
-          handleClickUnFollowing();
+          handleClickFollowing();
           setConfirming({ ...prev, isOpen: false });
         }}
         sx={{ borderRadius: 50, fontWeight: "bold" }}
@@ -134,22 +134,11 @@ export const UserDetail = (props) => {
     try {
       setLoading(true);
 
-      await createFollow(user.user_name);
-
-      const res = await fetchUser(currentUser.user_name);
-      setCurrentUser(res.data);
-    } catch (err) {
-      console.log("err", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleClickUnFollowing = async () => {
-    try {
-      setLoading(true);
-
-      await deleteFollow(user.user_name);
+      if (isFollowing) {
+        await deleteFollow(user.user_name);
+      } else {
+        await createFollow(user.user_name);
+      }
 
       const res = await fetchUser(currentUser.user_name);
       setCurrentUser(res.data);
