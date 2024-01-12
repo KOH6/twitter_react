@@ -127,7 +127,7 @@ export const UserDetail = (props) => {
 
   // ログインユーザのfolloweesに表示ユーザが含まれていたらフォローしている。明示的にBoolean型にキャストする。
   const isFollowing = !!currentUser.followees.find(
-    (followee) => followee.id === user.id
+    (followee) => followee.user_name === user.user_name
   );
 
   const handleClickFollowing = async () => {

@@ -23,11 +23,11 @@ export const useGeneratePostCardMenuItems = (props) => {
   const setLoading = useSetRecoilState(loadingState);
   const setFlash = useSetRecoilState(flashState);
 
-  const isLoggedInUser = record.user.id === currentUser.id;
+  const isLoggedInUser = record.user.user_name === currentUser.user_name;
 
   // ログインユーザのfolloweesに表示ユーザが含まれていたらフォローしている。明示的にBoolean型にキャストする。
   const isFollowing = !!currentUser.followees.find(
-    (followee) => followee.id === record.user.id
+    (followee) => followee.user_name === record.user.user_name
   );
 
   const handleDeleteRecord = async () => {
