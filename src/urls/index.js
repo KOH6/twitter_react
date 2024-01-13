@@ -13,3 +13,6 @@ export const images = `${DEFAULT_API_LOCALHOST}/images`;
 
 // comments
 export const comments = `${DEFAULT_API_LOCALHOST}/comments`;
+
+// notifications
+export const notifications = `${DEFAULT_API_LOCALHOST}/notifications`;
