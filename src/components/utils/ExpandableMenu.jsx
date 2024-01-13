@@ -25,7 +25,7 @@ export const ExpandableMenu = (props) => {
     <>
       <Box
         sx={{
-          zIndex: 10000,
+          zIndex: (theme) => theme.zIndex.speedDial + 1,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",

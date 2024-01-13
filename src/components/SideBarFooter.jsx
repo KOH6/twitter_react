@@ -80,7 +80,7 @@ export const SideBarFooter = (props) => {
           avatar={
             <CardActions
               sx={{
-                zIndex: 10000,
+                zIndex: (theme) => theme.zIndex.appBar + 1,
               }}
               disableSpacing
               onClick={(e) => {

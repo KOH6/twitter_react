@@ -50,7 +50,7 @@ export const CommentCard = (props) => {
         <Grid container>
           <Grid item xs={1} sx={{ textAlign: "left" }}>
             <CardActions
-              sx={{ zIndex: 10000 }}
+              sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
               disableSpacing
               onClick={handleClickUser}
             >

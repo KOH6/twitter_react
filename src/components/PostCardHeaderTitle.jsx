@@ -5,7 +5,7 @@ const defaultHeader = { fontWeight: "bold", textAlign: "left" };
 
 const clickableHeader = {
   ...defaultHeader,
-  zIndex: 100,
+  zIndex: (theme) => theme.zIndex.appBar + 1,
   "&:hover": {
     cursor: "pointer",
     textDecoration: "underline",

@@ -158,7 +158,7 @@ export const PostCard = (props) => {
             <Grid item xs={1} sx={{ textAlign: "left" }}>
               <CardActions
                 sx={{
-                  zIndex: 10000,
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
                 }}
                 disableSpacing
                 onClick={handleClickUser}
@@ -233,7 +233,7 @@ export const PostCard = (props) => {
                     <Box
                       key={`post-${post.id}-fotterItem-${index}`}
                       sx={{
-                        zIndex: 100,
+                        zIndex: (theme) => theme.zIndex.appBar + 1,
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
