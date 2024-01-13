@@ -56,6 +56,11 @@ export const PostForm = (props) => {
                 name="content"
                 value={post.content}
                 InputLabelProps={{ shrink: true }}
+                placeholder="いまどうしてる？"
+                variant="standard"
+                InputProps={{
+                  disableUnderline: true,
+                }}
                 onChange={handleChange}
               />
             </Grid>
@@ -65,6 +70,7 @@ export const PostForm = (props) => {
             <Grid item xs={12} sx={{ textAlign: "right" }}>
               <Button
                 type="submit"
+                disabled={post.content.length === 0}
                 variant="contained"
                 size="large"
                 sx={{ borderRadius: 50, fontWeight: "bold" }}

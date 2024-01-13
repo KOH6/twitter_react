@@ -10,3 +10,6 @@ export const profile = `${DEFAULT_API_LOCALHOST}/profile`;
 // posts
 export const tweets = `${DEFAULT_API_LOCALHOST}/tweets`;
 export const images = `${DEFAULT_API_LOCALHOST}/images`;
+
+// comments
+export const comments = `${DEFAULT_API_LOCALHOST}/comments`;

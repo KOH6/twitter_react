@@ -31,15 +31,6 @@ export const usePostCreate = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!post.content) {
-      setFlash({
-        isOpen: true,
-        severity: "info",
-        message: "本文が未入力です",
-      });
-      return;
-    }
-
     if (post.content.length >= MAX_LENGTH) {
       setFlash({
         isOpen: true,

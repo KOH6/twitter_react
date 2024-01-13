@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
@@ -33,36 +33,18 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
-const HeaderTitle = (props) => {
-  const { header, subHeader } = props;
-
-  return (
-    <Stack
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="center"
-      spacing={0}
-    >
-      <Typography
-        variant="body1"
-        sx={{ fontWeight: "bold", textAlign: "left" }}
-      >
-        {header}
-      </Typography>
-      <Typography variant="body1" sx={{ color: "grey", px: 1 }}>
-        {subHeader}
-      </Typography>
-    </Stack>
-  );
-};
+import { CommentCreateModal } from "../modals/CommentCreateModal.jsx";
+import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
 
 export const PostCard = (props) => {
   // 削除後の後処理はページごとに異なるので、propsで渡す
-  const { post, afterDeletePost } = props;
+  const { post, afterDeletePost, afterCreateComment } = props;
+  const [open, setOpen] = useState(false);
 
   const currentUser = useRecoilValue(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
+
   const navigate = useNavigate();
 
   const LoggedInMenuItems = [
@@ -79,6 +61,40 @@ export const PostCard = (props) => {
     {
       icon: <PersonAddAltIcon />,
       title: `@${post.user.user_name}をフォロー`,
+      onClick: () => {},
+    },
+  ];
+
+  const footerItems = [
+    {
+      icon: (
+        <Stack
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+        >
+          <ChatBubbleOutlineIcon />
+          {post.comment_count !== 0 && (
+            <Typography>{post.comment_count}</Typography>
+          )}
+        </Stack>
+      ),
+      onClick: (e) => {
+        e.stopPropagation();
+        setOpen(true);
+      },
+    },
+    {
+      icon: <RepeatIcon />,
+      onClick: () => {},
+    },
+    {
+      icon: <FavoriteBorderIcon />,
+      onClick: () => {},
+    },
+    {
+      icon: <BookmarkBorderIcon />,
       onClick: () => {},
     },
   ];
@@ -184,7 +200,7 @@ export const PostCard = (props) => {
                   />
                 }
                 title={
-                  <HeaderTitle
+                  <PostCardHeaderTitle
                     header={post.user.name}
                     subHeader={`@${post.user.user_name}・${formatDateTime(
                       new Date(post.created_at)
@@ -194,7 +210,7 @@ export const PostCard = (props) => {
               />
               <Typography
                 variant="body1"
-                sx={{ px: 1, textAlign: "left" }}
+                sx={{ px: 1, textAlign: "left", whiteSpace: "pre-line" }}
                 gutterBottom
               >
                 {post.content}
@@ -222,16 +238,37 @@ export const PostCard = (props) => {
                   flexWrap="wrap"
                   justifyContent="space-around"
                 >
-                  <ChatBubbleOutlineIcon />
-                  <RepeatIcon />
-                  <FavoriteBorderIcon />
-                  <BookmarkBorderIcon />
+                  {footerItems.map((item, index) => (
+                    <Box
+                      key={`post-${post.id}-fotterItem-${index}`}
+                      sx={{
+                        zIndex: 100,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&:hover": {
+                          background: "#E4E4E4",
+                          borderRadius: "50%",
+                          opacity: 0.99,
+                        },
+                      }}
+                      onClick={item.onClick}
+                    >
+                      {item.icon}
+                    </Box>
+                  ))}
                 </Stack>
               </Box>
             </Grid>
           </Grid>
         </CardContent>
       </CardActionArea>
+      <CommentCreateModal
+        post={post}
+        open={open}
+        setOpen={setOpen}
+        afterCreateComment={afterCreateComment}
+      />
     </Card>
   );
 };

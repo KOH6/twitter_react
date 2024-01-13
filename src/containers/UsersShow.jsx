@@ -27,6 +27,7 @@ export const UsersShow = () => {
           key={post.id}
           post={post}
           afterDeletePost={() => afterDeletePost()}
+          afterCreateComment={() => afterCreateComment()}
         />
       )),
     },
@@ -70,9 +71,12 @@ export const UsersShow = () => {
   }, [user_name, currentUser]);
 
   /**
-   * 投稿削除後は投稿一覧を含んだユーザ情報を再取得する
+   * 投稿削除後、コメント投稿後はユーザ情報を再取得する
    */
-  const afterDeletePost = async () => {
+  const afterDeletePost = async () => reFetchUser();
+  const afterCreateComment = async () => reFetchUser();
+
+  const reFetchUser = async () => {
     const res = await fetchUser(user_name);
     setCurrentUser(res.data);
   };
