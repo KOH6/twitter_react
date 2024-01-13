@@ -8,7 +8,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import RoomOutlinedIcon from "@mui/icons-material/RoomOutlined";
 import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
@@ -227,6 +227,25 @@ export const UserDetail = (props) => {
               )}からTwitterを利用しています`}
             </Typography>
           </div>
+          <Stack
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={3}
+          >
+            <Typography>
+              <strong style={{ fontWeight: "bold", paddingRight: "0.5rem" }}>
+                {user.followees.length}
+              </strong>
+              フォロー中
+            </Typography>
+            <Typography>
+              <strong style={{ fontWeight: "bold", paddingRight: "0.5rem" }}>
+                {user.followers.length}
+              </strong>
+              フォロワー
+            </Typography>
+          </Stack>
         </CardContent>
       </Card>
       {/* 編集モーダル */}
