@@ -20,7 +20,10 @@ import { ConfirmationDialog } from "./components/utils/ConfirmationDialog.jsx";
 const theme = createTheme({
   palette: {
     primary: blue,
-    secondary: grey,
+    secondary: {
+      main: "#526471",
+      contrastText: "#FFFFFF",
+    },
     black: {
       main: "#0E1419",
       contrastText: "#FFFFFF",

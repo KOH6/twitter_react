@@ -10,9 +10,7 @@ export const createDefaultHeaders = () => {
 
 export const formatDate = (date) => {
   const formatOptions = {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
+    dateStyle: "long",
     timeZone: "Asia/Tokyo",
   };
   const dateFormatter = new Intl.DateTimeFormat("ja-JP", formatOptions);
@@ -21,11 +19,8 @@ export const formatDate = (date) => {
 
 export const formatDateTime = (date) => {
   const formatOptions = {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
+    dateStyle: "long",
+    timeStyle: "short",
     timeZone: "Asia/Tokyo",
   };
   const dateFormatter = new Intl.DateTimeFormat("ja-JP", formatOptions);
