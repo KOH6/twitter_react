@@ -3,7 +3,7 @@ import { RecoilRoot } from "recoil";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { ThemeProvider, createTheme } from "@mui/material";
-import { blue, grey } from "@mui/material/colors";
+import { blue } from "@mui/material/colors";
 
 import { SignUp } from "./containers/SignUp.jsx";
 import { LogIn } from "./containers/LogIn";
