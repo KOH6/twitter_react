@@ -94,8 +94,6 @@ export const UserDetail = (props) => {
   const { user, isLoggedInUser } = props;
   const [openEditModal, setOpenEditModal] = useState(false);
 
-  console.log("user", user);
-
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
@@ -204,7 +202,8 @@ export const UserDetail = (props) => {
           <div
             style={{
               display: "grid",
-              gridGap: "1rem",
+              gridGap: "0.2rem",
+              margin: "0.5rem 0",
               gridTemplateColumns: "repeat(auto-fill, minmax(20rem, 1fr))",
             }}
           >
@@ -233,14 +232,26 @@ export const UserDetail = (props) => {
             alignItems="center"
             spacing={3}
           >
-            <Typography>
-              <strong style={{ fontWeight: "bold", paddingRight: "0.5rem" }}>
+            <Typography color="secondary">
+              <strong
+                style={{
+                  fontWeight: "bold",
+                  paddingRight: "0.5rem",
+                  color: "black",
+                }}
+              >
                 {user.followees.length}
               </strong>
               フォロー中
             </Typography>
-            <Typography>
-              <strong style={{ fontWeight: "bold", paddingRight: "0.5rem" }}>
+            <Typography color="secondary">
+              <strong
+                style={{
+                  fontWeight: "bold",
+                  paddingRight: "0.5rem",
+                  color: "black",
+                }}
+              >
                 {user.followers.length}
               </strong>
               フォロワー
