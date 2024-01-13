@@ -28,7 +28,7 @@ export const Layout = () => {
     },
     {
       icon: <NotificationsOutlinedIcon sx={{ fontSize: 40 }} />,
-      href: "/home",
+      href: "/notifications",
       title: "通知",
     },
     {
