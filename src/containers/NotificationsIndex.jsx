@@ -20,7 +20,6 @@ export const NotificationsIndex = () => {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log("notifications", notifications);
 
   return (
     <>
