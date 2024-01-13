@@ -7,7 +7,12 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 import { Button } from "@mui/material";
+import RoomOutlinedIcon from "@mui/icons-material/RoomOutlined";
+import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+
 import { UserEditModal } from "../modals/UserEditModal";
 
 import {
@@ -17,6 +22,7 @@ import {
 } from "../../globalStates/atoms";
 import { fetchUser } from "../../apis/users";
 import { createFollow, deleteFollow } from "../../apis/follows.js";
+import { formatDate } from "../../lib/utility.js";
 
 const LoggedInButton = (props) => {
   return (
@@ -87,6 +93,8 @@ const UnFollowingButton = (props) => {
 export const UserDetail = (props) => {
   const { user, isLoggedInUser } = props;
   const [openEditModal, setOpenEditModal] = useState(false);
+
+  console.log("user", user);
 
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
@@ -193,6 +201,32 @@ export const UserDetail = (props) => {
           <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
             {user.introduction}
           </Typography>
+          <div
+            style={{
+              display: "grid",
+              gridGap: "1rem",
+              gridTemplateColumns: "repeat(auto-fill, minmax(20rem, 1fr))",
+            }}
+          >
+            {user.place && (
+              <Typography noWrap color="secondary">
+                <RoomOutlinedIcon />
+                {user.place}
+              </Typography>
+            )}
+            {user.website && (
+              <Link noWrap href={`https://${user.website}`} underline="hover">
+                <AttachFileOutlinedIcon color="secondary" />
+                {user.website}
+              </Link>
+            )}
+            <Typography noWrap color="secondary">
+              <CalendarMonthOutlinedIcon />
+              {`${formatDate(
+                new Date(user.created_at)
+              )}からTwitterを利用しています`}
+            </Typography>
+          </div>
         </CardContent>
       </Card>
       {/* 編集モーダル */}
