@@ -2,29 +2,81 @@ import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Typography } from "@mui/material";
+import { Avatar, CardActions, Typography } from "@mui/material";
 
 import { GroupCard } from "../components/cards/GroupCard";
 
 import { loadingState } from "../globalStates/atoms";
-import { fetchGroups } from "../apis/messages";
+import { fetchGroups, fetchMessages } from "../apis/messages";
+import { MessageCard } from "../components/cards/MessageCard";
 
-export const MessagesIndex = () => {
-  // const currentUser = useRecoilValue(currentUserState);
-
-  const setLoading = useSetRecoilState(loadingState);
-  const [groups, setGroups] = useState([]);
-  const { group_id: displayingGroupId } = useParams();
+const MessageLists = (props) => {
+  const { group, messages } = props;
   const navigate = useNavigate();
 
-  console.log("groups", groups);
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+        }}
+      >
+        <CardActions
+          sx={{ p: 0, m: 0 }}
+          disableSpacing
+          onClick={(e) => navigate(`/${group.user.user_name}`)}
+        >
+          <Avatar
+            sx={{
+              height: "4vh",
+              width: "4vh",
+              "&:hover": {
+                cursor: "pointer",
+                opacity: "0.8",
+              },
+            }}
+            alt={`${group?.user.name}`}
+            src={`${group?.user.profile_image_path}`}
+          />
+        </CardActions>
+        <Typography variant="h5" sx={{ m: 2, fontWeight: "bold" }}>
+          {group?.user.name}
+        </Typography>
+      </div>
+      {messages.map((message) => (
+        <MessageCard
+          key={message.id}
+          otherUser={group?.user}
+          message={message}
+        />
+      ))}
+    </div>
+  );
+};
+
+export const MessagesIndex = () => {
+  const [groups, setGroups] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const setLoading = useSetRecoilState(loadingState);
+
+  const { group_id } = useParams();
+  const navigate = useNavigate();
+
+  const displayingGroup = groups.find((group) => group.id === Number(group_id));
 
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
-        const res = await fetchGroups();
-        setGroups(res.data);
+        const groupResponse = await fetchGroups();
+        setGroups(groupResponse.data);
+
+        if (group_id) {
+          const messagesResponse = await fetchMessages(group_id);
+          setMessages(messagesResponse.data);
+        }
       } catch (err) {
         // データがなかった場合、NotFoundページに遷移する
         console.log("err", err);
@@ -33,8 +85,9 @@ export const MessagesIndex = () => {
         setLoading(false);
       }
     })();
+    // 別グループへのURL遷移を検知
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [group_id]);
 
   return (
     <>
@@ -47,14 +100,14 @@ export const MessagesIndex = () => {
             <GroupCard
               key={group.id}
               group={group}
-              displayingGroupId={Number(displayingGroupId)}
+              displayingGroupId={displayingGroup?.id}
             />
           ))}
         </div>
-        <div className="w-3/5 overflow-y-auto">
-          <Typography variant="h5" sx={{ m: 2, fontWeight: "bold" }}>
-            画像とか相手のユーザ情報{displayingGroupId}
-          </Typography>
+        <div className="px-2 w-3/5 overflow-y-auto">
+          {displayingGroup && (
+            <MessageLists group={displayingGroup} messages={messages} />
+          )}
         </div>
       </div>
     </>
