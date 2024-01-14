@@ -12,6 +12,7 @@ import { PostsShow } from "./containers/PostsShow";
 import { UsersShow } from "./containers/UsersShow";
 import { Page404 } from "./pages/Page404";
 import { NotificationsIndex } from "./containers/NotificationsIndex.jsx";
+import { MessagesIndex } from "./containers/MessagesIndex.jsx";
 
 import { Layout } from "./layouts/Layout";
 import { ToastMessage } from "./components/utils/ToastMessage";
@@ -48,8 +49,10 @@ function App() {
                 path="/notifications"
                 element={<NotificationsIndex />}
               />
-              <Route path="/:user_name" element={<UsersShow />} />
+              <Route exact path="/messages" element={<MessagesIndex />} />
+              <Route path="/messages/:group_id" element={<MessagesIndex />} />
               <Route exact path="/:user_name/:id" element={<PostsShow />} />
+              <Route path="/:user_name" element={<UsersShow />} />
               <Route path="*" element={<Page404 />} />
             </Route>
           </Routes>
