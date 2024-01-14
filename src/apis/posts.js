@@ -7,7 +7,7 @@ export const fetchPosts = (limit, offset) => {
 };
 
 export const fetchPost = (id) => {
-  return axios.get(`${tweets}/${id}`);
+  return axios.get(`${tweets}/${id}/comments`);
 };
 
 export const createPost = (post, headers) => {

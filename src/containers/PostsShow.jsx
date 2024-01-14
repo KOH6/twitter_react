@@ -1,10 +1,42 @@
 import React from "react";
 
-import { PostDetail } from "../components/details/PostDetail";
 import { usePostFetch } from "../hooks/posts/usePostFetch";
+import { CommentCard } from "../components/cards/CommentCard";
+import { Card } from "@mui/material";
+import { PostCard } from "../components/cards/PostCard";
 
 export const PostsShow = () => {
-  const { post } = usePostFetch();
+  const { post, afterDeletePost, afterCreateComment, afterDeleteComment } =
+    usePostFetch();
 
-  return <PostDetail post={post} />;
+  return (
+    <>
+      {post && (
+        <Card
+          variant="outlined"
+          sx={{
+            textAlign: "center",
+            borderRight: "none",
+            borderLeft: "none",
+            borderRadius: "0%",
+          }}
+        >
+          <PostCard
+            key={post.id}
+            post={post}
+            afterDeletePost={() => afterDeletePost()}
+            afterCreateComment={() => afterCreateComment()}
+          />
+          {post.comments?.map((comment) => (
+            <CommentCard
+              key={comment.id}
+              comment={comment}
+              afterDeleteComment={() => afterDeleteComment()}
+              afterCreateComment={() => afterCreateComment()}
+            />
+          ))}
+        </Card>
+      )}
+    </>
+  );
 };
