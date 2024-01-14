@@ -14,7 +14,7 @@ export const MessagesIndex = () => {
 
   const setLoading = useSetRecoilState(loadingState);
   const [groups, setGroups] = useState([]);
-  const { group_id } = useParams();
+  const { group_id: displayingGroupId } = useParams();
   const navigate = useNavigate();
 
   console.log("groups", groups);
@@ -44,12 +44,16 @@ export const MessagesIndex = () => {
             メッセージ
           </Typography>
           {groups.map((group) => (
-            <GroupCard key={group.id} group={group} />
+            <GroupCard
+              key={group.id}
+              group={group}
+              displayingGroupId={Number(displayingGroupId)}
+            />
           ))}
         </div>
         <div className="w-3/5 overflow-y-auto">
           <Typography variant="h5" sx={{ m: 2, fontWeight: "bold" }}>
-            画像とか相手のユーザ情報
+            画像とか相手のユーザ情報{displayingGroupId}
           </Typography>
         </div>
       </div>

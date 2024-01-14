@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Card,
+  CardActionArea,
   CardActions,
   CardContent,
   Grid,
@@ -13,11 +14,15 @@ import {
 } from "@mui/material";
 import { formatDate } from "../../lib/utility";
 
+const displayingBackgroud = "#EFF3F4";
+
 export const GroupCard = (props) => {
-  const { group } = props;
+  const { group, displayingGroupId } = props;
   const [updatedAt, setUpdatedAt] = useState("");
   const [latestSummary, setLatestSummary] = useState("");
   const navigate = useNavigate();
+
+  const isDisplaying = displayingGroupId === group.id;
 
   useEffect(() => {
     // 最新メッセージが取得できない場合、部屋が作られた日付を使用する
@@ -40,82 +45,85 @@ export const GroupCard = (props) => {
         borderRight: "none",
         borderLeft: "none",
         borderRadius: "0%",
+        background: isDisplaying && displayingBackgroud,
       }}
     >
-      <CardContent style={{ paddingTop: "0.2rem", paddingBottom: "0.2rem" }}>
-        <Grid container>
-          <Grid item xs={1} sx={{ p: 1 }}>
-            <CardActions
-              sx={{
-                zIndex: (theme) => theme.zIndex.appBar + 1,
-                p: 0,
-                m: 0,
-              }}
-              disableSpacing
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/${group.user.user_name}`);
-              }}
-            >
-              <Avatar
+      <CardActionArea onClick={(e) => navigate(`/messages/${group.id}`)}>
+        <CardContent style={{ paddingTop: "0.2rem", paddingBottom: "0.2rem" }}>
+          <Grid container>
+            <Grid item xs={1} sx={{ p: 1 }}>
+              <CardActions
                 sx={{
-                  height: "4vh",
-                  width: "4vh",
-                  "&:hover": {
-                    cursor: "pointer",
-                    opacity: "0.8",
-                  },
+                  zIndex: (theme) => theme.zIndex.appBar + 1,
+                  p: 0,
+                  m: 0,
                 }}
-                alt={`${group.user.name}`}
-                src={`${group.user.profile_image_path}`}
-              />
-            </CardActions>
-          </Grid>
-          <Grid item xs={11} sx={{ py: 1 }}>
-            <Stack
-              direction="column"
-              justifyContent="center"
-              alignItems="flex-start"
-              spacing={0.5}
-              sx={{ px: 3 }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "start",
+                disableSpacing
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/${group.user.user_name}`);
                 }}
               >
-                <Typography
-                  variant="body2"
-                  noWrap
+                <Avatar
                   sx={{
-                    maxWidth: "30%",
-                    textAlign: "left",
-                    fontWeight: "bold",
-                    color: "black",
+                    height: "4vh",
+                    width: "4vh",
+                    "&:hover": {
+                      cursor: "pointer",
+                      opacity: "0.8",
+                    },
+                  }}
+                  alt={`${group.user.name}`}
+                  src={`${group.user.profile_image_path}`}
+                />
+              </CardActions>
+            </Grid>
+            <Grid item xs={11} sx={{ py: 1 }}>
+              <Stack
+                direction="column"
+                justifyContent="center"
+                alignItems="flex-start"
+                spacing={0.5}
+                sx={{ px: 3 }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "start",
                   }}
                 >
-                  {group.user.name}
+                  <Typography
+                    variant="body2"
+                    noWrap
+                    sx={{
+                      maxWidth: "30%",
+                      textAlign: "left",
+                      fontWeight: "bold",
+                      color: "black",
+                    }}
+                  >
+                    {group.user.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    noWrap
+                    sx={{ pl: 1, maxWidth: "30%" }}
+                  >
+                    @{group.user.user_name}
+                  </Typography>
+                  <Typography variant="body2" noWrap sx={{ maxWidth: "50%" }}>
+                    ・{updatedAt}
+                  </Typography>
+                </Box>
+                <Typography variant="body2" noWrap sx={{ maxWidth: "100%" }}>
+                  {latestSummary}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  noWrap
-                  sx={{ pl: 1, maxWidth: "30%" }}
-                >
-                  @{group.user.user_name}
-                </Typography>
-                <Typography variant="body2" noWrap sx={{ maxWidth: "50%" }}>
-                  ・{updatedAt}
-                </Typography>
-              </Box>
-              <Typography variant="body2" noWrap sx={{ maxWidth: "100%" }}>
-                {latestSummary}
-              </Typography>
-            </Stack>
+              </Stack>
+            </Grid>
           </Grid>
-        </Grid>
-      </CardContent>
+        </CardContent>
+      </CardActionArea>
     </Card>
   );
 };
