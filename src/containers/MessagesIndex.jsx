@@ -18,15 +18,20 @@ const MessageLists = (props) => {
     <div>
       <div
         style={{
+          position: "fixed",
+          top: 0,
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-start",
+          background: "white",
+          width: "100%",
+          opacity: "0.9",
         }}
       >
         <CardActions
           sx={{ p: 0, m: 0 }}
           disableSpacing
-          onClick={(e) => navigate(`/${group.user.user_name}`)}
+          onClick={() => navigate(`/${group.user.user_name}`)}
         >
           <Avatar
             sx={{
@@ -41,17 +46,21 @@ const MessageLists = (props) => {
             src={`${group?.user.profile_image_path}`}
           />
         </CardActions>
-        <Typography variant="h5" sx={{ m: 2, fontWeight: "bold" }}>
-          {group?.user.name}
-        </Typography>
+        <div>
+          <Typography variant="h5" sx={{ m: 2, fontWeight: "bold" }}>
+            {group?.user.name}
+          </Typography>
+        </div>
       </div>
-      {messages.map((message) => (
-        <MessageCard
-          key={message.id}
-          otherUser={group?.user}
-          message={message}
-        />
-      ))}
+      <div style={{ paddingTop: "5vh" }}>
+        {messages.map((message) => (
+          <MessageCard
+            key={message.id}
+            otherUser={group?.user}
+            message={message}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -88,7 +97,7 @@ export const MessagesIndex = () => {
 
   return (
     <>
-      <div className="h-screen flex flex-row flex-1 ">
+      <div className="h-screen flex flex-row flex-1">
         <div className="w-2/5 border-r-2 overflow-y-auto">
           <Typography variant="h5" sx={{ m: 2, fontWeight: "bold" }}>
             メッセージ
@@ -101,9 +110,11 @@ export const MessagesIndex = () => {
             />
           ))}
         </div>
-        <div className="px-2 w-3/5 overflow-y-auto">
+        <div className="h-full w-3/5">
           {displayingGroup && (
-            <MessageLists group={displayingGroup} messages={messages} />
+            <div className="px-2 h-5/6 border-b-2 overflow-y-auto">
+              <MessageLists group={displayingGroup} messages={messages} />
+            </div>
           )}
         </div>
       </div>

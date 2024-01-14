@@ -12,7 +12,7 @@ const currentUserDesign = {
   background: "#1E9BF0",
 };
 
-const otherDesign = {
+const otherUserDesign = {
   justifyContent: "flex-start",
   alignItems: "flex-start",
   borderRadius: "17px 17px 17px 2px",
@@ -25,7 +25,7 @@ export const MessageCard = (props) => {
   const currentUser = useRecoilValue(currentUserState);
 
   const design =
-    currentUser.id === message.user_id ? currentUserDesign : otherDesign;
+    currentUser.id === message.user_id ? currentUserDesign : otherUserDesign;
 
   return (
     <div
@@ -40,7 +40,7 @@ export const MessageCard = (props) => {
       <Typography
         variant="body1"
         sx={{
-          px: 2,
+          p: 2,
           color: design.fontColor,
           background: design.background,
           borderRadius: design.borderRadius,
