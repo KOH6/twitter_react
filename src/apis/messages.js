@@ -9,8 +9,28 @@ export const fetchGroups = () => {
   });
 };
 
+export const createGroup = (user) => {
+  return axios.post(
+    groups,
+    { user_id: user.id },
+    {
+      headers: createDefaultHeaders(),
+    }
+  );
+};
+
 export const fetchMessages = (group_id) => {
   return axios.get(`${groups}/${group_id}/messages`, {
     headers: createDefaultHeaders(),
   });
+};
+
+export const createMessage = (message, group) => {
+  return axios.post(
+    groups,
+    { massagge: message, group_id: group.id },
+    {
+      headers: createDefaultHeaders(),
+    }
+  );
 };

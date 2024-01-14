@@ -7,8 +7,9 @@ import { Avatar, CardActions, Typography } from "@mui/material";
 import { GroupCard } from "../components/cards/GroupCard";
 
 import { loadingState } from "../globalStates/atoms";
-import { fetchGroups, fetchMessages } from "../apis/messages";
+import { createMessage, fetchGroups, fetchMessages } from "../apis/messages";
 import { MessageCard } from "../components/cards/MessageCard";
+import { MessageForm } from "../components/forms/MessageForm";
 
 const MessageLists = (props) => {
   const { group, messages } = props;
@@ -112,9 +113,14 @@ export const MessagesIndex = () => {
         </div>
         <div className="h-full w-3/5">
           {displayingGroup && (
-            <div className="px-2 h-5/6 border-b-2 overflow-y-auto">
-              <MessageLists group={displayingGroup} messages={messages} />
-            </div>
+            <>
+              <div className="h-[90%] px-2 border-b-2 overflow-y-auto">
+                <MessageLists group={displayingGroup} messages={messages} />
+              </div>
+              <div className="h-[10%] pt-4">
+                <MessageForm />
+              </div>
+            </>
           )}
         </div>
       </div>
