@@ -62,7 +62,6 @@ export const MessagesIndex = () => {
   const setLoading = useSetRecoilState(loadingState);
 
   const { group_id } = useParams();
-  const navigate = useNavigate();
 
   const displayingGroup = groups.find((group) => group.id === Number(group_id));
 
@@ -78,9 +77,7 @@ export const MessagesIndex = () => {
           setMessages(messagesResponse.data);
         }
       } catch (err) {
-        // データがなかった場合、NotFoundページに遷移する
         console.log("err", err);
-        navigate("/not_found");
       } finally {
         setLoading(false);
       }
