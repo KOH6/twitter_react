@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -24,6 +25,7 @@ import {
 import { fetchUser } from "../../apis/users";
 import { createFollow, deleteFollow } from "../../apis/follows.js";
 import { formatDate } from "../../lib/utility.js";
+import { createGroup } from "../../apis/messages.js";
 
 const MessageIconButton = (props) => {
   return (
@@ -36,7 +38,7 @@ const MessageIconButton = (props) => {
         borderColor: "#919496",
       }}
       sx={{ mx: 1 }}
-      onClick={props.onClicksSendMessage}
+      onClick={props.onClick}
     >
       <MailOutlineIcon />
     </IconButton>
@@ -123,6 +125,8 @@ export const UserDetail = (props) => {
   const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
 
+  const navigate = useNavigate();
+
   /**
    * 確認ダイアログ上の情報
    */
@@ -180,6 +184,19 @@ export const UserDetail = (props) => {
     }
   };
 
+  const handleClickSendMessage = async () => {
+    try {
+      setLoading(true);
+      const res = await createGroup(user);
+      const group = res.data;
+      navigate(`/messages/${group.id}`);
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <Card variant="outlined" sx={{ border: "none" }}>
@@ -209,9 +226,13 @@ export const UserDetail = (props) => {
             ) : isFollowing ? (
               <UnFollowingButton
                 onClickFollow={() => setConfirming(confirming)}
+                onClicksSendMessage={handleClickSendMessage}
               />
             ) : (
-              <FollowingButton onClickFollow={() => handleClickFollowing()} />
+              <FollowingButton
+                onClickFollow={() => handleClickFollowing()}
+                onClicksSendMessage={handleClickSendMessage}
+              />
             )
           }
         />
