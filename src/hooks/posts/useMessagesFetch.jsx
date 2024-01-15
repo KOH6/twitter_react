@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
 
@@ -14,14 +14,11 @@ export const useMessagesFetch = () => {
 
   const displayingGroup = groups.find((group) => group.id === Number(group_id));
 
-  const messagesBottom = useRef(null);
-
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
         await fetchInitialGroups();
-        scrollToBottom();
       } catch (err) {
         console.log("err", err);
       } finally {
@@ -42,18 +39,10 @@ export const useMessagesFetch = () => {
     }
   };
 
-  const scrollToBottom = () => {
-    if (messagesBottom.current) {
-      messagesBottom.current.scrollIntoView(false);
-    }
-  };
-
   return {
     groups,
     displayingGroup,
     messages,
-    messagesBottom,
     fetchInitialGroups,
-    scrollToBottom,
   };
 };
