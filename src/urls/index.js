@@ -19,3 +19,6 @@ export const notifications = `${DEFAULT_API_LOCALHOST}/notifications`;
 
 // groups
 export const groups = `${DEFAULT_API_LOCALHOST}/groups`;
+
+// bookmarks
+export const bookmarks = `${DEFAULT_API_LOCALHOST}/bookmarks`;

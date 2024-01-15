@@ -7,9 +7,12 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import { createRepost, deleteRepost } from "../../apis/reposts.js";
 import { createLike, deleteLike } from "../../apis/likes.js";
+import { createBookmark, deleteBookmark } from "../../apis/bookmarks.js";
 import { fetchUser } from "../../apis/users.js";
 
 export const useGeneratePostCardFooterItems = (props) => {
@@ -18,10 +21,14 @@ export const useGeneratePostCardFooterItems = (props) => {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
 
+  console.log("post", post);
+  console.log("currentUser", currentUser);
   const alreadyReposted =
     currentUser.retweets.filter((item) => item.id === post.id).length !== 0;
   const alreadyLiked =
     currentUser.likes.filter((item) => item.id === post.id).length !== 0;
+  const alreadyBookmarked =
+    currentUser.bookmarks.filter((item) => item.id === post.id).length !== 0;
 
   const handleClickIcon = async (alreadyDone, createRecord, deleteRecord) => {
     try {
@@ -86,7 +93,7 @@ export const useGeneratePostCardFooterItems = (props) => {
       alreadyDone: alreadyLiked,
       icon: (
         <>
-          <FavoriteBorderIcon />
+          {alreadyLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           {post.like_count !== 0 && <Typography>{post.like_count}</Typography>}
         </>
       ),
@@ -95,9 +102,27 @@ export const useGeneratePostCardFooterItems = (props) => {
         await handleClickIcon(alreadyLiked, createLike, deleteLike);
       },
     },
+    // ブックマーク
     {
-      icon: <BookmarkBorderIcon />,
-      onClick: () => {},
+      color: "#1E9BF0",
+      background: "#E7EFF8",
+      alreadyDone: alreadyBookmarked,
+      icon: (
+        <>
+          {alreadyBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+          {post.bookmark_count !== 0 && (
+            <Typography>{post.bookmark_count}</Typography>
+          )}
+        </>
+      ),
+      onClick: async (e) => {
+        e.stopPropagation();
+        await handleClickIcon(
+          alreadyBookmarked,
+          createBookmark,
+          deleteBookmark
+        );
+      },
     },
   ];
 
