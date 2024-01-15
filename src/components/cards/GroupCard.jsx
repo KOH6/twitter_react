@@ -25,14 +25,7 @@ export const GroupCard = (props) => {
   const isDisplaying = displayingGroupId === group.id;
 
   useEffect(() => {
-    // 最新メッセージが取得できない場合、部屋が作られた日付を使用する
-    const updatedDateString = group.latest_message
-      ? group.latest_message.created_at
-      : group.created_at;
-
-    if (updatedDateString)
-      setUpdatedAt(formatDate(new Date(updatedDateString)));
-
+    setUpdatedAt(formatDate(new Date(group.updated_at)));
     if (group.latest_message) setLatestSummary(group.latest_message.content);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
