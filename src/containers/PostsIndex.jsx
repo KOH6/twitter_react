@@ -18,6 +18,7 @@ export const PostsIndex = () => {
     handleClickNext,
     afterDeletePost,
     afterCreateComment,
+    reFetch,
   } = useAllPostsFetch();
   const posts = postsData.posts;
   const currentUser = useRecoilValue(currentUserState);
@@ -67,6 +68,7 @@ export const PostsIndex = () => {
           post={post}
           afterDeletePost={() => afterDeletePost()}
           afterCreateComment={() => afterCreateComment()}
+          reFetch={() => reFetch()}
         />
       ))}
     </Card>

@@ -37,10 +37,18 @@ export const usePostFetch = () => {
   const afterDeleteComment = async () => initializeShowingPost(id);
   const afterCreateComment = async () => initializeShowingPost(id);
 
+  const reFetch = async () => initializeShowingPost(id);
+
   /**
    * 投稿削除後はプロフィール画面を表示する
    */
   const afterDeletePost = () => navigate(`/${post.user.user_name}`);
 
-  return { post, afterDeletePost, afterCreateComment, afterDeleteComment };
+  return {
+    post,
+    afterDeletePost,
+    afterCreateComment,
+    afterDeleteComment,
+    reFetch,
+  };
 };

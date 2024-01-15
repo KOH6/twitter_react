@@ -48,6 +48,7 @@ export const UsersShow = () => {
           post={post}
           afterDeletePost={async () => reFetchUser()}
           afterCreateComment={async () => reFetchUser()}
+          reFetch={() => reFetchUser()}
         />
       )),
     },
@@ -60,18 +61,35 @@ export const UsersShow = () => {
           comment={comment}
           afterDeleteComment={async () => reFetchUser()}
           afterCreateComment={async () => reFetchUser()}
+          reFetch={() => reFetchUser()}
+        />
+      )),
+    },
+    {
+      label: "リポスト",
+      value: "reposts",
+      items: user?.retweets.map((post) => (
+        <PostCard
+          key={post.id}
+          post={post}
+          afterDeletePost={async () => reFetchUser()}
+          afterCreateComment={async () => reFetchUser()}
+          reFetch={() => reFetchUser()}
         />
       )),
     },
     {
       label: "いいね",
       value: "likes",
-      items: "item3",
-    },
-    {
-      label: "フォロー",
-      value: "followings",
-      items: "item4",
+      items: user?.likes.map((post) => (
+        <PostCard
+          key={post.id}
+          post={post}
+          afterDeletePost={async () => reFetchUser()}
+          afterCreateComment={async () => reFetchUser()}
+          reFetch={() => reFetchUser()}
+        />
+      )),
     },
   ];
 
@@ -80,7 +98,7 @@ export const UsersShow = () => {
 
   const reFetchUser = async () => {
     const res = await fetchUser(user_name);
-    setCurrentUser(res.data);
+    setUser(res.data);
   };
 
   return (

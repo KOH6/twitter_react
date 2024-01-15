@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -36,18 +36,26 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 import { CommentCreateModal } from "../modals/CommentCreateModal.jsx";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
+import { createRepost, deleteRepost } from "../../apis/reposts.js";
+import { createLike, deleteLike } from "../../apis/likes.js";
+import { fetchUser } from "../../apis/users.js";
 
 export const PostCard = (props) => {
   // 削除後の後処理はページごとに異なるので、propsで渡す
-  const { post, afterDeletePost, afterCreateComment } = props;
+  const { post, afterDeletePost, afterCreateComment, reFetch } = props;
   const [open, setOpen] = useState(false);
 
-  const currentUser = useRecoilValue(currentUserState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
   const setFlash = useSetRecoilState(flashState);
 
   const navigate = useNavigate();
+
+  const alreadyReposted =
+    currentUser.retweets.filter((item) => item.id === post.id).length !== 0;
+  const alreadyLiked =
+    currentUser.likes.filter((item) => item.id === post.id).length !== 0;
 
   const LoggedInMenuItems = [
     {
@@ -68,32 +76,56 @@ export const PostCard = (props) => {
   ];
 
   const footerItems = [
+    // コメント
     {
+      color: "#1E9BF0",
+      background: "#E7EFF8",
       icon: (
-        <Stack
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          spacing={1}
-        >
+        <>
           <ChatBubbleOutlineIcon />
           {post.comment_count !== 0 && (
             <Typography>{post.comment_count}</Typography>
           )}
-        </Stack>
+        </>
       ),
       onClick: (e) => {
         e.stopPropagation();
         setOpen(true);
       },
     },
+    // リツイート
     {
-      icon: <RepeatIcon />,
-      onClick: () => {},
+      color: "#00BA7C",
+      background: "#E7F2EC",
+      alreadyDone: alreadyReposted,
+      icon: (
+        <>
+          <RepeatIcon />
+          {post.retweet_count !== 0 && (
+            <Typography>{post.retweet_count}</Typography>
+          )}
+        </>
+      ),
+      onClick: async (e) => {
+        e.stopPropagation();
+        await handleClickIcon(alreadyReposted, createRepost, deleteRepost);
+      },
     },
+    // いいね
     {
-      icon: <FavoriteBorderIcon />,
-      onClick: () => {},
+      color: "#F91780",
+      background: "#FAE6ED",
+      alreadyDone: alreadyLiked,
+      icon: (
+        <>
+          <FavoriteBorderIcon />
+          {post.like_count !== 0 && <Typography>{post.like_count}</Typography>}
+        </>
+      ),
+      onClick: async (e) => {
+        e.stopPropagation();
+        await handleClickIcon(alreadyLiked, createLike, deleteLike);
+      },
     },
     {
       icon: <BookmarkBorderIcon />,
@@ -147,6 +179,26 @@ export const PostCard = (props) => {
     } finally {
       setLoading(false);
       setConfirming((prev) => ({ ...prev, isOpen: false }));
+    }
+  };
+
+  const handleClickIcon = async (alreadyDone, createRecord, deleteRecord) => {
+    try {
+      setLoading(true);
+
+      if (alreadyDone) {
+        await deleteRecord(post.id);
+      } else {
+        await createRecord(post.id);
+      }
+
+      await reFetch();
+      const res = await fetchUser(currentUser.user_name);
+      setCurrentUser(res.data);
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -255,14 +307,29 @@ export const PostCard = (props) => {
                         justifyContent: "center",
                         alignItems: "center",
                         "&:hover": {
-                          background: "#E4E4E4",
+                          background: item.background,
                           borderRadius: "50%",
                           opacity: 0.99,
                         },
                       }}
                       onClick={item.onClick}
                     >
-                      {item.icon}
+                      <Stack
+                        direction="row"
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={1}
+                        color={item.alreadyDone && item.color}
+                        sx={{
+                          width: "4vh",
+                          "&:hover": {
+                            color: item.color,
+                            transition: "0.2s",
+                          },
+                        }}
+                      >
+                        {item.icon}
+                      </Stack>
                     </Box>
                   ))}
                 </Stack>

@@ -34,7 +34,9 @@ export const useAllPostsFetch = () => {
   /**
    * コメント投稿後は現在表示中のページの一覧の情報を再取得
    */
-  const afterCreateComment = async () => {
+  const afterCreateComment = async () => await reFetch();
+
+  const reFetch = async () => {
     const { prevOffset, nextOffset } = postsData;
     const currentOffset =
       nextOffset - prevOffset === LIMIT ? 0 : nextOffset - LIMIT;
@@ -79,5 +81,6 @@ export const useAllPostsFetch = () => {
     fetchPagenatePosts,
     afterDeletePost,
     afterCreateComment,
+    reFetch,
   };
 };
