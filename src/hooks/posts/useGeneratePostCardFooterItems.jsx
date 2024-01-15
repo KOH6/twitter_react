@@ -21,8 +21,6 @@ export const useGeneratePostCardFooterItems = (props) => {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
 
-  console.log("post", post);
-  console.log("currentUser", currentUser);
   const alreadyReposted =
     currentUser.retweets.filter((item) => item.id === post.id).length !== 0;
   const alreadyLiked =
