@@ -27,8 +27,9 @@ export const GroupCard = (props) => {
   useEffect(() => {
     setUpdatedAt(formatDate(new Date(group.updated_at)));
     if (group.latest_message) setLatestSummary(group.latest_message.content);
+    // メッセージ投稿後の再描画で、カード上に最新メッセージをびょうがするためgroupの変更を検知
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [group]);
 
   return (
     <Card
