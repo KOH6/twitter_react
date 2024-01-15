@@ -10,6 +10,7 @@ const currentUserDesign = {
   borderRadius: "17px 17px 2px 17px",
   fontColor: "#F3F8FD",
   background: "#1E9BF0",
+  textAlign: "right",
 };
 
 const otherUserDesign = {
@@ -18,6 +19,7 @@ const otherUserDesign = {
   borderRadius: "17px 17px 17px 2px",
   fontColor: "#0E1419",
   background: "#EEF3F4",
+  textAlign: "left",
 };
 
 export const MessageCard = (props) => {
@@ -48,10 +50,14 @@ export const MessageCard = (props) => {
           textAlign: "left",
           whiteSpace: "pre-line",
         }}
+        style={{
+          overflowWrap: "break-word",
+          wordBreak: "normal",
+        }}
       >
         {message.content}
       </Typography>
-      <Typography variant="body2" sx={{ my: 1 }}>
+      <Typography variant="body2" sx={{ my: 1, textAlign: design.textAlign }}>
         {formatDateTime(new Date(message.created_at))}
       </Typography>
     </div>
