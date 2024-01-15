@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
-
-import { currentUserState, loadingState } from "../../globalStates/atoms.js";
-import { deletePost } from "../../apis/posts.js";
-
-import { formatDateTime } from "../../lib/utility.js";
-import { ExpandableMenu } from "../utils/ExpandableMenu.jsx";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -28,8 +21,12 @@ import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
 import { useGeneratePostCardMenuItems } from "../../hooks/posts/useGeneratePostCardMenuItems.jsx";
 import { useGeneratePostCardFooterItems } from "../../hooks/posts/useGeneratePostCardFooterItems.jsx";
 
+import { ExpandableMenu } from "../utils/ExpandableMenu.jsx";
+import { deletePost } from "../../apis/posts.js";
+import { formatDateTime } from "../../lib/utility.js";
+
 export const PostCard = (props) => {
-  const { post, afterDeletePost, afterCreateComment, reFetch } = props;
+  const { post, afterCreateComment, reFetch } = props;
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -37,7 +34,6 @@ export const PostCard = (props) => {
   const menuItems = useGeneratePostCardMenuItems({
     record: post,
     deleteRecord: () => deletePost(post.id),
-    afterDeleteRecord: afterDeletePost,
     reFetch: reFetch,
   });
 
