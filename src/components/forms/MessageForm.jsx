@@ -2,14 +2,19 @@ import React, { useState } from "react";
 
 import { IconButton, Stack, TextField } from "@mui/material";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
+import { useSetRecoilState } from "recoil";
+import { loadingState } from "../../globalStates/atoms";
+import { createMessage } from "../../apis/messages";
 
 const initialMessage = {
   content: "",
 };
 
 export const MessageForm = (props) => {
-  // const { group, handleClick } = props;
+  const { group, reFetch } = props;
   const [message, setMessage] = useState(initialMessage);
+
+  const setLoading = useSetRecoilState(loadingState);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,6 +22,20 @@ export const MessageForm = (props) => {
   };
 
   console.log("message", message);
+
+  const handleClick = async (e) => {
+    try {
+      setLoading(true);
+      await createMessage(message, group);
+
+      await reFetch();
+      setMessage(initialMessage);
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Stack direction="row" justifyContent="center" alignItems="center">
@@ -50,7 +69,7 @@ export const MessageForm = (props) => {
           backgroundColor: "#EFF3F4",
           color: "#98C8F2",
         }}
-        // onClick={() => handleClick()}
+        onClick={(e) => handleClick(e)}
       >
         <SendOutlinedIcon fontSize="inherit" />
       </IconButton>

@@ -27,8 +27,8 @@ export const fetchMessages = (group_id) => {
 
 export const createMessage = (message, group) => {
   return axios.post(
-    groups,
-    { massagge: message, group_id: group.id },
+    `${groups}/${group.id}/messages`,
+    { message: message, group_id: group.id },
     {
       headers: createDefaultHeaders(),
     }

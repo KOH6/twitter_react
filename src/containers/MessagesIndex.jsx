@@ -7,7 +7,7 @@ import { Avatar, CardActions, Typography } from "@mui/material";
 import { GroupCard } from "../components/cards/GroupCard";
 
 import { loadingState } from "../globalStates/atoms";
-import { createMessage, fetchGroups, fetchMessages } from "../apis/messages";
+import { fetchGroups, fetchMessages } from "../apis/messages";
 import { MessageCard } from "../components/cards/MessageCard";
 import { MessageForm } from "../components/forms/MessageForm";
 
@@ -79,13 +79,7 @@ export const MessagesIndex = () => {
     (async () => {
       try {
         setLoading(true);
-        const groupResponse = await fetchGroups();
-        setGroups(groupResponse.data);
-
-        if (group_id) {
-          const messagesResponse = await fetchMessages(group_id);
-          setMessages(messagesResponse.data);
-        }
+        await fetchInitialGroups();
       } catch (err) {
         console.log("err", err);
       } finally {
@@ -95,6 +89,16 @@ export const MessagesIndex = () => {
     // 別グループへのURL遷移を検知
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [group_id]);
+
+  const fetchInitialGroups = async () => {
+    const groupResponse = await fetchGroups();
+    setGroups(groupResponse.data);
+
+    if (group_id) {
+      const messagesResponse = await fetchMessages(group_id);
+      setMessages(messagesResponse.data);
+    }
+  };
 
   return (
     <>
@@ -118,7 +122,10 @@ export const MessagesIndex = () => {
                 <MessageLists group={displayingGroup} messages={messages} />
               </div>
               <div className="h-[10%] pt-4">
-                <MessageForm />
+                <MessageForm
+                  group={displayingGroup}
+                  reFetch={fetchInitialGroups}
+                />
               </div>
             </>
           )}
