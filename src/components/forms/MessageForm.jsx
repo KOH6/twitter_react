@@ -69,7 +69,7 @@ export const MessageForm = (props) => {
           backgroundColor: "#EFF3F4",
           color: "#98C8F2",
         }}
-        onClick={(e) => handleClick(e)}
+        onClick={async (e) => await handleClick(e)}
       >
         <SendOutlinedIcon fontSize="inherit" />
       </IconButton>

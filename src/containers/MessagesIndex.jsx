@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSetRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -12,11 +12,11 @@ import { MessageCard } from "../components/cards/MessageCard";
 import { MessageForm } from "../components/forms/MessageForm";
 
 const MessageLists = (props) => {
-  const { group, messages } = props;
+  const { group, messages, refName } = props;
   const navigate = useNavigate();
 
   return (
-    <div>
+    <>
       <div
         style={{
           position: "fixed",
@@ -61,8 +61,9 @@ const MessageLists = (props) => {
             message={message}
           />
         ))}
+        <div ref={refName}></div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -75,11 +76,14 @@ export const MessagesIndex = () => {
 
   const displayingGroup = groups.find((group) => group.id === Number(group_id));
 
+  const messagesBottom = useRef(null);
+
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
         await fetchInitialGroups();
+        scrollToBottom();
       } catch (err) {
         console.log("err", err);
       } finally {
@@ -97,6 +101,12 @@ export const MessagesIndex = () => {
     if (group_id) {
       const messagesResponse = await fetchMessages(group_id);
       setMessages(messagesResponse.data);
+    }
+  };
+
+  const scrollToBottom = () => {
+    if (messagesBottom.current) {
+      messagesBottom.current.scrollIntoView(false);
     }
   };
 
@@ -119,12 +129,19 @@ export const MessagesIndex = () => {
           {displayingGroup && (
             <>
               <div className="h-[90%] px-2 border-b-2 overflow-y-auto">
-                <MessageLists group={displayingGroup} messages={messages} />
+                <MessageLists
+                  group={displayingGroup}
+                  messages={messages}
+                  refName={messagesBottom}
+                />
               </div>
               <div className="h-[10%] pt-4">
                 <MessageForm
                   group={displayingGroup}
-                  reFetch={fetchInitialGroups}
+                  reFetch={async () => {
+                    await fetchInitialGroups();
+                    scrollToBottom();
+                  }}
                 />
               </div>
             </>
