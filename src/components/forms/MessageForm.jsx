@@ -21,8 +21,6 @@ export const MessageForm = (props) => {
     setMessage((prev) => ({ ...prev, [name]: value }));
   };
 
-  console.log("message", message);
-
   const handleClick = async (e) => {
     try {
       setLoading(true);

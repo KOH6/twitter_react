@@ -14,7 +14,7 @@ export const MessageLists = (props) => {
   useEffect(() => {
     // 明細ループ後にrefの要素に描画を移動する
     if (messagesBottom.current) {
-      messagesBottom.current.scrollIntoView(false);
+      messagesBottom.current.scrollIntoView({ behavior: "smooth" });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);

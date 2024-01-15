@@ -14,7 +14,6 @@ export const MessagesIndex = () => {
     messages,
     messagesBottom,
     fetchInitialGroups,
-    // scrollToBottom,
   } = useMessagesFetch();
 
   return (
