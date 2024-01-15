@@ -26,7 +26,7 @@ import { deletePost } from "../../apis/posts.js";
 import { formatDateTime } from "../../lib/utility.js";
 
 export const PostCard = (props) => {
-  const { post, afterCreateComment, reFetch } = props;
+  const { post, afterCreateComment, afterDeletePost, reFetch } = props;
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -34,6 +34,7 @@ export const PostCard = (props) => {
   const menuItems = useGeneratePostCardMenuItems({
     record: post,
     deleteRecord: () => deletePost(post.id),
+    afterDeleteRecord: afterDeletePost,
     reFetch: reFetch,
   });
 
