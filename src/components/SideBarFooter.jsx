@@ -1,6 +1,7 @@
 import React from "react";
 import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import {
   Avatar,
@@ -11,20 +12,55 @@ import {
   CardHeader,
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
+
 import { ExpandableMenu } from "./utils/ExpandableMenu";
 
-import { confirmingState } from "../globalStates/atoms";
+import {
+  confirmingState,
+  currentUserState,
+  flashState,
+  loadingState,
+} from "../globalStates/atoms";
+import { deleteUser } from "../apis/users";
 
 export const SideBarFooter = (props) => {
-  const { user, handleLogout } = props;
+  const { user } = props;
   const setConfirming = useSetRecoilState(confirmingState);
+  const setLoading = useSetRecoilState(loadingState);
+  const setFlash = useSetRecoilState(flashState);
+
+  const setCurrentUser = useSetRecoilState(currentUserState);
 
   const navigate = useNavigate();
 
+  const handleDeleteUser = async () => {
+    try {
+      setLoading(true);
+      await deleteUser();
+
+      setCurrentUser({});
+
+      Cookies.remove("_access_token");
+      Cookies.remove("_client");
+      Cookies.remove("_uid");
+
+      setFlash({
+        isOpen: true,
+        severity: "success",
+        message: "Xから退会しました",
+      });
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const menuItems = [
     {
-      icon: null,
-      title: `@${user.user_name}からログアウト`,
+      icon: <PersonOffIcon />,
+      title: `Xから退会`,
       onClick: () => setConfirming(confirming),
     },
   ];
@@ -34,19 +70,20 @@ export const SideBarFooter = (props) => {
    */
   const confirming = {
     isOpen: true,
-    title: "Xからログアウトしますか？",
-    message: "いつでもログインし直すことができます。",
+    title: "Xから退会しますか？",
+    message:
+      "アカウントが削除されます。この操作は取り消せません。表示名、ユーザー名、公開プロフィールがXに表示されなくなります。",
     agree: (
       <Button
         variant="contained"
-        color="black"
-        onClick={(prev) => {
-          handleLogout();
+        color="error"
+        onClick={async (prev) => {
+          await handleDeleteUser();
           setConfirming({ ...prev, isOpen: false });
         }}
         sx={{ borderRadius: 50, fontWeight: "bold" }}
       >
-        ログアウト
+        退会
       </Button>
     ),
     disagree: (
