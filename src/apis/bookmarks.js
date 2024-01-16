@@ -4,7 +4,9 @@ import { tweets, bookmarks } from "../urls/index";
 import { createDefaultHeaders } from "../lib/utility.js";
 
 export const fetchBookmarkingPosts = () => {
-  return axios.get(bookmarks);
+  return axios.get(bookmarks, {
+    headers: createDefaultHeaders(),
+  });
 };
 
 export const createBookmark = (id) => {
