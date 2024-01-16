@@ -1,9 +1,6 @@
 import React from "react";
 import { useUserEdit } from "../../hooks/users/useUserEdit.jsx";
 
-import { styled } from "@mui/material/styles";
-import { grey } from "@mui/material/colors";
-
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -18,14 +15,6 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
-
-const SaveButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText(grey[900]),
-  backgroundColor: grey[900],
-  "&:hover": {
-    backgroundColor: grey[700],
-  },
-}));
 
 export const UserEditModal = (props) => {
   const { open } = props;
@@ -67,17 +56,17 @@ export const UserEditModal = (props) => {
             >
               プロフィールを編集する
             </Typography>
-            <SaveButton
+            <Button
               variant="contained"
+              color="black"
               onClick={handleSubmit}
               sx={{
                 borderRadius: 50,
                 fontWeight: "bold",
-                color: "white",
               }}
             >
               保存
-            </SaveButton>
+            </Button>
           </Toolbar>
           {/* 背景画像 */}
           <div style={{ position: "relative" }}>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Card, Box, Tab } from "@mui/material";
 
@@ -11,7 +11,7 @@ import { fetchUser } from "../apis/users";
 import { CommentCard } from "../components/cards/CommentCard";
 
 export const UsersShow = () => {
-  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+  const currentUser = useRecoilValue(currentUserState);
 
   const setLoading = useSetRecoilState(loadingState);
   const [user, setUser] = useState(null);

@@ -39,6 +39,7 @@ export const PostsShow = () => {
               comment={comment}
               afterDeleteComment={() => afterDeleteComment()}
               afterCreateComment={() => afterCreateComment()}
+              reFetch={() => reFetch()}
             />
           ))}
         </Card>

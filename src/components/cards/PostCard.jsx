@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
-import {
-  confirmingState,
-  currentUserState,
-  flashState,
-  loadingState,
-} from "../../globalStates/atoms.js";
+import { currentUserState, loadingState } from "../../globalStates/atoms.js";
 import { deletePost } from "../../apis/posts.js";
 
 import { formatDateTime } from "../../lib/utility.js";
@@ -18,7 +13,6 @@ import CardContent from "@mui/material/CardContent";
 import {
   Avatar,
   Box,
-  Button,
   CardActionArea,
   CardActions,
   CardHeader,
@@ -31,14 +25,13 @@ import RepeatIcon from "@mui/icons-material/Repeat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 import { CommentCreateModal } from "../modals/CommentCreateModal.jsx";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle.jsx";
 import { createRepost, deleteRepost } from "../../apis/reposts.js";
 import { createLike, deleteLike } from "../../apis/likes.js";
 import { fetchUser } from "../../apis/users.js";
+import { useGeneratePostCardMenuItems } from "../../hooks/posts/useGeneratePostCardMenuItems.jsx";
 
 export const PostCard = (props) => {
   // 削除後の後処理はページごとに異なるので、propsで渡す
@@ -47,8 +40,13 @@ export const PostCard = (props) => {
 
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
-  const setConfirming = useSetRecoilState(confirmingState);
-  const setFlash = useSetRecoilState(flashState);
+
+  const menuItems = useGeneratePostCardMenuItems({
+    record: post,
+    deleteRecord: () => deletePost(post.id),
+    afterDeleteRecord: afterDeletePost,
+    reFetch: reFetch,
+  });
 
   const navigate = useNavigate();
 
@@ -56,24 +54,6 @@ export const PostCard = (props) => {
     currentUser.retweets.filter((item) => item.id === post.id).length !== 0;
   const alreadyLiked =
     currentUser.likes.filter((item) => item.id === post.id).length !== 0;
-
-  const LoggedInMenuItems = [
-    {
-      icon: <DeleteOutlineIcon />,
-      title: "削除",
-      fontColor: "red",
-      onClick: () => setConfirming(confirming),
-    },
-  ];
-
-  // TODO フォロー済みかいなかでの分岐
-  const UnLoggedInMenuItems = [
-    {
-      icon: <PersonAddAltIcon />,
-      title: `@${post.user.user_name}をフォロー`,
-      onClick: () => {},
-    },
-  ];
 
   const footerItems = [
     // コメント
@@ -133,55 +113,6 @@ export const PostCard = (props) => {
     },
   ];
 
-  /**
-   * 確認ダイアログ上の情報
-   */
-  const confirming = {
-    isOpen: true,
-    title: "投稿を削除しますか？",
-    message:
-      "この操作は取り消せません。プロフィール、あなたをフォローしているアカウントのタイムラインから投稿が削除されます。 ",
-    agree: (
-      <Button
-        variant="contained"
-        color="error"
-        sx={{ borderRadius: 50 }}
-        onClick={async () => await handleDelete()}
-      >
-        削除
-      </Button>
-    ),
-    disagree: (
-      <Button
-        variant="outlined"
-        color="secondary"
-        sx={{ borderRadius: 50, color: "black" }}
-        onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
-      >
-        キャンセル
-      </Button>
-    ),
-  };
-
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      await deletePost(post.id);
-      await afterDeletePost();
-
-      setFlash({
-        isOpen: true,
-        severity: "success",
-        message: "投稿を削除しました",
-      });
-    } catch (err) {
-      console.log("err", err);
-    } finally {
-      setLoading(false);
-      setConfirming((prev) => ({ ...prev, isOpen: false }));
-    }
-  };
-
   const handleClickIcon = async (alreadyDone, createRecord, deleteRecord) => {
     try {
       setLoading(true);
@@ -200,6 +131,11 @@ export const PostCard = (props) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClickUser = (e) => {
+    e.stopPropagation();
+    navigate(`/${post.user.user_name}`);
   };
 
   return (
@@ -222,13 +158,10 @@ export const PostCard = (props) => {
             <Grid item xs={1} sx={{ textAlign: "left" }}>
               <CardActions
                 sx={{
-                  zIndex: 10000,
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
                 }}
                 disableSpacing
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`/${post.user.user_name}`);
-                }}
+                onClick={handleClickUser}
               >
                 <Avatar
                   sx={{
@@ -252,11 +185,7 @@ export const PostCard = (props) => {
                 action={
                   <ExpandableMenu
                     displayIcon={<MoreHorizIcon />}
-                    menuItems={
-                      post.user.user_name === currentUser.user_name
-                        ? LoggedInMenuItems
-                        : UnLoggedInMenuItems
-                    }
+                    menuItems={menuItems}
                   />
                 }
                 title={
@@ -265,6 +194,8 @@ export const PostCard = (props) => {
                     subHeader={`@${post.user.user_name}・${formatDateTime(
                       new Date(post.created_at)
                     )}`}
+                    canClick
+                    onClick={handleClickUser}
                   />
                 }
               />
@@ -302,7 +233,7 @@ export const PostCard = (props) => {
                     <Box
                       key={`post-${post.id}-fotterItem-${index}`}
                       sx={{
-                        zIndex: 100,
+                        zIndex: (theme) => theme.zIndex.appBar + 1,
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",

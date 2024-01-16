@@ -39,12 +39,12 @@ export const SideBarFooter = (props) => {
     agree: (
       <Button
         variant="contained"
-        color="primary"
+        color="black"
         onClick={(prev) => {
           handleLogout();
           setConfirming({ ...prev, isOpen: false });
         }}
-        sx={{ borderRadius: 50 }}
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
       >
         ログアウト
       </Button>
@@ -52,8 +52,8 @@ export const SideBarFooter = (props) => {
     disagree: (
       <Button
         variant="outlined"
-        color="secondary"
-        sx={{ borderRadius: 50, color: "black" }}
+        color="black"
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
         onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
       >
         キャンセル
@@ -80,7 +80,7 @@ export const SideBarFooter = (props) => {
           avatar={
             <CardActions
               sx={{
-                zIndex: 10000,
+                zIndex: (theme) => theme.zIndex.appBar + 1,
               }}
               disableSpacing
               onClick={(e) => {

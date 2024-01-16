@@ -1,10 +1,8 @@
 import React from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import {
   Avatar,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -13,95 +11,29 @@ import {
   Typography,
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 import { ExpandableMenu } from "../utils/ExpandableMenu";
 import { PostCardHeaderTitle } from "../PostCardHeaderTitle";
 
-import {
-  confirmingState,
-  currentUserState,
-  flashState,
-  loadingState,
-} from "../../globalStates/atoms";
 import { formatDateTime } from "../../lib/utility";
 import { deleteComment } from "../../apis/comments";
+import { useGeneratePostCardMenuItems } from "../../hooks/posts/useGeneratePostCardMenuItems";
 
 export const CommentCard = (props) => {
-  const { comment, afterDeleteComment } = props;
-  const currentUser = useRecoilValue(currentUserState);
-  const setLoading = useSetRecoilState(loadingState);
-  const setConfirming = useSetRecoilState(confirmingState);
-  const setFlash = useSetRecoilState(flashState);
+  const { comment, afterDeleteComment, reFetch } = props;
 
   const navigate = useNavigate();
 
-  const LoggedInMenuItems = [
-    {
-      icon: <DeleteOutlineIcon />,
-      title: "コメント削除",
-      fontColor: "red",
-      onClick: () => setConfirming(confirming),
-    },
-  ];
+  const menuItems = useGeneratePostCardMenuItems({
+    record: comment,
+    deleteRecord: () => deleteComment(comment.id),
+    afterDeleteRecord: afterDeleteComment,
+    reFetch: reFetch,
+  });
 
-  // TODO フォロー済みかいなかでの分岐
-  const UnLoggedInMenuItems = [
-    {
-      icon: <PersonAddAltIcon />,
-      title: `@${comment.user.user_name}をフォロー`,
-      onClick: () => {},
-    },
-  ];
-
-  /**
-   * 確認ダイアログ上の情報
-   */
-  const confirming = {
-    isOpen: true,
-    title: "コメントを削除しますか？",
-    message:
-      "この操作は取り消せません。プロフィール、あなたをフォローしているアカウントのタイムラインからコメントが削除されます。 ",
-    agree: (
-      <Button
-        variant="contained"
-        color="error"
-        sx={{ borderRadius: 50 }}
-        onClick={async () => await handleDelete()}
-      >
-        削除
-      </Button>
-    ),
-    disagree: (
-      <Button
-        variant="outlined"
-        color="secondary"
-        sx={{ borderRadius: 50, color: "black" }}
-        onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
-      >
-        キャンセル
-      </Button>
-    ),
-  };
-
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      await deleteComment(comment.id);
-      await afterDeleteComment();
-
-      setFlash({
-        isOpen: true,
-        severity: "success",
-        message: "コメントを削除しました",
-      });
-    } catch (err) {
-      console.log("err", err);
-    } finally {
-      setLoading(false);
-      setConfirming((prev) => ({ ...prev, isOpen: false }));
-    }
+  const handleClickUser = (e) => {
+    e.stopPropagation();
+    navigate(`/${comment.user.user_name}`);
   };
 
   return (
@@ -118,14 +50,9 @@ export const CommentCard = (props) => {
         <Grid container>
           <Grid item xs={1} sx={{ textAlign: "left" }}>
             <CardActions
-              sx={{
-                zIndex: 10000,
-              }}
+              sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
               disableSpacing
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/${comment.user.user_name}`);
-              }}
+              onClick={handleClickUser}
             >
               <Avatar
                 sx={{
@@ -147,11 +74,7 @@ export const CommentCard = (props) => {
               action={
                 <ExpandableMenu
                   displayIcon={<MoreHorizIcon />}
-                  menuItems={
-                    comment.user.user_name === currentUser.user_name
-                      ? LoggedInMenuItems
-                      : UnLoggedInMenuItems
-                  }
+                  menuItems={menuItems}
                 />
               }
               title={
@@ -160,6 +83,8 @@ export const CommentCard = (props) => {
                   subHeader={`@${comment.user.user_name}・${formatDateTime(
                     new Date(comment.created_at)
                   )}`}
+                  canClick
+                  onClick={handleClickUser}
                 />
               }
             />
