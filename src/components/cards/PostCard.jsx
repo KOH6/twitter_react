@@ -153,7 +153,7 @@ export const PostCard = (props) => {
           navigate(`/${post.user.user_name}/${post.id}`);
         }}
       >
-        <CardContent>
+        <CardContent style={{ paddingTop: "0.2rem", paddingBottom: "0.5rem" }}>
           <Grid container>
             <Grid item xs={1} sx={{ textAlign: "left" }}>
               <CardActions

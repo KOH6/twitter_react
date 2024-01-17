@@ -11,6 +11,7 @@ import { PostsIndex } from "./containers/PostsIndex";
 import { PostsShow } from "./containers/PostsShow";
 import { UsersShow } from "./containers/UsersShow";
 import { Page404 } from "./pages/Page404";
+import { NotificationsIndex } from "./containers/NotificationsIndex.jsx";
 
 import { Layout } from "./layouts/Layout";
 import { ToastMessage } from "./components/utils/ToastMessage";
@@ -42,6 +43,11 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route exact path="/home" element={<PostsIndex />} />
               <Route exact path="/not_found" element={<Page404 />} />
+              <Route
+                exact
+                path="/notifications"
+                element={<NotificationsIndex />}
+              />
               <Route path="/:user_name" element={<UsersShow />} />
               <Route exact path="/:user_name/:id" element={<PostsShow />} />
               <Route path="*" element={<Page404 />} />

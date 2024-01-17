@@ -46,7 +46,7 @@ export const CommentCard = (props) => {
         borderRadius: "0%",
       }}
     >
-      <CardContent>
+      <CardContent style={{ paddingTop: "0.2rem", paddingBottom: "0.2rem" }}>
         <Grid container>
           <Grid item xs={1} sx={{ textAlign: "left" }}>
             <CardActions
