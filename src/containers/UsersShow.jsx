@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -19,6 +19,8 @@ export const UsersShow = () => {
   const { user_name } = useParams();
   const navigate = useNavigate();
 
+  const profileTop = useRef(null);
+
   useEffect(() => {
     (async () => {
       try {
@@ -34,6 +36,11 @@ export const UsersShow = () => {
         setLoading(false);
       }
     })();
+
+    // プロフィール部分に描画を移動する
+    if (profileTop.current) {
+      profileTop.current.scrollIntoView();
+    }
     // 別ユーザプロフィールへのURL遷移とログインユーザ情報の更新を検知
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_name, currentUser]);
@@ -105,7 +112,11 @@ export const UsersShow = () => {
     <>
       {/* 初期描画時の画面ちらつき対策で、userの存在を明示的に確認した上でコンポーネントを描画する */}
       {user && (
-        <Card variant="outlined" sx={{ border: "none", px: 0 }}>
+        <Card
+          ref={profileTop}
+          variant="outlined"
+          sx={{ border: "none", px: 0 }}
+        >
           <UserDetail user={user} isLoggedInUser={isLoggedInUser} />
           <TabContext value={selectedTab}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

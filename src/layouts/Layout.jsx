@@ -33,7 +33,7 @@ export const Layout = () => {
     },
     {
       icon: <MailOutlineIcon sx={{ fontSize: 40 }} />,
-      href: "/home",
+      href: "/messages",
       title: "メッセージ",
     },
     {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -8,10 +9,11 @@ import CardMedia from "@mui/material/CardMedia";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import { Button, Stack } from "@mui/material";
+import { Button, IconButton, Stack } from "@mui/material";
 import RoomOutlinedIcon from "@mui/icons-material/RoomOutlined";
 import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
 import { UserEditModal } from "../modals/UserEditModal";
 
@@ -23,6 +25,25 @@ import {
 import { fetchUser } from "../../apis/users";
 import { createFollow, deleteFollow } from "../../apis/follows.js";
 import { formatDate } from "../../lib/utility.js";
+import { createGroup } from "../../apis/messages.js";
+
+const MessageIconButton = (props) => {
+  return (
+    <IconButton
+      variant="contained"
+      edge="start"
+      color="black"
+      style={{
+        border: "1px solid",
+        borderColor: "#919496",
+      }}
+      sx={{ mx: 1 }}
+      onClick={props.onClick}
+    >
+      <MailOutlineIcon />
+    </IconButton>
+  );
+};
 
 const LoggedInButton = (props) => {
   return (
@@ -43,50 +64,56 @@ const LoggedInButton = (props) => {
 
 const FollowingButton = (props) => {
   return (
-    <Button
-      variant="contained"
-      color="black"
-      size="large"
-      onClick={props.onClick}
-      sx={{
-        borderRadius: 50,
-        fontWeight: "bold",
-      }}
-    >
-      フォロー
-    </Button>
+    <>
+      <MessageIconButton onClick={props.onClicksSendMessage} />
+      <Button
+        variant="contained"
+        color="black"
+        size="large"
+        onClick={props.onClickFollow}
+        sx={{
+          borderRadius: 50,
+          fontWeight: "bold",
+        }}
+      >
+        フォロー
+      </Button>
+    </>
   );
 };
 
 const UnFollowingButton = (props) => {
   return (
-    <Button
-      variant="outlined"
-      color="black"
-      size="large"
-      onClick={props.onClick}
-      sx={{
-        width: "10rem",
-        borderRadius: 50,
-        fontWeight: "bold",
-        // ホバー時にボタンデザインを変更する
-        "& .hoverText": {
-          display: "none",
-        },
-        "&:hover": {
-          background: "#FFEDEC",
-          borderColor: "#FEC9CE",
-          transition: "0s",
-          "& .defaultText": { display: "none" },
-          "& .hoverText": { display: "inline" },
-        },
-      }}
-    >
-      <p className="defaultText">フォロー中</p>
-      <p className="hoverText" style={{ color: "#F4202E" }}>
-        フォロー解除
-      </p>
-    </Button>
+    <>
+      <MessageIconButton onClick={props.onClicksSendMessage} />
+      <Button
+        variant="outlined"
+        color="black"
+        size="large"
+        onClick={props.onClickFollow}
+        sx={{
+          width: "10rem",
+          borderRadius: 50,
+          fontWeight: "bold",
+          // ホバー時にボタンデザインを変更する
+          "& .hoverText": {
+            display: "none",
+          },
+          "&:hover": {
+            background: "#FFEDEC",
+            borderColor: "#FEC9CE",
+            transition: "0s",
+            "& .defaultText": { display: "none" },
+            "& .hoverText": { display: "inline" },
+          },
+        }}
+      >
+        <p className="defaultText">フォロー中</p>
+        <p className="hoverText" style={{ color: "#F4202E" }}>
+          フォロー解除
+        </p>
+      </Button>
+    </>
   );
 };
 
@@ -97,6 +124,8 @@ export const UserDetail = (props) => {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setLoading = useSetRecoilState(loadingState);
   const setConfirming = useSetRecoilState(confirmingState);
+
+  const navigate = useNavigate();
 
   /**
    * 確認ダイアログ上の情報
@@ -155,6 +184,19 @@ export const UserDetail = (props) => {
     }
   };
 
+  const handleClickSendMessage = async () => {
+    try {
+      setLoading(true);
+      const res = await createGroup(user);
+      const group = res.data;
+      navigate(`/messages/${group.id}`);
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <Card variant="outlined" sx={{ border: "none" }}>
@@ -182,9 +224,15 @@ export const UserDetail = (props) => {
             isLoggedInUser ? (
               <LoggedInButton onClick={() => setOpenEditModal(true)} />
             ) : isFollowing ? (
-              <UnFollowingButton onClick={() => setConfirming(confirming)} />
+              <UnFollowingButton
+                onClickFollow={() => setConfirming(confirming)}
+                onClicksSendMessage={handleClickSendMessage}
+              />
             ) : (
-              <FollowingButton onClick={() => handleClickFollowing()} />
+              <FollowingButton
+                onClickFollow={() => handleClickFollowing()}
+                onClicksSendMessage={handleClickSendMessage}
+              />
             )
           }
         />

@@ -16,3 +16,6 @@ export const comments = `${DEFAULT_API_LOCALHOST}/comments`;
 
 // notifications
 export const notifications = `${DEFAULT_API_LOCALHOST}/notifications`;
+
+// groups
+export const groups = `${DEFAULT_API_LOCALHOST}/groups`;
