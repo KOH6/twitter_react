@@ -38,7 +38,7 @@ export const Layout = () => {
     },
     {
       icon: <BookmarkBorderIcon sx={{ fontSize: 40 }} />,
-      href: "/home",
+      href: "/bookmarks",
       title: "ブックマーク",
     },
     {
