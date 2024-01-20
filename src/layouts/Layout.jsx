@@ -1,6 +1,5 @@
 import React from "react";
 import Cookies from "js-cookie";
-
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { NavLink, Outlet } from "react-router-dom";
 
@@ -12,13 +11,35 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
-import { currentUserState, flashState } from "../globalStates/atoms";
 import { UnLoggedInHome } from "../pages/UnLoggedInHome";
 import { SideBarFooter } from "../components/SideBarFooter";
+
+import {
+  confirmingState,
+  currentUserState,
+  flashState,
+} from "../globalStates/atoms";
 
 export const Layout = () => {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setFlash = useSetRecoilState(flashState);
+  const setConfirming = useSetRecoilState(confirmingState);
+
+  const isLogin = Object.keys(currentUser).length !== 0;
+
+  const handleLogout = () => {
+    setCurrentUser({});
+
+    Cookies.remove("_access_token");
+    Cookies.remove("_client");
+    Cookies.remove("_uid");
+
+    setFlash({
+      isOpen: true,
+      severity: "success",
+      message: "ログアウトしました。",
+    });
+  };
 
   const navItems = [
     {
@@ -48,25 +69,41 @@ export const Layout = () => {
     },
     {
       icon: <ExitToAppIcon sx={{ fontSize: 40 }} />,
-      href: "/home",
-      title: "退会",
+      onClick: () => setConfirming(confirming),
+      title: `ログアウト`,
     },
   ];
 
-  const isLogin = Object.keys(currentUser).length !== 0;
-
-  const handleLogout = () => {
-    setCurrentUser({});
-
-    Cookies.remove("_access_token");
-    Cookies.remove("_client");
-    Cookies.remove("_uid");
-
-    setFlash({
-      isOpen: true,
-      severity: "success",
-      message: "ログアウトしました。",
-    });
+  /**
+   * ログアウト確認ダイアログ上の情報
+   */
+  const confirming = {
+    isOpen: true,
+    title: "Xからログアウトしますか？",
+    message: "いつでもログインし直すことができます。",
+    agree: (
+      <Button
+        variant="contained"
+        color="black"
+        onClick={(prev) => {
+          handleLogout();
+          setConfirming({ ...prev, isOpen: false });
+        }}
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
+      >
+        ログアウト
+      </Button>
+    ),
+    disagree: (
+      <Button
+        variant="outlined"
+        color="black"
+        sx={{ borderRadius: 50, fontWeight: "bold" }}
+        onClick={() => setConfirming((prev) => ({ ...prev, isOpen: false }))}
+      >
+        キャンセル
+      </Button>
+    ),
   };
 
   return (
@@ -92,9 +129,9 @@ export const Layout = () => {
                   </svg>
                 </div>
                 <ul className="space-y-2 font-medium">
-                  {navItems.map(({ icon, href, title }) => (
+                  {navItems.map(({ icon, href, title, onClick }) => (
                     <li className="mx-2 py-4" key={title}>
-                      <NavLink to={href}>
+                      <NavLink to={href} onClick={onClick}>
                         <ListItem button sx={{ p: 0 }}>
                           <Stack
                             direction="row"
